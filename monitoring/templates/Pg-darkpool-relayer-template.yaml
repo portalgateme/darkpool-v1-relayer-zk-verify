@@ -1,0 +1,70 @@
+zabbix_export:
+  version: '5.2'
+  date: '2021-12-01T13:26:59Z'
+  groups:
+    - name: Templates/Applications
+  templates:
+    - template: pg-darkpool-relayer
+      name: pg-darkpool-relayer
+      groups:
+        - name: Templates/Applications
+      items:
+        - name: 'pg-darkpool-relayer: health.error'
+          type: DEPENDENT
+          key: pg-darkpool-relayer.health.error
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.health.error
+          master_item:
+            key: 'web.page.get[{$URL}]'
+          triggers:
+            - expression: '{last()}<>""'
+              name: 'pg-darkpool-relayer: health error'
+              priority: AVERAGE
+        - name: 'pg-darkpool-relayer: health.status'
+          type: DEPENDENT
+          key: pg-darkpool-relayer.health.status
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.health.status
+          master_item:
+            key: 'web.page.get[{$URL}]'
+          triggers:
+            - expression: '{last(#3)}<>"true"'
+              name: 'pg-darkpool-relayer: health status <> true'
+              priority: HIGH
+        - name: 'pg-darkpool-relayer: data'
+          type: ZABBIX_ACTIVE
+          key: 'web.page.get[{$URL}]'
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '\n\s?\n([\s\S]*)'
+                - \1
+      httptests:
+        - name: 'pg-darkpool-relayer: status page'
+          agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/80.0.3987.87 Chrome/80.0.3987.87 Safari/537.36'
+          steps:
+            - name: 'status page'
+              url: '{$URL}'xs
+              follow_redirects: 'NO'
+              required: status
+              status_codes: '200'
+  triggers:
+    - expression: '{pg-darkpool-relayer:web.test.fail[pg-darkpool-relayer: status page].last()}>0'
+      name: 'pg-darkpool-relayer: status page failed'
+      priority: AVERAGE
+    - expression: '{pg-darkpool-relayer:web.test.rspcode[pg-darkpool-relayer: status page,status page].last(#3)}<>200'
+      name: 'pg-darkpool-relayer: status page rspcode <>200'
+      priority: HIGH
