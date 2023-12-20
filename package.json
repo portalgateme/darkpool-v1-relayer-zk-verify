@@ -1,11 +1,10 @@
 {
-  "name": "pg-relayer",
+  "name": "pg-darkpool-relayer",
   "version": "0.1.0",
   "description": "Relayer for portal gate privacy solution. https://portalgate.me",
   "scripts": {
     "server": "node src/server.js",
     "worker": "node src/worker",
-    "treeWatcher": "node src/treeWatcher",
     "priceWatcher": "node src/priceWatcher",
     "healthWatcher": "node src/healthWatcher",
     "eslint": "eslint --ext .js --ignore-path .gitignore .",
@@ -13,11 +12,12 @@
     "prettier:fix": "npx prettier --write . --config .prettierrc",
     "lint": "yarn eslint && yarn prettier:check",
     "test": "mocha",
-    "start": "yarn server & yarn priceWatcher & yarn treeWatcher & yarn worker & yarn healthWatcher"
+    "start": "yarn server & yarn priceWatcher & yarn worker & yarn healthWatcher"
   },
   "author": "portalgate.me",
   "license": "MIT",
   "dependencies": {
+    "@portalgateme/darkpool-v1-proof": "file:.yalc/@portalgateme/darkpool-v1-proof",
     "ajv": "^6.12.5",
     "async-mutex": "^0.2.4",
     "bull": "^3.12.1",

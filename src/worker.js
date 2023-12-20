@@ -33,6 +33,7 @@ const {
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
+const withdrawalProof = require('./modules/verifier')
 
 let web3
 let currentTx
@@ -169,12 +170,18 @@ async function checkPgFee({ args, asset }) {
 
 async function getTxObject({ data }) {
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    const contract = new web3.eth.Contract(pgDarkPoolABI, pgFUZKAddress)
     let calldata
-    if(isETH(data.asset)){
-      calldata = contract.methods.withdraw_eth(data.proof, ...data.args).encodeABI()
+    const validProof = await withdrawalProof(data.args[0], data.asset, data.args[4], data.args[1], data.proof)
+   
+    if(validProof){
+      const contract = new web3.eth.Contract(pgDarkPoolABI, pgFUZKAddress)
+      if(isETH(data.asset)){
+        calldata = contract.methods.withdraw_eth(data.proof, ...data.args).encodeABI()
+      }else{
+        calldata = contract.methods.withdraw_erc20(data.asset, data.proof, ...data.args).encodeABI()
+      }  
     }else{
-      calldata = contract.methods.withdraw_erc20(data.asset, data.proof, ...data.args).encodeABI()
+      throw new RelayerError('Invalid proof')
     }
 
     return {
@@ -224,8 +231,9 @@ async function processJob(job) {
   }
 }
 
-async function submitTx(job, retry = 0) {
+async function submitTx(job, retry = 0) { 
   await checkFee(job)
+
   currentTx = await txManager.createTx(await getTxObject(job))
 
   /*if (job.data.type !== jobType.PORTALGATE_WITHDRAW) {

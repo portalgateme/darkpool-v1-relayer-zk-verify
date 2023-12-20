@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "@portalgateme/darkpool-v1-proof": {
+      "version": "0.1.0",
+      "signature": "2c39ca7cc45c3469957957fec0cc9a13",
+      "file": true
+    }
+  }
+}
