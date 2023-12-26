@@ -66,14 +66,53 @@ const pgDarkPoolWithdrawSchema = {
     //contract: instanceType,
     args: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
+      maxItems: 7,
+      minItems: 7,
       items: [bytes32Type, bytes32Type, addressType, relayerType, bytes32Type ,bytes32Type, bytes32Type],
     },
   },
   additionalProperties: false,
   required: ['asset', 'proof', 'args'],
 }
+
+const pgDarkPoolUniswapSSSchema = {
+  type: 'object',
+  properties: {
+    asset: assetType,
+    proof: proofType,
+    //contract: instanceType,
+    args: {
+      type: 'array',
+      maxItems: 8,
+      minItems: 8,
+      items: [bytes32Type, bytes32Type, assetType, relayerType, 
+              bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+    },
+  },
+  additionalProperties: false,
+  required: ['asset', 'proof', 'args'],
+}
+
+const pgDarkPoolUniswapLPSchema = {
+  type: 'object',
+  properties: {
+    asset1: assetType,
+    proof1: proofType,
+    asset2: assetType,
+    proof2: proofType,
+    //contract: instanceType,
+    args: {
+      type: 'array',
+      maxItems: 12,
+      minItems: 12,
+      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type, relayerType, 
+              bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+    },
+  },
+  additionalProperties: false,
+  required: ['asset', 'proof', 'args'],
+}
+
 
 /*const miningRewardSchema = {
   type: 'object',
@@ -183,6 +222,10 @@ const miningWithdrawSchema = {
 }*/
 
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
+const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
+const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
+//const validatePgDarkPoolUniswapMS = ajv.compile(pgDarkPoolUniswapMSSchema)
+
 //const validateMiningReward = ajv.compile(miningRewardSchema)
 //const validateMiningWithdraw = ajv.compile(miningWithdrawSchema)
 
@@ -199,6 +242,20 @@ function getPgDarkPoolWithdrawInputError(data) {
   return getInputError(validatePgDarkPoolWithdraw, data)
 }
 
+function getPgDarkPoolUniswapSSInputError(data) {
+  return getInputError(validatePgDarkPoolUniswapSS, data)
+}
+
+
+function getPgDarkPoolUniswapLPInputError(data) {
+  return getInputError(validatePgDarkPoolUniswapLP, data)
+}
+
+/*function getPgDarkPoolUniswapMSInputError(data) {
+  return getInputError(validatePgDarkPoolUniswapMS, data)
+}*/
+
+
 /*function getMiningRewardInputError(data) {
   return getInputError(validateMiningReward, data)
 }
@@ -209,6 +266,9 @@ function getMiningWithdrawInputError(data) {
 
 module.exports = {
   getPgDarkPoolWithdrawInputError,
+  getPgDarkPoolUniswapSSInputError,
+  //getPgDarkPoolUniswapMSInputError,
+  getPgDarkPoolUniswapLPInputError,
   //getMiningRewardInputError,
   //getMiningWithdrawInputError,
 }

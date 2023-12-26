@@ -1,6 +1,6 @@
 const queue = require('../queue')
 //const { netId, pgServiceFee, instances, rewardAccount, pgRouterAddress, minerAddress } = require('../config')
-const { netId, pgServiceFee, rewardAccount, pgFUZKAddress } = require('../config')
+const { netId, pgServiceFee, rewardAccount, pgDarkPoolAssetManager } = require('../config')
 
 const { version } = require('../../package.json')
 const { redis } = require('../modules/redis')
@@ -16,7 +16,7 @@ async function status(req, res) {
     netId,
     //instances,
     rewardAccount,
-    pgFUZKAddress,
+    pgDarkPoolAssetManager,
     //minerAddress,
     ethPrices,
     pgServiceFee,

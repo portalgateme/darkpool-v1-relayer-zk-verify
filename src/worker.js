@@ -21,7 +21,7 @@ const {
 } = require('./utils')
 const { jobType, status } = require('./constants')
 const {
-  pgFUZKAddress,
+  pgDarkPoolAssetManager,
   //minerAddress,
   gasLimits,
   privateKey,
@@ -33,7 +33,7 @@ const {
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
-const withdrawalProof = require('./modules/verifier')
+//const withdrawalProof = require('./modules/verifier')
 
 let web3
 let currentTx
@@ -104,11 +104,11 @@ async function start() {
   }
 }
 
-function checkFee({ data }) {
+/*function checkFee({ data }) {
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
     return checkPgFee(data)
   }
-}
+}*/
 
 async function getGasPrice() {
   const block = await web3.eth.getBlock('latest')
@@ -123,9 +123,10 @@ async function getGasPrice() {
 
 async function checkPgFee({ args, asset }) {
   const isEth = isETH(asset)
-  const [amount, fee, refund] = [args[4], args[5], args[6]].map(toBN)
+  //const [amount, fee, refund] = [args[4], args[5], args[6]].map(toBN)
+  const [amount, fee, refund] = args.slice(-3).map(toBN)
   const gasPrice = await getGasPrice()
-  const ethPrice = await redis.hget('prices', currency)
+  const ethPrice = await redis.hget('prices', asset)
   const expense = gasPrice.mul(toBN(gasLimits[jobType.PG_DARKPOOL_WITHDRAW]))
 
   let serviceFee
@@ -138,10 +139,11 @@ async function checkPgFee({ args, asset }) {
     decimals = 18
   }
   
-  serviceFee = toBN(fromDecimals(amount, decimals))
-  .mul(toBN(parseInt(pgServiceFee * 1e10)))
-  .div(toBN(1e10 * 100))
-
+  //serviceFee = toBN(fromDecimals(amount, decimals))
+  //.mul(toBN(parseInt(pgServiceFee * 1e10)))
+  //.div(toBN(1e10 * 100))
+  serviceFee = amount.mul(toBN(parseInt(pgServiceFee * 1e10)))
+                      .div(toBN(1e10 * 100))
 
   let desiredFee
   if(isEth){
@@ -149,7 +151,7 @@ async function checkPgFee({ args, asset }) {
   } else{
     desiredFee = expense
     .add(refund)
-    .mul(toBN(10 ** decimals))
+    //.mul(toBN(10 ** decimals))
     .div(toBN(ethPrice))
     desiredFee = desiredFee.add(serviceFee)
   }
@@ -169,35 +171,45 @@ async function checkPgFee({ args, asset }) {
 }
 
 async function getTxObject({ data }) {
+  let calldata
+  const contract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
+ 
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    let calldata
-    const validProof = await withdrawalProof(data.args[0], data.asset, data.args[4], data.args[1], data.proof)
+    //let validProof = true
+    //const validProof = await withdrawalProof(data.args[0], data.asset, data.args[4], data.args[1], data.proof)
    
-    if(validProof){
-      const contract = new web3.eth.Contract(pgDarkPoolABI, pgFUZKAddress)
-      if(isETH(data.asset)){
-        calldata = contract.methods.withdraw_eth(data.proof, ...data.args).encodeABI()
-      }else{
-        calldata = contract.methods.withdraw_erc20(data.asset, data.proof, ...data.args).encodeABI()
-      }  
+    //if(validProof){
+    if(isETH(data.asset)){
+      calldata = contract.methods.withdraw_eth(data.proof, ...data.args).encodeABI()
     }else{
-      throw new RelayerError('Invalid proof')
-    }
-
+      calldata = contract.methods.withdraw_erc20(data.asset, data.proof, ...data.args).encodeABI()
+    }  
+    //}else{
+    //  throw new RelayerError('Invalid proof')
+    //}
     return {
       value: data.args[6],
       to: contract._address,
       data: calldata,
       gasLimit: gasLimits['WITHDRAW_WITH_EXTRA'],
     }
-  } else {
-    //const method = data.type === jobType.MINING_REWARD ? 'reward' : 'withdraw'
-    //const calldata = minerContract.methods[method](data.proof, data.args).encodeABI()
+  } else if(data.type === jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP){
+    calldata = contract.methods.uniswap_ss(data.asset, data.proof, ...data.args).encodeABI()
     return {
-      //to: minerContract._address,
-     // data: calldata,
-      //gasLimit: gasLimits[data.type],
+      to: contract._address,
+      data: calldata,
+      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
+  } else if(data.type === jobType.PG_DARKPOOL_UNISWAP_LP){
+    calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    return {
+      to: contract._address,
+      data: calldata,
+      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
+    }
+  
+  } else {
+      throw new RelayerError(`Unknown job type: ${data.type}`)
   }
 }
 
@@ -232,7 +244,7 @@ async function processJob(job) {
 }
 
 async function submitTx(job, retry = 0) { 
-  await checkFee(job)
+  await checkPgFee(job)
 
   currentTx = await txManager.createTx(await getTxObject(job))
 
