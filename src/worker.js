@@ -8,7 +8,6 @@ const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
 const {
   //poseidonHash2,
-  //getInstance,
   fromDecimals,
   //sleep,
   toBN,
@@ -18,6 +17,7 @@ const {
   logRelayerError,
   isETH,
   toChecksumAddress,
+  getRateToEth,
 } = require('./utils')
 const { jobType, status } = require('./constants')
 const {
@@ -104,11 +104,6 @@ async function start() {
   }
 }
 
-/*function checkFee({ data }) {
-  if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    return checkPgFee(data)
-  }
-}*/
 
 async function getGasPrice() {
   const block = await web3.eth.getBlock('latest')
@@ -123,39 +118,32 @@ async function getGasPrice() {
 
 async function checkPgFee({ args, asset }) {
   const isEth = isETH(asset)
-  //const [amount, fee, refund] = [args[4], args[5], args[6]].map(toBN)
   const [amount, fee, refund] = args.slice(-3).map(toBN)
   const gasPrice = await getGasPrice()
-  const ethPrice = await redis.hget('prices', asset)
   const expense = gasPrice.mul(toBN(gasLimits[jobType.PG_DARKPOOL_WITHDRAW]))
 
   let serviceFee
+  let desiredFee
   let decimals
 
-  if (!isEth){  
+  if(isEth){
+    serviceFee = toBN(amount).mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100)) 
+    decimals = 18
+  } else{
     const erc20 = new web3.eth.Contract(erc20ABI, toChecksumAddress(asset))
     decimals = await erc20.methods.decimals().call()
-  } else{
-    decimals = 18
-  }
-  
-  //serviceFee = toBN(fromDecimals(amount, decimals))
-  //.mul(toBN(parseInt(pgServiceFee * 1e10)))
-  //.div(toBN(1e10 * 100))
-  serviceFee = amount.mul(toBN(parseInt(pgServiceFee * 1e10)))
-                      .div(toBN(1e10 * 100))
+    const ethRate = await redis.hget('rates', asset)
+    
+    if(!ethRate){
+      ethRate  = await getRateToEth(asset,decimals,true)
+    }
 
-  let desiredFee
-  if(isEth){
-      desiredFee = expense.add(serviceFee)
-  } else{
-    desiredFee = expense
-    .add(refund)
-    //.mul(toBN(10 ** decimals))
-    .div(toBN(ethPrice))
-    desiredFee = desiredFee.add(serviceFee)
+    serviceFee = toBN(amount)
+                  .mul(toBN(ethRate))
+                  .div(toBN(10).pow(toBN(decimals)))
+                  .mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100)) 
   }
-
+  desiredFee = expense.add(serviceFee)
   console.log(
     'sent fee, desired fee, serviceFee',
     fromWei(fee.toString()),
@@ -188,7 +176,6 @@ async function getTxObject({ data }) {
     //  throw new RelayerError('Invalid proof')
     //}
     return {
-      value: data.args[6],
       to: contract._address,
       data: calldata,
       gasLimit: gasLimits['WITHDRAW_WITH_EXTRA'],

@@ -1,31 +1,12 @@
-//const { instances, netId } = require('./config')
 //const { poseidon } = require('circomlib')
 const { toBN, toChecksumAddress, BN, fromWei, isAddress, toWei } = require('web3-utils')
-
-/*const addressMap = new Map()
-
-for (const [currency, { instanceAddress, symbol, decimals }] of Object.entries(instances)) {
-  console.log
-  Object.entries(instanceAddress).forEach(([amount, address]) =>
-    addressMap.set(`${netId}_${address}`, {
-      currency,
-      amount,
-      symbol,
-      decimals,
-    }),
-  )
-}*/
-
+const { offchainOracleAddress } = require('./config')
+const web3 = require('./modules/web3')('oracle')
+const offchainOracleABI = require('../abis/OffchainOracle.abi.json')
+const offchainOracle = new web3.eth.Contract(offchainOracleABI, offchainOracleAddress)
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-/*function getInstance(address) {
-  const key = `${netId}_${toChecksumAddress(address)}`
-  if (addressMap.has(key)) {
-    return addressMap.get(key)
-  } else {
-    throw new Error('Unknown contact address')
-  }
-}*/
+
 
 function isETH(address){
   return address == "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
@@ -66,6 +47,14 @@ function getArgsForOracle() {
     'usdt': {
       tokenAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       decimals: 6
+    },
+    'DAI': {
+      tokenAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      decimals: 18
+    },
+    'WBTC': {
+      tokenAddress: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      decimals: 8
     }
   }
   const tokenAddresses = []
@@ -79,6 +68,20 @@ function getArgsForOracle() {
     }
   })
   return { tokenAddresses, oneUintAmount, currencyLookup }
+}
+
+async function getRateToEth(srcToken, srcTokenDecimal, useSrcWrappers){ 
+
+  let rateFormated
+  try {
+    const rate = await offchainOracle.methods.getRateToEth(srcToken, useSrcWrappers).call()
+    const numerator = toBN(10).pow(toBN(srcTokenDecimal))
+    const denominator = toBN(10).pow(toBN(18)) // eth decimals
+    rateFormated = toBN(rate).mul(numerator).div(denominator)//.div(denominator)
+  } catch(e){
+    throw new RelayerError("Can't get prices of " + srcToken, 1)
+  }
+  return rateFormated
 }
 
 function fromDecimals(value, decimals) {
@@ -152,7 +155,6 @@ const readRelayerErrors = async redis => {
 }
 
 module.exports = {
-  //getInstance,
   isETH,
   setSafeInterval,
   //poseidonHash2,
@@ -169,4 +171,5 @@ module.exports = {
   RelayerError,
   logRelayerError,
   readRelayerErrors,
+  getRateToEth
 }
