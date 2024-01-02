@@ -25,7 +25,7 @@ async function main() {
       throw new RelayerError('Can`t update prices', 1)
     }
     await redis.hmset('rates', ethRates)
-    console.log('Wrote following prices to redis', ethPrices)
+    console.log('Wrote following prices to redis', ethRates)
   } catch (e) {
     await logRelayerError(redis, e)
     console.error('priceWatcher error', e)

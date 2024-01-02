@@ -8,7 +8,7 @@ const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
 const {
   //poseidonHash2,
-  fromDecimals,
+  //fromDecimals,
   //sleep,
   toBN,
   toWei,
@@ -33,7 +33,7 @@ const {
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
-//const withdrawalProof = require('./modules/verifier')
+const withdrawalProof = require('./modules/verifier')
 
 let web3
 let currentTx
@@ -163,18 +163,17 @@ async function getTxObject({ data }) {
   const contract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
  
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    //let validProof = true
-    //const validProof = await withdrawalProof(data.args[0], data.asset, data.args[4], data.args[1], data.proof)
+    const validProof = await withdrawalProof(data.args[0], data.asset, data.args[4], data.args[1], data.proof)
    
-    //if(validProof){
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
     if(isETH(data.asset)){
       calldata = contract.methods.withdraw_eth(data.proof, ...data.args).encodeABI()
     }else{
       calldata = contract.methods.withdraw_erc20(data.asset, data.proof, ...data.args).encodeABI()
     }  
-    //}else{
-    //  throw new RelayerError('Invalid proof')
-    //}
+
     return {
       to: contract._address,
       data: calldata,
