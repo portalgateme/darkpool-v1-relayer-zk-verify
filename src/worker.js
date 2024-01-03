@@ -33,7 +33,7 @@ const {
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
-const withdrawalProof = require('./modules/verifier')
+const { withdrawalProof } = require('./modules/verifier')
 
 let web3
 let currentTx
@@ -163,15 +163,15 @@ async function getTxObject({ data }) {
   const contract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
  
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    const validProof = await withdrawalProof(data.args[0], data.asset, data.args[4], data.args[1], data.proof)
+    const validProof = await withdrawalProof(web3,data.proof,data.verifierArgs)
    
     if(!validProof){
         throw new RelayerError('Invalid proof')
     }
     if(isETH(data.asset)){
-      calldata = contract.methods.withdraw_eth(data.proof, ...data.args).encodeABI()
+      calldata = contract.methods.withdrawETH(data.proof, ...data.args).encodeABI()
     }else{
-      calldata = contract.methods.withdraw_erc20(data.asset, data.proof, ...data.args).encodeABI()
+      calldata = contract.methods.withdrawERC20(data.asset, data.proof, ...data.args).encodeABI()
     }  
 
     return {
@@ -223,14 +223,14 @@ async function processJob(job) {
     console.log(`Start processing a new ${job.data.type} job #${job.id}`)
     await submitTx(job)
   } catch (e) {
-    console.error('processJob', e.message)
+    console.error('processJob', e.message,e.stack)
     await updateStatus(status.FAILED)
     throw new RelayerError(e.message)
   }
 }
 
 async function submitTx(job, retry = 0) { 
-  await checkPgFee(job)
+  await checkPgFee(job.data)
 
   currentTx = await txManager.createTx(await getTxObject(job))
 

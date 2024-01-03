@@ -96,7 +96,7 @@ async function miningWithdraw(req, res) {
 module.exports = {
   pgDarkPoolWithdraw,
   pgDarkPoolUniswapSingleSwap,
-  pgDarkPoolUniswapMultihopSwap,
+  // pgDarkPoolUniswapMultihopSwap,
   pgDarkPoolUniswapLP,
   //miningReward,
   //miningWithdraw,

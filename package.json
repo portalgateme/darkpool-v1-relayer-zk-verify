@@ -17,7 +17,6 @@
   "author": "portalgate.me",
   "license": "MIT",
   "dependencies": {
-    "@portalgateme/darkpool-v1-proof": "file:.yalc/@portalgateme/darkpool-v1-proof",
     "ajv": "^6.12.5",
     "async-mutex": "^0.2.4",
     "bull": "^3.12.1",

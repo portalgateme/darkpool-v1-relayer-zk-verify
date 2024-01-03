@@ -15,7 +15,7 @@ async function main() {
     const ethRates = {}
     for (let i = 0; i < tokenAddresses.length; i++) {
       try {
-        const rateFormatted = getRateToEth(tokenAddresses[i],oneUintAmount,true)
+        const rateFormatted = getRateToEth(tokenAddresses[i],oneUintAmount[i],true)
         ethRates[currencyLookup[tokenAddresses[i]]] = rateFormatted.toString()
       } catch (e) {
         console.error('cant get price of ', tokenAddresses[i])

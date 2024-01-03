@@ -12,6 +12,7 @@ module.exports = {
   oracleRpcUrl: process.env.ORACLE_RPC_URL || 'https://mainnet.infura.io/',
   offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
   pgDarkPoolAssetManager: pgConfig[`netId${netId}`].pgDarkPoolAssetManager,
+  pgDarkPoolVerifierHub: pgConfig[`netId${netId}`].pgDarkPoolVerifierHub,
   //minerAddress: pgConfig[`netId${netId}`].miner,
   //minerMerkleTreeHeight: 20,
   privateKey: process.env.PRIVATE_KEY,

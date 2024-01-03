@@ -1,0 +1,707 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "assetPoolERC20",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "assetPoolETH",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "verifierHub",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "initialOwner",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "target",
+                "type": "address"
+            }
+        ],
+        "name": "AddressEmptyCode",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "AddressInsufficientBalance",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "FailedInnerCall",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnableInvalidOwner",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "OwnableUnauthorizedAccount",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            }
+        ],
+        "name": "SafeERC20FailedOperation",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "ASSET_ETH",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "P",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_asset",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_assetMod",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteCommitment",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            }
+        ],
+        "name": "depositERC20",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteCommitment",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            }
+        ],
+        "name": "depositETH",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAssetPoolERC20",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAssetPoolETH",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getVerifierHub",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_merkleRoot",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifierIn1",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifierIn2",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteOut1",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            }
+        ],
+        "name": "join",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_merkleRoot",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifierIn1",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifierIn2",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteOut1",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteOut2",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            }
+        ],
+        "name": "joinSplit",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "merkleNodes",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "merkleRoots",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "root",
+                "type": "bytes32"
+            }
+        ],
+        "name": "merkleRootsAllowed",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "allowed",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "commitment",
+                "type": "bytes32"
+            }
+        ],
+        "name": "noteCommitmentsCreated",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "created",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "nullifier",
+                "type": "bytes32"
+            }
+        ],
+        "name": "nullifiersUsed",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "used",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "assetPoolERC20",
+                "type": "address"
+            }
+        ],
+        "name": "setAssetPoolERC20",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "assetPoolETH",
+                "type": "address"
+            }
+        ],
+        "name": "setAssetPoolETH",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "feeManager",
+                "type": "address"
+            }
+        ],
+        "name": "setFeeManager",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "relayerManager",
+                "type": "address"
+            }
+        ],
+        "name": "setRelayerManager",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "verifierHub",
+                "type": "address"
+            }
+        ],
+        "name": "setVerifierHub",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_merkleRoot",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifierIn1",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteOut1",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteOut2",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            }
+        ],
+        "name": "split",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_merkleRoot",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_aliceNullifier",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_aliceOut",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_bobNullifier",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_bobOut",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            }
+        ],
+        "name": "swap",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_merkleRoot",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifierIn",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_noteOut",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            }
+        ],
+        "name": "transfer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_asset",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_assetMod",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_merkleRoot",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifier",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "_recipient",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_relayer",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_fee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_refund",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdrawERC20",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes",
+                "name": "_proof",
+                "type": "bytes"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_merkleRoot",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_nullifier",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address payable",
+                "name": "_recipient",
+                "type": "address"
+            },
+            {
+                "internalType": "address payable",
+                "name": "_relayer",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_fee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_refund",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdrawETH",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

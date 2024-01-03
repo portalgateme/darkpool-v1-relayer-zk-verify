@@ -29,10 +29,10 @@ ajv.addKeyword('isAddress', {
 })*/
 
 ajv.addKeyword('isETH', {
-  validate: (schema, data) =>{
-    try{
+  validate: (schema, data) => {
+    try {
       return isETH(data)
-    }catch (e){
+    } catch (e) {
       return false
     }
   },
@@ -55,7 +55,7 @@ const proofType = { type: 'string', pattern: '^0x[a-fA-F0-9]{4288}$' }
 //const encryptedAccountType = { type: 'string', pattern: '^0x[a-fA-F0-9]{392}$' }
 const bytes32Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{64}$' }
 //const instanceType = { ...addressType, isKnownContract: true }
-const assetType = { ...addressType, isETH: true}
+const assetType = { ...addressType, isETH: true }
 const relayerType = { ...addressType, isFeeRecipient: true }
 
 const pgDarkPoolWithdrawSchema = {
@@ -63,13 +63,18 @@ const pgDarkPoolWithdrawSchema = {
   properties: {
     asset: assetType,
     proof: proofType,
-    //contract: instanceType,
     args: {
       type: 'array',
       maxItems: 7,
       minItems: 7,
-      items: [bytes32Type, bytes32Type, addressType, relayerType, bytes32Type ,bytes32Type, bytes32Type],
+      items: [bytes32Type, bytes32Type, addressType, relayerType, bytes32Type, bytes32Type, bytes32Type],
     },
+    verifierArgs: {
+      type: 'array',
+      maxItems: 5,
+      minItems: 5,
+      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+    }
   },
   additionalProperties: false,
   required: ['asset', 'proof', 'args'],
@@ -85,8 +90,8 @@ const pgDarkPoolUniswapSSSchema = {
       type: 'array',
       maxItems: 8,
       minItems: 8,
-      items: [bytes32Type, bytes32Type, assetType, relayerType, 
-              bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+      items: [bytes32Type, bytes32Type, assetType, relayerType,
+        bytes32Type, bytes32Type, bytes32Type, bytes32Type],
     },
   },
   additionalProperties: false,
@@ -105,8 +110,8 @@ const pgDarkPoolUniswapLPSchema = {
       type: 'array',
       maxItems: 12,
       minItems: 12,
-      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type, relayerType, 
-              bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type, relayerType,
+        bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type],
     },
   },
   additionalProperties: false,
