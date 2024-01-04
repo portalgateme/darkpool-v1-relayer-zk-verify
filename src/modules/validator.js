@@ -62,13 +62,15 @@ const pgDarkPoolWithdrawSchema = {
   type: 'object',
   properties: {
     asset: assetType,
+    assetMod: bytes32Type,
     proof: proofType,
-    args: {
-      type: 'array',
-      maxItems: 7,
-      minItems: 7,
-      items: [bytes32Type, bytes32Type, addressType, relayerType, bytes32Type, bytes32Type, bytes32Type],
-    },
+    merkleRoot:bytes32Type,
+    nullifier: bytes32Type,
+    recipient: addressType,
+    relayer: addressType,
+    amount: bytes32Type,
+    fee: bytes32Type,
+    refund: bytes32Type,
     verifierArgs: {
       type: 'array',
       maxItems: 5,
@@ -77,7 +79,7 @@ const pgDarkPoolWithdrawSchema = {
     }
   },
   additionalProperties: false,
-  required: ['asset', 'proof', 'args'],
+  required: ['asset', 'assetMod', 'proof', 'merkleRoot', 'nullifier', 'recipient', 'relayer', 'amount', 'verifierArgs'],
 }
 
 const pgDarkPoolUniswapSSSchema = {

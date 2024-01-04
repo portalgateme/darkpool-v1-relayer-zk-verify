@@ -116,18 +116,25 @@ async function getGasPrice() {
   return toBN(toWei(fast.toString(), 'gwei'))
 }
 
-async function checkPgFee({ args, asset }) {
+async function checkPgFee(asset, amount, fee, refund) {
   const isEth = isETH(asset)
-  const [amount, fee, refund] = args.slice(-3).map(toBN)
   const gasPrice = await getGasPrice()
   const expense = gasPrice.mul(toBN(gasLimits[jobType.PG_DARKPOOL_WITHDRAW]))
+
+  amount = toBN(amount)
+  fee = toBN(fee)
+  refund = toBN(refund)
+  
+  if(fee.lt(refund) || amount.lt(fee) ){
+    throw new RelayerError('Provided fee is not enough. Probably it is a Gas Price spike, try to resubmit.' , 0)
+  }
 
   let serviceFee
   let desiredFee
   let decimals
 
   if(isEth){
-    serviceFee = toBN(amount).mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100)) 
+    serviceFee = amount.mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100)) 
     decimals = 18
   } else{
     const erc20 = new web3.eth.Contract(erc20ABI, toChecksumAddress(asset))
@@ -169,9 +176,9 @@ async function getTxObject({ data }) {
         throw new RelayerError('Invalid proof')
     }
     if(isETH(data.asset)){
-      calldata = contract.methods.withdrawETH(data.proof, ...data.args).encodeABI()
+      calldata = contract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount).encodeABI()
     }else{
-      calldata = contract.methods.withdrawERC20(data.asset, data.proof, ...data.args).encodeABI()
+      calldata = contract.methods.withdrawERC20(data.asset, data.assetMod, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount).encodeABI()
     }  
 
     return {
@@ -230,7 +237,7 @@ async function processJob(job) {
 }
 
 async function submitTx(job, retry = 0) { 
-  await checkPgFee(job.data)
+  await checkPgFee(job.data.asset, job.data.amount, job.data.fee, job.data.refund)
 
   currentTx = await txManager.createTx(await getTxObject(job))
 

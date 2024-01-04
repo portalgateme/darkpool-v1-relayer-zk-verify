@@ -639,16 +639,6 @@
                 "internalType": "uint256",
                 "name": "_amount",
                 "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_fee",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_refund",
-                "type": "uint256"
             }
         ],
         "name": "withdrawERC20",
@@ -686,16 +676,6 @@
             {
                 "internalType": "uint256",
                 "name": "_amount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_fee",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_refund",
                 "type": "uint256"
             }
         ],
