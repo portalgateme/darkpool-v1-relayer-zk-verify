@@ -7,7 +7,7 @@ const {
   //getMiningWithdrawInputError
 } = require('../modules/validator')
 const { postJob } = require('../queue')
-const { jobType } = require('../constants')
+const { jobType } = require('../config/constants')
 
 async function pgDarkPoolWithdraw(req, res) {
   const inputError = getPgDarkPoolWithdrawInputError(req.body)

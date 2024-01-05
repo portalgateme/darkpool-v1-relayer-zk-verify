@@ -19,7 +19,7 @@ const {
   toChecksumAddress,
   getRateToEth,
 } = require('./utils')
-const { jobType, status } = require('./constants')
+const { jobType, status } = require('./config/constants')
 const {
   pgDarkPoolAssetManager,
   //minerAddress,
@@ -29,11 +29,11 @@ const {
   oracleRpcUrl,
   baseFeeReserve,
   pgServiceFee,
-} = require('./config')
+} = require('./config/config')
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
-const { withdrawalProof } = require('./modules/verifier')
+const { zkProofVerifier } = require('./modules/verifier')
 
 let web3
 let currentTx
@@ -170,8 +170,7 @@ async function getTxObject({ data }) {
   const contract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
  
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    const validProof = await withdrawalProof(web3,data.proof,data.verifierArgs)
-   
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_WITHDRAW)
     if(!validProof){
         throw new RelayerError('Invalid proof')
     }
@@ -180,27 +179,67 @@ async function getTxObject({ data }) {
     }else{
       calldata = contract.methods.withdrawERC20(data.asset, data.assetMod, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount).encodeABI()
     }  
-
     return {
       to: contract._address,
       data: calldata,
       gasLimit: gasLimits['WITHDRAW_WITH_EXTRA'],
     }
   } else if(data.type === jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP){
-    calldata = contract.methods.uniswap_ss(data.asset, data.proof, ...data.args).encodeABI()
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP)
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
+    //calldata = contract.methods.uniswap_ss(data.asset, data.assetMod, data.proof, ...data.args).encodeABI()
     return {
       to: contract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
   } else if(data.type === jobType.PG_DARKPOOL_UNISWAP_LP){
-    calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
+    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
     return {
       to: contract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
   
+  } else if(data.type === jobType.PG_DARKPOOL_CURVE_STABLESWAP){
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
+    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    return {
+      to: contract._address,
+      data: calldata,
+      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
+    }
+  } else if(data.type === jobType.PG_DARKPOOL_CURVE_LP){
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
+    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    return {
+      to: contract._address,
+      data: calldata,
+      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
+    }
+  } else if(data.type === jobType.PG_DARKPOOL_1INCH_SWAP){
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
+    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    return {
+      to: contract._address,
+      data: calldata,
+      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
+    }
   } else {
       throw new RelayerError(`Unknown job type: ${data.type}`)
   }

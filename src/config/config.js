@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const { jobType } = require('./constants')
-const pgConfig = require('./config/pgDarkPoolConfig')
+const pgConfig = require('./pgDarkPoolConfig')
 
 const netId = Number(process.env.NET_ID) || 1
 

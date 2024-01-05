@@ -1,6 +1,6 @@
 //const { poseidon } = require('circomlib')
 const { toBN, toChecksumAddress, BN, fromWei, isAddress, toWei } = require('web3-utils')
-const { offchainOracleAddress } = require('./config')
+const { offchainOracleAddress } = require('./config/config')
 const web3 = require('./modules/web3')('oracle')
 const offchainOracleABI = require('../abis/OffchainOracle.abi.json')
 const offchainOracle = new web3.eth.Contract(offchainOracleABI, offchainOracleAddress)

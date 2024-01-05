@@ -1,5 +1,5 @@
 const express = require('express')
-const { port, rewardAccount } = require('./config')
+const { port, rewardAccount } = require('./config/config')
 const { version } = require('../package.json')
 const { isAddress } = require('./utils')
 const router = require('./router')

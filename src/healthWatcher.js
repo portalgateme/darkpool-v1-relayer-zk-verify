@@ -1,5 +1,5 @@
 const { setSafeInterval, toBN, fromWei, RelayerError } = require('./utils')
-const { privateKey, minimumBalance } = require('./config')
+const { privateKey, minimumBalance } = require('./config/config')
 const { redis } = require('./modules/redis')
 const web3 = require('./modules/web3')()
 

@@ -1,5 +1,5 @@
 /*const MerkleTree = require('fixed-merkle-tree')
-const { minerMerkleTreeHeight, netId, minerAddress, deployedBlock } = require('./config')
+const { minerMerkleTreeHeight, netId, minerAddress, deployedBlock } = require('./config/config')
 const { poseidonHash2, toBN, logRelayerError } = require('./utils')
 const web3 = require('./modules/web3')('ws')
 const MinerABI = require('../abis/mining.abi.json')

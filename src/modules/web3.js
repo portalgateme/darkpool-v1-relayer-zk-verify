@@ -1,5 +1,5 @@
 const Web3 = require('web3')
-const { oracleRpcUrl, httpRpcUrl } = require('../config')
+const { oracleRpcUrl, httpRpcUrl } = require('../config/config')
 const getWeb3 = (type = 'http') => {
   let url
   switch (type) {

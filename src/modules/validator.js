@@ -1,7 +1,7 @@
 const { isAddress, toChecksumAddress } = require('web3-utils')
 //const { getInstance } = require('../utils')
 const { isETH } = require('../utils')
-const { rewardAccount } = require('../config')
+const { rewardAccount } = require('../config/config')
 
 const Ajv = require('ajv')
 const ajv = new Ajv({ format: 'fast' })
@@ -54,6 +54,8 @@ const addressType = { type: 'string', pattern: '^0x[a-fA-F0-9]{40}$', isAddress:
 const proofType = { type: 'string', pattern: '^0x[a-fA-F0-9]{4288}$' }
 //const encryptedAccountType = { type: 'string', pattern: '^0x[a-fA-F0-9]{392}$' }
 const bytes32Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{64}$' }
+const int24Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{6}$' }
+
 //const instanceType = { ...addressType, isKnownContract: true }
 const assetType = { ...addressType, isETH: true }
 const relayerType = { ...addressType, isFeeRecipient: true }
@@ -67,15 +69,15 @@ const pgDarkPoolWithdrawSchema = {
     merkleRoot:bytes32Type,
     nullifier: bytes32Type,
     recipient: addressType,
-    relayer: addressType,
+    relayer: relayerType,
     amount: bytes32Type,
     fee: bytes32Type,
     refund: bytes32Type,
     verifierArgs: {
       type: 'array',
-      maxItems: 5,
-      minItems: 5,
-      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+      maxItems: 6,
+      minItems: 6,
+      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
     }
   },
   additionalProperties: false,
@@ -86,18 +88,27 @@ const pgDarkPoolUniswapSSSchema = {
   type: 'object',
   properties: {
     asset: assetType,
+    assetMod: bytes32Type,
     proof: proofType,
     //contract: instanceType,
-    args: {
+    merkleRoot:bytes32Type,
+    nullifier: bytes32Type,
+    assetOut: assetType,
+    relayer: relayerType,
+    amount: bytes32Type,
+    fee: bytes32Type,
+    refund: bytes32Type,
+   
+    verifierArgs: {
       type: 'array',
-      maxItems: 8,
-      minItems: 8,
-      items: [bytes32Type, bytes32Type, assetType, relayerType,
-        bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+      maxItems: 5,
+      minItems: 5,
+      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
     },
+    
   },
   additionalProperties: false,
-  required: ['asset', 'proof', 'args'],
+  required: ['asset', 'assetMod', 'proof', 'merkleRoot', 'nullifier', 'assetOut', 'relayer', 'amount', 'verifierArgs'],
 }
 
 const pgDarkPoolUniswapLPSchema = {
@@ -108,12 +119,31 @@ const pgDarkPoolUniswapLPSchema = {
     asset2: assetType,
     proof2: proofType,
     //contract: instanceType,
-    args: {
+    merkleRoot1:bytes32Type,
+    nullifier1: bytes32Type,
+    merkleRoot2:bytes32Type,
+    nullifier2: bytes32Type,
+    relayer: relayerType,
+    amount: bytes32Type,
+    amount2: bytes32Type,
+    tickMin: int24Type,
+    tickMax:int24Type,
+    poolFee: bytes32Type,
+    fee: bytes32Type,
+    refund: bytes32Type,
+
+    verifierArgs1: {
       type: 'array',
-      maxItems: 12,
-      minItems: 12,
-      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type, relayerType,
-        bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+      maxItems: 5,
+      minItems: 5,
+      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
+    },
+
+    verifierArgs2: {
+      type: 'array',
+      maxItems: 5,
+      minItems: 5,
+      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
     },
   },
   additionalProperties: false,
