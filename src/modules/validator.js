@@ -1,5 +1,4 @@
 const { isAddress, toChecksumAddress } = require('web3-utils')
-//const { getInstance } = require('../utils')
 const { isETH } = require('../utils')
 const { rewardAccount } = require('../config/config')
 
@@ -16,17 +15,6 @@ ajv.addKeyword('isAddress', {
   },
   errors: true,
 })
-
-/*ajv.addKeyword('isKnownContract', {
-  validate: (schema, data) => {
-    try {
-      return !!getInstance(data)
-    } catch (e) {
-      return false
-    }
-  },
-  errors: true,
-})*/
 
 ajv.addKeyword('isETH', {
   validate: (schema, data) => {
@@ -54,9 +42,8 @@ const addressType = { type: 'string', pattern: '^0x[a-fA-F0-9]{40}$', isAddress:
 const proofType = { type: 'string', pattern: '^0x[a-fA-F0-9]{4288}$' }
 //const encryptedAccountType = { type: 'string', pattern: '^0x[a-fA-F0-9]{392}$' }
 const bytes32Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{64}$' }
-const int24Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{6}$' }
-
-//const instanceType = { ...addressType, isKnownContract: true }
+const Uint256Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{1,64}$' }
+const int24Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{1,6}$' }
 const assetType = { ...addressType, isETH: true }
 const relayerType = { ...addressType, isFeeRecipient: true }
 
@@ -64,87 +51,76 @@ const pgDarkPoolWithdrawSchema = {
   type: 'object',
   properties: {
     asset: assetType,
-    assetMod: bytes32Type,
     proof: proofType,
     merkleRoot:bytes32Type,
     nullifier: bytes32Type,
     recipient: addressType,
     relayer: relayerType,
-    amount: bytes32Type,
+    amount: Uint256Type,
     fee: bytes32Type,
     refund: bytes32Type,
     verifierArgs: {
       type: 'array',
       maxItems: 6,
       minItems: 6,
-      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
+      items: [addressType, bytes32Type, assetType, Uint256Type, bytes32Type],
     }
   },
   additionalProperties: false,
-  required: ['asset', 'assetMod', 'proof', 'merkleRoot', 'nullifier', 'recipient', 'relayer', 'amount', 'verifierArgs'],
+  required: ['asset', 'proof', 'merkleRoot', 'nullifier', 'recipient', 'relayer', 'amount', 'verifierArgs'],
 }
 
 const pgDarkPoolUniswapSSSchema = {
   type: 'object',
   properties: {
     asset: assetType,
-    assetMod: bytes32Type,
     proof: proofType,
-    //contract: instanceType,
     merkleRoot:bytes32Type,
     nullifier: bytes32Type,
     assetOut: assetType,
+    noteFooterOut:bytes32Type,
     relayer: relayerType,
-    amount: bytes32Type,
+    amount: Uint256Type,
     fee: bytes32Type,
     refund: bytes32Type,
    
     verifierArgs: {
       type: 'array',
-      maxItems: 5,
-      minItems: 5,
-      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
+      maxItems: 6,
+      minItems: 6,
+      items: [bytes32Type, assetType, assetType, bytes32Type,Uint256Type, bytes32Type],
     },
     
   },
   additionalProperties: false,
-  required: ['asset', 'assetMod', 'proof', 'merkleRoot', 'nullifier', 'assetOut', 'relayer', 'amount', 'verifierArgs'],
+  required: ['asset', 'proof', 'merkleRoot', 'nullifier', 'assetOut', 'relayer', 'amount', 'verifierArgs'],
 }
 
 const pgDarkPoolUniswapLPSchema = {
   type: 'object',
   properties: {
     asset1: assetType,
-    proof1: proofType,
     asset2: assetType,
-    proof2: proofType,
-    //contract: instanceType,
-    merkleRoot1:bytes32Type,
+    proof: proofType,
+    merkleRoot:bytes32Type,
     nullifier1: bytes32Type,
-    merkleRoot2:bytes32Type,
     nullifier2: bytes32Type,
+    noteFooterOut:bytes32Type,
     relayer: relayerType,
-    amount: bytes32Type,
-    amount2: bytes32Type,
+    amount1: Uint256Type,
+    amount2: Uint256Type,
     tickMin: int24Type,
     tickMax:int24Type,
     poolFee: bytes32Type,
     fee: bytes32Type,
     refund: bytes32Type,
 
-    verifierArgs1: {
+    verifierArgs: {
       type: 'array',
-      maxItems: 5,
-      minItems: 5,
-      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
-    },
-
-    verifierArgs2: {
-      type: 'array',
-      maxItems: 5,
-      minItems: 5,
-      items: [addressType, bytes32Type, assetType, bytes32Type, bytes32Type],
-    },
+      maxItems: 10,
+      minItems: 10,
+      items: [bytes32Type, assetType, assetType, Uint256Type, Uint256Type,bytes32Type, int24Type,int24Type, bytes32Type, bytes32Type],
+    }
   },
   additionalProperties: false,
   required: ['asset', 'proof', 'args'],
