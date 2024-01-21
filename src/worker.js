@@ -1,15 +1,12 @@
 const fs = require('fs')
-//const MerkleTree = require('fixed-merkle-tree')
 const { GasPriceOracle } = require('gas-price-oracle')
-//const { Controller } = require('tornado-anonymity-mining')
-//const miningABI = require('../abis/mining.abi.json')
 const pgDarkPoolABI = require('../abis/pgDarkPool.abi')
+const pgDarkPoolUniswapABI = require('../abis/pgDarkPoolUniswap.abi')
+const pgDarkPoolCurveABI = require('../abis/pgDarkPoolCurve.abi')
+
 const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
 const {
-  //poseidonHash2,
-  //fromDecimals,
-  //sleep,
   toBN,
   toWei,
   fromWei,
@@ -22,7 +19,6 @@ const {
 const { jobType, status } = require('./config/constants')
 const {
   pgDarkPoolAssetManager,
-  //minerAddress,
   gasLimits,
   privateKey,
   httpRpcUrl,
@@ -38,39 +34,9 @@ const { zkProofVerifier } = require('./modules/verifier')
 let web3
 let currentTx
 let currentJob
-//let tree
 let txManager
-//let controller
-//let minerContract
 const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
 
-/*async function fetchTree() {
-  const elements = await redis.get('tree:elements')
-  const convert = (_, val) => (typeof val === 'string' ? toBN(val) : val)
-  tree = MerkleTree.deserialize(JSON.parse(elements, convert), poseidonHash2)
-
-  if (currentTx && currentJob && ['MINING_REWARD', 'MINING_WITHDRAW'].includes(currentJob.data.type)) {
-    const { proof, args } = currentJob.data
-    if (toBN(args.account.inputRoot).eq(toBN(tree.root()))) {
-      console.log('Account root is up to date. Skipping Root Update operation...')
-      return
-    } else {
-      console.log('Account root is outdated. Starting Root Update operation...')
-    }
-
-    const update = await controller.treeUpdate(args.account.outputCommitment, tree)
-    const instance = new web3.eth.Contract(miningABI, minerAddress)
-    const data =
-      currentJob.data.type === 'MINING_REWARD'
-        ? instance.methods.reward(proof, args, update.proof, update.args).encodeABI()
-        : instance.methods.withdraw(proof, args, update.proof, update.args).encodeABI()
-    await currentTx.replace({
-      to: minerAddress,
-      data,
-    })
-    console.log('replaced pending tx')
-  }
-}*/
 
 async function start() {
   try {
@@ -87,15 +53,6 @@ async function start() {
         BASE_FEE_RESERVE_PERCENTAGE: baseFeeReserve,
       },
     })
-    //minerContract = new web3.eth.Contract(miningABI, minerAddress)
-    //redisSubscribe.subscribe('treeUpdate', fetchTree)
-    //await fetchTree()
-   /* const provingKeys = {
-      treeUpdateCircuit: require('../keys/TreeUpdate.json'),
-      treeUpdateProvingKey: fs.readFileSync('./keys/TreeUpdate_proving_key.bin').buffer,
-    }*/
-    //controller = new Controller({ provingKeys })
-    //await controller.init()
     queue.process(processJob)
     console.log('Worker started')
   } catch (e) {
@@ -167,7 +124,9 @@ async function checkPgFee(asset, amount, fee, refund) {
 
 async function getTxObject({ data }) {
   let calldata
-  const contract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
+  const darkPoolContract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
+  const uniswapContract = new web3.eth.Contract(pgDarkPoolUniswapABI, pgDarkPoolUniswapAssetManager)
+  const curveContract = new web3.eth.Contract(pgDarkPoolCurveABI, pgDarkPoolCurveAssetManager)
  
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
     const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_WITHDRAW)
@@ -175,12 +134,12 @@ async function getTxObject({ data }) {
         throw new RelayerError('Invalid proof')
     }
     if(isETH(data.asset)){
-      calldata = contract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount).encodeABI()
+      calldata = darkPoolContract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount).encodeABI()
     }else{
-      calldata = contract.methods.withdrawERC20(data.asset, data.assetMod, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount).encodeABI()
+      calldata = darkPoolContract.methods.withdrawERC20(data.asset, data.assetMod, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount).encodeABI()
     }  
     return {
-      to: contract._address,
+      to: darkPoolContract._address,
       data: calldata,
       gasLimit: gasLimits['WITHDRAW_WITH_EXTRA'],
     }
@@ -189,32 +148,53 @@ async function getTxObject({ data }) {
     if(!validProof){
         throw new RelayerError('Invalid proof')
     }
-    //calldata = contract.methods.uniswap_ss(data.asset, data.assetMod, data.proof, ...data.args).encodeABI()
+    //calldata = uniswapContract.methods.uniswap_ss().encodeABI()
     return {
-      to: contract._address,
+      to: uniswapContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
   } else if(data.type === jobType.PG_DARKPOOL_UNISWAP_LP){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_LP)
     if(!validProof){
         throw new RelayerError('Invalid proof')
     }
-    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    //calldata = uniswapContract.methods.uniswap_lp().encodeABI()
     return {
-      to: contract._address,
+      to: uniswapContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  
-  } else if(data.type === jobType.PG_DARKPOOL_CURVE_STABLESWAP){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
+  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING){
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING)
     if(!validProof){
         throw new RelayerError('Invalid proof')
     }
-    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    //calldata = uniswapContract.methods.().encodeABI()
     return {
-      to: contract._address,
+      to: uniswapContract._address,
+      data: calldata,
+      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
+    }
+  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY){
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY)
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
+    //calldata = uniswapContract.methods.().encodeABI()
+    return {
+      to: uniswapContract._address,
+      data: calldata,
+      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
+    }
+  } else if(data.type === jobType.PG_DARKPOOL_CURVE_EXCHANGE){
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_EXCHANGE)
+    if(!validProof){
+        throw new RelayerError('Invalid proof')
+    }
+    //calldata = curveContract.methods.curveExchange().encodeABI()
+    return {
+      to: curveContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
@@ -223,18 +203,18 @@ async function getTxObject({ data }) {
     if(!validProof){
         throw new RelayerError('Invalid proof')
     }
-    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    //calldata = curveContract.methods.curveLP().encodeABI()
     return {
-      to: contract._address,
+      to: curveContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if(data.type === jobType.PG_DARKPOOL_1INCH_SWAP){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
+  } else if(data.type === jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY){
+    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY)
     if(!validProof){
         throw new RelayerError('Invalid proof')
     }
-    //calldata = contract.methods.uniswap_lp(data.asset1, data.proof1,data.asset2, data.proof2, ...data.args).encodeABI()
+    //calldata = curveContract.methods.curveRemoveLiquidity().encodeABI()
     return {
       to: contract._address,
       data: calldata,
@@ -280,10 +260,6 @@ async function submitTx(job, retry = 0) {
 
   currentTx = await txManager.createTx(await getTxObject(job))
 
-  /*if (job.data.type !== jobType.PORTALGATE_WITHDRAW) {
-    await fetchTree()
-  }*/
-
   try {
     const receipt = await currentTx
       .send()
@@ -300,35 +276,10 @@ async function submitTx(job, retry = 0) {
     if (receipt.status === 1) {
       await updateStatus(status.CONFIRMED)
     } else {
-      /*if (job.data.type !== jobType.PORTALGATE_WITHDRAW && (await isOutdatedTreeRevert(receipt, currentTx))) {
-        if (retry < 3) {
-          await updateStatus(status.RESUBMITTED)
-          await submitTx(job, retry + 1)
-        } else {
-          throw new RelayerError('Tree update retry limit exceeded')
-        }
-      } else {*/
       throw new RelayerError('Submitted transaction failed')
-      //}
     }
   } catch (e) {
-    // todo this could result in duplicated error logs
-    // todo handle a case where account tree is still not up to date (wait and retry)?
-    /*if (
-      job.data.type !== jobType.PORTALGATE_WITHDRAW &&
-      (e.message.indexOf('Outdated account merkle root') !== -1 ||
-        e.message.indexOf('Outdated tree update merkle root') !== -1)
-    ) {
-      if (retry < 5) {
-        await sleep(3000)
-        console.log('Tree is still not up to date, resubmitting')
-        await submitTx(job, retry + 1)
-      } else {
-        throw new RelayerError('Tree update retry limit exceeded')
-      }
-    } else {*/
     throw new RelayerError(`Revert by smart contract ${e.message}`)
-    //}
   }
 }
 

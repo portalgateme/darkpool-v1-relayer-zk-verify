@@ -67,7 +67,10 @@ const pgDarkPoolWithdrawSchema = {
     }
   },
   additionalProperties: false,
-  required: ['asset', 'proof', 'merkleRoot', 'nullifier', 'recipient', 'relayer', 'amount', 'verifierArgs'],
+  required: [
+              'asset', 'proof', 'merkleRoot', 'nullifier', 
+              'recipient', 'relayer', 'amount', 'verifierArgs'
+            ],
 }
 
 const pgDarkPoolUniswapSSSchema = {
@@ -90,10 +93,12 @@ const pgDarkPoolUniswapSSSchema = {
       minItems: 6,
       items: [bytes32Type, assetType, assetType, bytes32Type,Uint256Type, bytes32Type],
     },
-    
   },
   additionalProperties: false,
-  required: ['asset', 'proof', 'merkleRoot', 'nullifier', 'assetOut', 'relayer', 'amount', 'verifierArgs'],
+  required: [
+              'asset', 'proof', 'merkleRoot', 'nullifier', 
+              'assetOut', 'relayer', 'amount', 'verifierArgs'
+            ],
 }
 
 const pgDarkPoolUniswapLPSchema = {
@@ -119,128 +124,161 @@ const pgDarkPoolUniswapLPSchema = {
       type: 'array',
       maxItems: 10,
       minItems: 10,
-      items: [bytes32Type, assetType, assetType, Uint256Type, Uint256Type,bytes32Type, int24Type,int24Type, bytes32Type, bytes32Type],
+      items: [
+                bytes32Type, assetType, assetType, Uint256Type, Uint256Type,
+                bytes32Type, int24Type,int24Type, bytes32Type, bytes32Type
+              ],
     }
   },
   additionalProperties: false,
   required: ['asset', 'proof', 'args'],
 }
 
+const pgDarkPoolUniswapFeeCollectingSchema = {}
+const pgDarkPoolUniswapRemoveLiquiditySchema ={}
 
-/*const miningRewardSchema = {
+const pgDarkPoolCurveExchangeSchema = {
   type: 'object',
   properties: {
     proof: proofType,
-    args: {
-      type: 'object',
-      properties: {
-        rate: bytes32Type,
-        fee: bytes32Type,
-        instance: instanceType,
-        rewardNullifier: bytes32Type,
-        extDataHash: bytes32Type,
-        depositRoot: bytes32Type,
-        withdrawalRoot: bytes32Type,
-        extData: {
-          type: 'object',
-          properties: {
-            relayer: relayerType,
-            encryptedAccount: encryptedAccountType,
-          },
-          additionalProperties: false,
-          required: ['relayer', 'encryptedAccount'],
-        },
-        account: {
-          type: 'object',
-          properties: {
-            inputRoot: bytes32Type,
-            inputNullifierHash: bytes32Type,
-            outputRoot: bytes32Type,
-            outputPathIndices: bytes32Type,
-            outputCommitment: bytes32Type,
-          },
-          additionalProperties: false,
-          required: [
-            'inputRoot',
-            'inputNullifierHash',
-            'outputRoot',
-            'outputPathIndices',
-            'outputCommitment',
-          ],
-        },
-      },
-      additionalProperties: false,
-      required: [
-        'rate',
-        'fee',
-        'instance',
-        'rewardNullifier',
-        'extDataHash',
-        'depositRoot',
-        'withdrawalRoot',
-        'extData',
-        'account',
-      ],
+    merkleRoot:bytes32Type,
+    nullifier: bytes32Type,
+    assetIn: assetType,
+    amountIn: Uint256Type,
+    pool: addressType,
+    assetOut: assetType,
+    noteFooter:bytes32Type,
+    relayer: relayerType,
+    fee: bytes32Type,
+    refund: bytes32Type,
+   
+    verifierArgs: {
+      type: 'array',
+      maxItems: 6,
+      minItems: 6,
+      items: [
+                bytes32Type, assetType, Uint256Type, bytes32Type,
+                addressType,assetType, bytes32Type
+              ],
     },
   },
   additionalProperties: false,
-  required: ['proof', 'args'],
+  required: [
+              'proof', 'merkleRoot', 'nullifier', 'assetIn', 'amoutIn',
+              'pool','assetOut', 'noteFooter','relayer', 'verifierArgs'
+            ],
 }
 
-const miningWithdrawSchema = {
+const pgDarkPoolCurveLPSchema = {
   type: 'object',
   properties: {
     proof: proofType,
-    args: {
-      type: 'object',
-      properties: {
-        amount: bytes32Type,
-        extDataHash: bytes32Type,
-        extData: {
-          type: 'object',
-          properties: {
-            fee: bytes32Type,
-            recipient: addressType,
-            relayer: relayerType,
-            encryptedAccount: encryptedAccountType,
-          },
-          additionalProperties: false,
-          required: ['fee', 'relayer', 'encryptedAccount', 'recipient'],
-        },
-        account: {
-          type: 'object',
-          properties: {
-            inputRoot: bytes32Type,
-            inputNullifierHash: bytes32Type,
-            outputRoot: bytes32Type,
-            outputPathIndices: bytes32Type,
-            outputCommitment: bytes32Type,
-          },
-          additionalProperties: false,
-          required: [
-            'inputRoot',
-            'inputNullifierHash',
-            'outputRoot',
-            'outputPathIndices',
-            'outputCommitment',
-          ],
-        },
-      },
-      additionalProperties: false,
-      required: ['amount', 'extDataHash', 'extData', 'account'],
+    merkleRoot:bytes32Type,
+    nullifiers: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type]
+    },
+    assets: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: [assetType, assetType, assetType, assetType]
+    },
+    amounts: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
+    },
+    pool: addressType,
+    noteFooters:{
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type]
+    },
+    relayer: relayerType,
+    fee: bytes32Type,
+    refund: bytes32Type,
+   
+    verifierArgs: {
+      type: 'array',
+      maxItems: 6,
+      minItems: 6,
+      items: [
+                bytes32Type,
+                [bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+                [assetType, assetType, assetType, assetType],
+                [Uint256Type, Uint256Type, Uint256Type, Uint256Type],
+                addressType,
+                [bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+              ],
     },
   },
   additionalProperties: false,
-  required: ['proof', 'args'],
-}*/
+  required: [
+              'proof', 'merkleRoot', 'nullifiers', 'assets', 'amouts',
+              'pool','noteFooters','relayer', 'verifierArgs'
+            ],
+}
+
+const pgDarkPoolCurveRemoveLiquiditySchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot:bytes32Type,
+    nullifier: bytes32Type,
+    asset: assetType,
+    amount: Uint256Type,
+    pool: addressType,
+    assetsOut: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
+    },
+    noteFooters:{
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type]
+    },
+    relayer: relayerType,
+    fee: bytes32Type,
+    refund: bytes32Type,
+   
+    verifierArgs: {
+      type: 'array',
+      maxItems: 7,
+      minItems: 7,
+      items: [
+                bytes32Type,
+                bytes32Type,
+                assetType,
+                Uint256Type,
+                addressType,
+                [assetType,assetType, assetType, assetType],
+                [bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+              ],
+    },
+  },
+  additionalProperties: false,
+  required: [
+              'proof', 'merkleRoot', 'nullifier', 'asset', 'amout',
+              'pool','assetsOut', 'noteFooters','relayer', 'verifierArgs'
+            ],
+}
 
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
 const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
 const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
-//const validatePgDarkPoolUniswapMS = ajv.compile(pgDarkPoolUniswapMSSchema)
-
-//const validateMiningReward = ajv.compile(miningRewardSchema)
-//const validateMiningWithdraw = ajv.compile(miningWithdrawSchema)
+const validatePgDarkPoolUniswapFeeCollecting = ajv.compile(pgDarkPoolUniswapFeeCollectingSchema)
+const validatePgDarkPoolUniswapRemoveLiquidity = ajv.compile(pgDarkPoolUniswapRemoveLiquiditySchema)
+const validatePgDarkPoolCurveExchange = ajv.compile(pgDarkPoolCurveExchangeSchema)
+const validatePgDarkPoolCurveLP = ajv.compile(pgDarkPoolCurveLPSchema)
+const validatePgDarkPoolCurveRemoveLiquidity = ajv.compile(pgDarkPoolCurveRemoveLiquiditySchema)
 
 function getInputError(validator, data) {
   validator(data)
@@ -264,24 +302,33 @@ function getPgDarkPoolUniswapLPInputError(data) {
   return getInputError(validatePgDarkPoolUniswapLP, data)
 }
 
-/*function getPgDarkPoolUniswapMSInputError(data) {
-  return getInputError(validatePgDarkPoolUniswapMS, data)
-}*/
-
-
-/*function getMiningRewardInputError(data) {
-  return getInputError(validateMiningReward, data)
+function getPgDarkPoolUniswapFeeCollectingInputError(data) {
+  return getInputError(validatePgDarkPoolUniswapFeeCollecting, data)
 }
 
-function getMiningWithdrawInputError(data) {
-  return getInputError(validateMiningWithdraw, data)
-}*/
+function getPgDarkPoolUniswapRemoveLiquidityInputError(data) {
+  return getInputError(validatePgDarkPoolUniswapRemoveLiquidity, data)
+}
+
+function getPgDarkPoolCurveExchangeInputError(data) {
+  return getInputError(validatePgDarkPoolCurveExchange, data)
+}
+
+function getPgDarkPoolCurveLPInputError(data) {
+  return getInputError(validatePgDarkPoolCurveLP, data)
+}
+
+function getPgDarkPoolCurveRemoveLiquidityInputError(data) {
+  return getInputError(validatePgDarkPoolCurveRemoveLiquidity, data)
+}
 
 module.exports = {
   getPgDarkPoolWithdrawInputError,
   getPgDarkPoolUniswapSSInputError,
-  //getPgDarkPoolUniswapMSInputError,
   getPgDarkPoolUniswapLPInputError,
-  //getMiningRewardInputError,
-  //getMiningWithdrawInputError,
+  getPgDarkPoolUniswapFeeCollectingInputError,
+  getPgDarkPoolUniswapRemoveLiquidityInputError,
+  getPgDarkPoolCurveExchangeInputError,
+  getPgDarkPoolCurveLPInputError,
+  getPgDarkPoolCurveRemoveLiquidityInputError
 }
