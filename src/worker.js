@@ -19,6 +19,8 @@ const {
 const { jobType, status } = require('./config/constants')
 const {
   pgDarkPoolAssetManager,
+  pgDarkPoolUniswapAssetManager,
+  pgDarkPoolCurveAssetManager,
   gasLimits,
   privateKey,
   httpRpcUrl,

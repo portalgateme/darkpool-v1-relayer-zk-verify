@@ -22,6 +22,8 @@ router.get('/', status.index)
 router.get('/status', status.status)
 router.get('/v1/jobs/:id', status.getJob)
 router.post('/v1/pgDarkPoolWithdraw', controller.pgDarkPoolWithdraw)
+router.post('/v1/pgDarkPoolUniswapSingleSwap', controller.pgDarkPoolUniswapSingleSwap)
+router.post('/v1/pgDarkPoolUniswapLP', controller.pgDarkPoolUniswapLP)
 //router.post('/v1/miningReward', controller.miningReward)
 //router.post('/v1/miningWithdraw', controller.miningWithdraw)
 

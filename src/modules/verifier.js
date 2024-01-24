@@ -1,7 +1,9 @@
 const pgVerifierHubABI = require('../../abis/pgIVerifierHub.abi')
 const pgVerifierABI = require('../../abis/pgIVerifier.abi')
-const pgDarkPoolVerifierHub = require('../config/config')
-const jobType = require('../config/constants')
+const {pgDarkPoolVerifierHub} = require('../config/config')
+const {jobType} = require('../config/constants')
+const {RelayerError } = require('../utils')
+
 
 async function zkProofVerifier(web3, proof, input, job) {
    const hubContract = new web3.eth.Contract(pgVerifierHubABI, pgDarkPoolVerifierHub)
