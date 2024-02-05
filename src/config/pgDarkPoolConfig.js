@@ -14,8 +14,8 @@ module.exports = {
     //deployedBlock: 9739503,
   },
   netId31337: {
-    pgDarkPoolAssetManager: '0x0B306BF915C4d645ff596e518fAf3F9669b97016',
-    pgDarkPoolVerifierHub: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
+    pgDarkPoolAssetManager: '0xE401FBb0d6828e9f25481efDc9dd18Da9E500983',
+    pgDarkPoolVerifierHub: '0x876939152C56362e17D508B9DEA77a3fDF9e4083',
     pgDarkPoolUniswapAssetManager:'',
     pgDarkPoolCurveAssetManager:'',
     //deployedBlock: 9739503,
