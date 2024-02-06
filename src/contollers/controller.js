@@ -31,7 +31,7 @@ async function pgDarkPoolUniswapSingleSwap(req, res) {
   }
 
   const id = await postJob({
-    type: jobType.pgDarkPoolUniswapSingleSwap,
+    type: jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP,
     request: req.body,
   })
   return res.json({ id })

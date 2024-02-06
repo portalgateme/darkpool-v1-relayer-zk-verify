@@ -44,7 +44,7 @@ const proofType = { type: 'string', pattern: '^0x[a-fA-F0-9]{4288}$' }
 const bytes32Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{64}$' }
 const Uint256Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{1,64}$' }
 const int24Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{1,6}$' }
-const assetType = { ...addressType, isETH: true }
+const assetType = { ...addressType}
 const relayerType = { ...addressType, isFeeRecipient: true }
 
 const pgDarkPoolWithdrawSchema = {
@@ -76,22 +76,24 @@ const pgDarkPoolWithdrawSchema = {
 const pgDarkPoolUniswapSSSchema = {
   type: 'object',
   properties: {
-    asset: assetType,
     proof: proofType,
     merkleRoot:bytes32Type,
+    asset: assetType,
+    amount: Uint256Type,
     nullifier: bytes32Type,
     assetOut: assetType,
+    amountOutMin: Uint256Type,
     noteFooterOut:bytes32Type,
     relayer: relayerType,
-    amount: Uint256Type,
     fee: bytes32Type,
     refund: bytes32Type,
+    poolFee: bytes32Type,
    
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
-      items: [bytes32Type, assetType, assetType, bytes32Type,Uint256Type, bytes32Type],
+      maxItems: 2,
+      minItems: 2,
+      items: [bytes32Type, bytes32Type],
     },
   },
   additionalProperties: false,

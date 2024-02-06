@@ -83,31 +83,31 @@ async function checkPgFee(asset, amount, fee, refund) {
   amount = toBN(amount)
   fee = toBN(fee)
   refund = toBN(refund)
-  
-  if(fee.lt(refund) || amount.lt(fee) ){
-    throw new RelayerError('Provided fee is not enough. Probably it is a Gas Price spike, try to resubmit.' , 0)
+
+  if (fee.lt(refund) || amount.lt(fee)) {
+    throw new RelayerError('Provided fee is not enough. Probably it is a Gas Price spike, try to resubmit.', 0)
   }
 
   let serviceFee
   let desiredFee
   let decimals
 
-  if(isEth){
-    serviceFee = amount.mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100)) 
+  if (isEth) {
+    serviceFee = amount.mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100))
     decimals = 18
-  } else{
+  } else {
     const erc20 = new web3.eth.Contract(erc20ABI, toChecksumAddress(asset))
     decimals = await erc20.methods.decimals().call()
     const ethRate = await redis.hget('rates', asset)
-    
-    if(!ethRate){
-      ethRate  = await getRateToEth(asset,decimals,true)
+
+    if (!ethRate) {
+      ethRate = await getRateToEth(asset, decimals, true)
     }
 
     serviceFee = toBN(amount)
-                  .mul(toBN(ethRate))
-                  .div(toBN(10).pow(toBN(decimals)))
-                  .mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100)) 
+      .mul(toBN(ethRate))
+      .div(toBN(10).pow(toBN(decimals)))
+      .mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100))
   }
   desiredFee = expense.add(serviceFee)
   console.log(
@@ -129,37 +129,51 @@ async function getTxObject({ data }) {
   const darkPoolContract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
   const uniswapContract = new web3.eth.Contract(pgDarkPoolUniswapABI, pgDarkPoolUniswapAssetManager)
   const curveContract = new web3.eth.Contract(pgDarkPoolCurveABI, pgDarkPoolCurveAssetManager)
- 
+
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_WITHDRAW)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_WITHDRAW)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
-    if(isETH(data.asset)){
-      calldata = darkPoolContract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer,data.refund, data.amount).encodeABI()
-    }else{
-      calldata = darkPoolContract.methods.withdrawERC20(data.asset, data.assetMod, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer,data.refund, data.amount).encodeABI()
-    }  
+    if (isETH(data.asset)) {
+      calldata = darkPoolContract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.refund, data.amount).encodeABI()
+    } else {
+      calldata = darkPoolContract.methods.withdrawERC20(data.asset, data.assetMod, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.refund, data.amount).encodeABI()
+    }
     return {
       to: darkPoolContract._address,
       data: calldata,
       gasLimit: gasLimits['WITHDRAW_WITH_EXTRA'],
     }
-  } else if(data.type === jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
-    //calldata = uniswapContract.methods.uniswap_ss().encodeABI()
+    calldata = uniswapContract.methods.uniswapSimpleSwap({
+      inNoteData: {
+        assetAddress: data.asset,
+        amount: data.amount,
+        nullifier: data.nullifier,
+      },
+      merkleRoot: data.merkleRoot,
+      account: "0x0000000000000000000000000000000000000000",
+      assetOut: data.assetOut,
+      relayer: data.relayer,
+      amountOutMin: data.amountOutMin,
+      noteFooter: data.noteFooterOut,
+      relayerGasFee: data.refund,
+      poolFee: data.poolFee,
+    }, data.proof).encodeABI()
     return {
       to: uniswapContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if(data.type === jobType.PG_DARKPOOL_UNISWAP_LP){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_LP)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_LP) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_LP)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
     //calldata = uniswapContract.methods.uniswap_lp().encodeABI()
     return {
@@ -167,10 +181,10 @@ async function getTxObject({ data }) {
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
     //calldata = uniswapContract.methods.().encodeABI()
     return {
@@ -178,10 +192,10 @@ async function getTxObject({ data }) {
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
     //calldata = uniswapContract.methods.().encodeABI()
     return {
@@ -189,10 +203,10 @@ async function getTxObject({ data }) {
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if(data.type === jobType.PG_DARKPOOL_CURVE_EXCHANGE){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_EXCHANGE)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+  } else if (data.type === jobType.PG_DARKPOOL_CURVE_EXCHANGE) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_EXCHANGE)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
     //calldata = curveContract.methods.curveExchange().encodeABI()
     return {
@@ -200,10 +214,10 @@ async function getTxObject({ data }) {
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if(data.type === jobType.PG_DARKPOOL_CURVE_LP){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_LP)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+  } else if (data.type === jobType.PG_DARKPOOL_CURVE_LP) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_LP)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
     //calldata = curveContract.methods.curveLP().encodeABI()
     return {
@@ -211,10 +225,10 @@ async function getTxObject({ data }) {
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if(data.type === jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY){
-    const validProof = await zkProofVerifier(web3,data.proof,data.verifierArgs,jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY)
-    if(!validProof){
-        throw new RelayerError('Invalid proof')
+  } else if (data.type === jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
     }
     //calldata = curveContract.methods.curveRemoveLiquidity().encodeABI()
     return {
@@ -223,7 +237,7 @@ async function getTxObject({ data }) {
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
   } else {
-      throw new RelayerError(`Unknown job type: ${data.type}`)
+    throw new RelayerError(`Unknown job type: ${data.type}`)
   }
 }
 
@@ -251,13 +265,13 @@ async function processJob(job) {
     console.log(`Start processing a new ${job.data.type} job #${job.id}`)
     await submitTx(job)
   } catch (e) {
-    console.error('processJob', e.message,e.stack)
+    console.error('processJob', e.message, e.stack)
     await updateStatus(status.FAILED)
     throw new RelayerError(e.message)
   }
 }
 
-async function submitTx(job, retry = 0) { 
+async function submitTx(job, retry = 0) {
   await checkPgFee(job.data.asset, job.data.amount, job.data.fee, job.data.refund)
 
   currentTx = await txManager.createTx(await getTxObject(job))
