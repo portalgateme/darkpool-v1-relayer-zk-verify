@@ -157,7 +157,6 @@ async function getTxObject({ data }) {
         nullifier: data.nullifier,
       },
       merkleRoot: data.merkleRoot,
-      account: "0x0000000000000000000000000000000000000000",
       assetOut: data.assetOut,
       relayer: data.relayer,
       amountOutMin: data.amountOutMin,
@@ -171,11 +170,34 @@ async function getTxObject({ data }) {
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
   } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_LP) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_LP)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
+    // const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_LP)
+    // if (!validProof) {
+    //   throw new RelayerError('Invalid proof')
+    // }
+    const param = {
+      noteData1: {
+        assetAddress: data.asset1,
+        amount: data.amount1,
+        nullifier: data.nullifier1,
+      },
+      noteData2: {
+        assetAddress: data.asset2,
+        amount: data.amount2,
+        nullifier: data.nullifier2,
+      },
+      relayer: data.relayer,
+      relayerGasFees: [data.refundToken1, data.refundToken2],
+      merkleRoot: data.merkleRoot,
+      amountForToken2: data.amountForToken2,
+      noteFooterForSplittedNote: data.noteFooterForSplittedNote,
+      noteFooterForChangeNote: data.noteFooterForChangeNote,
+      tickMin: data.tickMin,
+      tickMax: data.tickMax,
+      outNoteFooter: data.outNoteFooter,
+      poolFee: data.poolFee,
     }
-    //calldata = uniswapContract.methods.uniswap_lp().encodeABI()
+    console.log(param)
+    calldata = uniswapContract.methods.uniswapLiquidityProvision(param, data.proof).encodeABI()
     return {
       to: uniswapContract._address,
       data: calldata,
@@ -186,7 +208,16 @@ async function getTxObject({ data }) {
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
-    //calldata = uniswapContract.methods.().encodeABI()
+    const param = {
+      merkleRoot: data.merkleRoot,
+      positionNoteCommitment: data.positionNoteCommitment,
+      tokenId: data.tokenId,
+      feeNoteFooters: [data.feeNoteFooter1, data.feeNoteFooter2],
+      relayerGasFees: [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2],
+      relayer: data.relayer,
+    }
+    console.log(param)
+    calldata = uniswapContract.methods.uniswapCollectFees(param, data.proof).encodeABI()
     return {
       to: uniswapContract._address,
       data: calldata,
@@ -197,7 +228,19 @@ async function getTxObject({ data }) {
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
-    //calldata = uniswapContract.methods.().encodeABI()
+    const param = {
+      merkleRoot: data.merkleRoot,
+      positionNote:{
+        assetAddress: data.nftAddress,
+        amount: data.tokenId,
+        nullifier: data.nullifier,
+      },
+      outNoteFooters: [data.outNoteFooter1, data.outNoteFooter2],
+      relayerGasFees: [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2],
+      relayer: data.relayer,
+    }
+    console.log(param)
+    calldata = uniswapContract.methods.uniswapRemoveLiquidity(param, data.proof).encodeABI()    
     return {
       to: uniswapContract._address,
       data: calldata,
@@ -272,7 +315,7 @@ async function processJob(job) {
 }
 
 async function submitTx(job, retry = 0) {
-  await checkPgFee(job.data.asset, job.data.amount, job.data.fee, job.data.refund)
+  // await checkPgFee(job.data.asset, job.data.amount, job.data.fee, job.data.refund)
 
   currentTx = await txManager.createTx(await getTxObject(job))
 

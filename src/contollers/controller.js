@@ -2,6 +2,8 @@ const {
   getPgDarkPoolWithdrawInputError,
   getPgDarkPoolUniswapSSInputError,
   getPgDarkPoolUniswapLPInputError,
+  getPgDarkPoolUniswapRemoveLiquidityInputError,
+  getPgDarkPoolUniswapFeeCollectingInputError,
   //getPgDarkPoolUniswapMSInputError,
   //getMiningRewardInputError,
   //getMiningWithdrawInputError
@@ -32,6 +34,34 @@ async function pgDarkPoolUniswapSingleSwap(req, res) {
 
   const id = await postJob({
     type: jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolUniswapRemoveLiquidity(req, res) {
+  const inputError = getPgDarkPoolUniswapRemoveLiquidityInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolUniswapCollectFees(req, res) {
+  const inputError = getPgDarkPoolUniswapFeeCollectingInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING,
     request: req.body,
   })
   return res.json({ id })
@@ -98,6 +128,8 @@ module.exports = {
   pgDarkPoolUniswapSingleSwap,
   // pgDarkPoolUniswapMultihopSwap,
   pgDarkPoolUniswapLP,
+  pgDarkPoolUniswapCollectFees,
+  pgDarkPoolUniswapRemoveLiquidity,
   //miningReward,
   //miningWithdraw,
 }

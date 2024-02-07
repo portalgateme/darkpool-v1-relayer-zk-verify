@@ -13,9 +13,9 @@ async function zkProofVerifier(web3, proof, input, job) {
    } else if (job === jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP){
       verifierContractAddress = await hubContract.methods.getVerifier("uniswapSwap").call()
    } else if (job === jobType.PG_DARKPOOL_UNISWAP_LP){
-      verifierContractAddress = await hubContract.methods.getVerifier("uniswapLP").call()
+      verifierContractAddress = await hubContract.methods.getVerifier("uniswapLiquidityProvision").call()
    } else if (job === jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING){
-      verifierContractAddress = await hubContract.methods.getVerifier("uniswapFeeCollecting").call()
+      verifierContractAddress = await hubContract.methods.getVerifier("uniswapCollectFees").call()
    } else if (job === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY){
       verifierContractAddress = await hubContract.methods.getVerifier("uniswapRemoveLiquidity").call()
    } else if (job === jobType.PG_DARKPOOL_CURVE_EXCHANGE){
