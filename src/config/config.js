@@ -21,7 +21,7 @@ module.exports = {
   rewardAccount: process.env.REWARD_ACCOUNT,
   gasLimits: {
     WITHDRAW_WITH_EXTRA: 1300000,
-    DEFI_WITH_EXTRA: 2600000,
+    DEFI_WITH_EXTRA: 8000000,
     [jobType.PG_DARKPOOL_WITHDRAW]: 390000,
     [jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP]: 780000,
     [jobType.PG_DARKPOOL_UNISWAP_LP]: 780000,

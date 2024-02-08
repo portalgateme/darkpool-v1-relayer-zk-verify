@@ -127,7 +127,7 @@ async function checkPgFee(asset, amount, fee, refund) {
 async function getTxObject({ data }) {
   let calldata
   const darkPoolContract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
-  const uniswapContract = new web3.eth.Contract(pgDarkPoolUniswapABI, pgDarkPoolUniswapAssetManager)
+  const uniswapContract = new web3.eth.Contract(pgDarkPoolUniswapABI.abi, pgDarkPoolUniswapAssetManager)
   const curveContract = new web3.eth.Contract(pgDarkPoolCurveABI, pgDarkPoolCurveAssetManager)
 
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
