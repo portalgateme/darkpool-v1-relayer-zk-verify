@@ -166,7 +166,7 @@ const pgDarkPoolUniswapFeeCollectingSchema = {
     }
   },
   additionalProperties: false,
-  required: ['merkleRoot', 'positionNoteCommitment', 'tokenId','proof', 'verifierArgs'],
+  required: ['merkleRoot', 'positionNoteCommitment', 'tokenId', 'proof', 'verifierArgs'],
 }
 const pgDarkPoolUniswapRemoveLiquiditySchema = {
   type: 'object',
@@ -194,7 +194,7 @@ const pgDarkPoolUniswapRemoveLiquiditySchema = {
     }
   },
   additionalProperties: false,
-  required: ['merkleRoot', 'nullifier', 'tokenId','proof', 'verifierArgs'],
+  required: ['merkleRoot', 'nullifier', 'tokenId', 'proof', 'verifierArgs'],
 }
 
 const pgDarkPoolCurveMultiExchangeSchema = {
@@ -205,34 +205,35 @@ const pgDarkPoolCurveMultiExchangeSchema = {
     nullifier: bytes32Type,
     assetIn: assetType,
     amountIn: Uint256Type,
-    route: {
+    routes: {
       type: 'array',
       maxItems: 11,
       minItems: 11,
-      items: [addressType, addressType, addressType, addressType,addressType,
-              addressType,addressType,addressType,addressType,addressType,addressType]
+      items: [addressType, addressType, addressType, addressType, addressType,
+        addressType, addressType, addressType, addressType, addressType, addressType]
     },
-    swapParams:{
-      type: 'array',
-      maxItems: 5,
+    swapParams: {
+      type: "array",
       minItems: 5,
-      items:[
-              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
-              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
-              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
-              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
-              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]}
-            ]
+      maxItems: 5,
+      items: {
+        type: "array",
+        minItems: 5,
+        maxItems: 5,
+        items: {
+          intType, intType, intType, intType, intType
+        }
+      }
     },
     pools: {
       type: 'array',
       maxItems: 5,
       minItems: 5,
-      items: [addressType, addressType, addressType, addressType,addressType]    
+      items: [addressType, addressType, addressType, addressType, addressType]
     },
     routeHash: bytes32Type,
     assetOut: assetType,
-    noteFooter: bytes32Type,
+    noteFooterOut: bytes32Type,
     relayer: relayerType,
     gasRefund: bytes32Type,
 
@@ -241,15 +242,15 @@ const pgDarkPoolCurveMultiExchangeSchema = {
       maxItems: 7,
       minItems: 7,
       items: [
-        bytes32Type, bytes32Type, assetType, Uint256Type,
-        bytes32Type, assetType, bytes32Type
+        bytes32Type, bytes32Type, bytes32Type, bytes32Type,
+        bytes32Type, bytes32Type, bytes32Type
       ],
     },
   },
   additionalProperties: false,
   required: [
-    'proof', 'merkleRoot', 'nullifier', 'assetIn', 'amoutIn', 'route','swapParams',
-    'pools', 'routeHash', 'assetOut', 'noteFooter', 'relayer', 'refund', 'verifierArgs'
+    'proof', 'merkleRoot', 'nullifier', 'assetIn', 'amountIn', 'routes', 'swapParams',
+    'pools', 'routeHash', 'assetOut', 'noteFooterOut', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 

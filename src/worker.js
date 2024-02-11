@@ -135,7 +135,7 @@ async function getTxObject({ data }) {
   let calldata
   const darkPoolContract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
   const uniswapContract = new web3.eth.Contract(pgDarkPoolUniswapABI.abi, pgDarkPoolUniswapAssetManager)
-  const curveMultiExchangeContract = new web3.eth.Contract(pgDarkPoolCurveABI, pgDarkPoolCurveMultiExchangeAssetManager)
+  const curveMultiExchangeContract = new web3.eth.Contract(pgDarkPoolCurveMultiExchangeABI.abi, pgDarkPoolCurveMultiExchangeAssetManager)
   const curveSPPContract = new web3.eth.Contract(pgDarkPoolCurveSPPABI.abi, pgDarkPoolCurveSPPAssetManager)
   const curveSLPContract = new web3.eth.Contract(pgDarkPoolCurveSLPABI.abi, pgDarkPoolCurveSLPAssetManager)
   const curveCPContract = new web3.eth.Contract(pgDarkPoolCurveCPABI.abi, pgDarkPoolCurveCPAssetManager)
@@ -261,22 +261,24 @@ async function getTxObject({ data }) {
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
-    calldata = curveMultiExchangeContract.methods.exchange(
+    const exchangeArgs = {
+      merkleRoot: data.merkleRoot,
+      nullifier: data.nullifier,
+      assetIn: data.assetIn,
+      amountIn: data.amountIn,
+      route: data.routes,
+      swapParams: data.swapParams,
+      pools: data.pools,
+      routeHash: data.routeHash,
+      assetOut: data.assetOut,
+      noteFooter: data.noteFooterOut,
+      relayer: data.relayer,
+      gasRefund: data.gasRefund,
+    }
+    console.log(exchangeArgs)
+    calldata = curveMultiExchangeContract.methods.curveMultiExchange(
       data.proof,
-      {
-        merkleRoot: data.merkleRoot,
-        nullifier: data.nullifier,
-        assetIn: data.assetIn,
-        amountIn: data.amountIn,
-        route: data.route,
-        swapParams: data.swapParams,
-        pools: data.pools,
-        routeHash: data.routeHash,
-        assetOut: data.assetOut,
-        noteFooter: data.noteFooter,
-        relayer: data.relayer,
-        gasRefund: data.gasRefund,
-      }
+      exchangeArgs,
     ).encodeABI()
     return {
       to: curveMultiExchangeContract._address,
