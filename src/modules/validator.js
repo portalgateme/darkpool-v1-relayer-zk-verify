@@ -43,7 +43,8 @@ const proofType = { type: 'string', pattern: '^0x[a-fA-F0-9]{4288}$' }
 //const encryptedAccountType = { type: 'string', pattern: '^0x[a-fA-F0-9]{392}$' }
 const bytes32Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{64}$' }
 const Uint256Type = { type: 'string', pattern: '^0x[a-fA-F0-9]{1,64}$' }
-const int24Type = { type: 'integer'}
+const int24Type = { type: 'integer' }
+const intType = { type: 'interger' }
 const assetType = { ...addressType }
 const relayerType = { ...addressType, isFeeRecipient: true }
 
@@ -196,7 +197,7 @@ const pgDarkPoolUniswapRemoveLiquiditySchema = {
   required: ['merkleRoot', 'nullifier', 'tokenId','proof', 'verifierArgs'],
 }
 
-const pgDarkPoolCurveExchangeSchema = {
+const pgDarkPoolCurveMultiExchangeSchema = {
   type: 'object',
   properties: {
     proof: proofType,
@@ -204,27 +205,51 @@ const pgDarkPoolCurveExchangeSchema = {
     nullifier: bytes32Type,
     assetIn: assetType,
     amountIn: Uint256Type,
-    pool: addressType,
+    route: {
+      type: 'array',
+      maxItems: 11,
+      minItems: 11,
+      items: [addressType, addressType, addressType, addressType,addressType,
+              addressType,addressType,addressType,addressType,addressType,addressType]
+    },
+    swapParams:{
+      type: 'array',
+      maxItems: 5,
+      minItems: 5,
+      items:[
+              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
+              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
+              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
+              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]},
+              {type: 'array', maxItems: 5, minItems: 5, items: [intType, intType,intType,intType,intType]}
+            ]
+    },
+    pools: {
+      type: 'array',
+      maxItems: 5,
+      minItems: 5,
+      items: [addressType, addressType, addressType, addressType,addressType]    
+    },
+    routeHash: bytes32Type,
     assetOut: assetType,
     noteFooter: bytes32Type,
     relayer: relayerType,
-    fee: bytes32Type,
-    refund: bytes32Type,
+    gasRefund: bytes32Type,
 
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
+      maxItems: 7,
+      minItems: 7,
       items: [
-        bytes32Type, assetType, Uint256Type, bytes32Type,
-        addressType, assetType, bytes32Type
+        bytes32Type, bytes32Type, assetType, Uint256Type,
+        bytes32Type, assetType, bytes32Type
       ],
     },
   },
   additionalProperties: false,
   required: [
-    'proof', 'merkleRoot', 'nullifier', 'assetIn', 'amoutIn',
-    'pool', 'assetOut', 'noteFooter', 'relayer', 'verifierArgs'
+    'proof', 'merkleRoot', 'nullifier', 'assetIn', 'amoutIn', 'route','swapParams',
+    'pools', 'routeHash', 'assetOut', 'noteFooter', 'relayer', 'refund', 'verifierArgs'
   ],
 }
 
@@ -335,8 +360,8 @@ const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
 const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
 const validatePgDarkPoolUniswapFeeCollecting = ajv.compile(pgDarkPoolUniswapFeeCollectingSchema)
 const validatePgDarkPoolUniswapRemoveLiquidity = ajv.compile(pgDarkPoolUniswapRemoveLiquiditySchema)
-const validatePgDarkPoolCurveExchange = ajv.compile(pgDarkPoolCurveExchangeSchema)
-const validatePgDarkPoolCurveLP = ajv.compile(pgDarkPoolCurveLPSchema)
+const validatePgDarkPoolCurveMultiExchange = ajv.compile(pgDarkPoolCurveMultiExchangeSchema)
+const validatePgDarkPoolCurveAddLiquidity = ajv.compile(pgDarkPoolCurveLPSchema)
 const validatePgDarkPoolCurveRemoveLiquidity = ajv.compile(pgDarkPoolCurveRemoveLiquiditySchema)
 
 function getInputError(validator, data) {
@@ -369,12 +394,12 @@ function getPgDarkPoolUniswapRemoveLiquidityInputError(data) {
   return getInputError(validatePgDarkPoolUniswapRemoveLiquidity, data)
 }
 
-function getPgDarkPoolCurveExchangeInputError(data) {
-  return getInputError(validatePgDarkPoolCurveExchange, data)
+function getPgDarkPoolCurveMultiExchangeInputError(data) {
+  return getInputError(validatePgDarkPoolCurveMultiExchange, data)
 }
 
-function getPgDarkPoolCurveLPInputError(data) {
-  return getInputError(validatePgDarkPoolCurveLP, data)
+function getPgDarkPoolCurveAddLiquidityInputError(data) {
+  return getInputError(validatePgDarkPoolCurveAddLiquidity, data)
 }
 
 function getPgDarkPoolCurveRemoveLiquidityInputError(data) {
@@ -387,7 +412,7 @@ module.exports = {
   getPgDarkPoolUniswapLPInputError,
   getPgDarkPoolUniswapFeeCollectingInputError,
   getPgDarkPoolUniswapRemoveLiquidityInputError,
-  getPgDarkPoolCurveExchangeInputError,
-  getPgDarkPoolCurveLPInputError,
+  getPgDarkPoolCurveMultiExchangeInputError,
+  getPgDarkPoolCurveAddLiquidityInputError,
   getPgDarkPoolCurveRemoveLiquidityInputError
 }

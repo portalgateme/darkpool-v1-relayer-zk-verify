@@ -2,7 +2,11 @@ const fs = require('fs')
 const { GasPriceOracle } = require('gas-price-oracle')
 const pgDarkPoolABI = require('../abis/pgDarkPool.abi')
 const pgDarkPoolUniswapABI = require('../abis/pgDarkPoolUniswap.abi')
-const pgDarkPoolCurveABI = require('../abis/pgDarkPoolCurve.abi')
+const pgDarkPoolCurveMultiExchangeABI = require('../abis/pgDarkPoolCurveMultiExchange.abi')
+const pgDarkPoolCurveSPPABI = require('../abis/pgDarkPoolCurveSPP.abi')
+const pgDarkPoolCurveSLPABI = require('../abis/pgDarkPoolCurveSLP.abi')
+const pgDarkPoolCurveCPABI = require('../abis/pgDarkPoolCurveCP.abi')
+
 
 const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
@@ -20,7 +24,10 @@ const { jobType, status } = require('./config/constants')
 const {
   pgDarkPoolAssetManager,
   pgDarkPoolUniswapAssetManager,
-  pgDarkPoolCurveAssetManager,
+  pgDarkPoolCurveMultiExchangeAssetManager,
+  pgDarkPoolCurveSPPAssetManager,
+  pgDarkPoolCurveSLPAssetManager,
+  pgDarkPoolCurveCPAssetManager,
   gasLimits,
   privateKey,
   httpRpcUrl,
@@ -128,7 +135,10 @@ async function getTxObject({ data }) {
   let calldata
   const darkPoolContract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
   const uniswapContract = new web3.eth.Contract(pgDarkPoolUniswapABI.abi, pgDarkPoolUniswapAssetManager)
-  const curveContract = new web3.eth.Contract(pgDarkPoolCurveABI, pgDarkPoolCurveAssetManager)
+  const curveMultiExchangeContract = new web3.eth.Contract(pgDarkPoolCurveABI, pgDarkPoolCurveMultiExchangeAssetManager)
+  const curveSPPContract = new web3.eth.Contract(pgDarkPoolCurveSPPABI.abi, pgDarkPoolCurveSPPAssetManager)
+  const curveSLPContract = new web3.eth.Contract(pgDarkPoolCurveSLPABI.abi, pgDarkPoolCurveSLPAssetManager)
+  const curveCPContract = new web3.eth.Contract(pgDarkPoolCurveCPABI.abi, pgDarkPoolCurveCPAssetManager)
 
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
     const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_WITHDRAW)
@@ -246,25 +256,41 @@ async function getTxObject({ data }) {
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if (data.type === jobType.PG_DARKPOOL_CURVE_EXCHANGE) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_EXCHANGE)
+  } else if (data.type === jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE)
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
-    //calldata = curveContract.methods.curveExchange().encodeABI()
+    calldata = curveMultiExchangeContract.methods.exchange(
+      data.proof,
+      {
+        merkleRoot: data.merkleRoot,
+        nullifier: data.nullifier,
+        assetIn: data.assetIn,
+        amountIn: data.amountIn,
+        route: data.route,
+        swapParams: data.swapParams,
+        pools: data.pools,
+        routeHash: data.routeHash,
+        assetOut: data.assetOut,
+        noteFooter: data.noteFooter,
+        relayer: data.relayer,
+        gasRefund: data.gasRefund,
+      }
+    ).encodeABI()
     return {
-      to: curveContract._address,
+      to: curveMultiExchangeContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
-  } else if (data.type === jobType.PG_DARKPOOL_CURVE_LP) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_LP)
+  } else if (data.type === jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY) {
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY)
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
     //calldata = curveContract.methods.curveLP().encodeABI()
     return {
-      to: curveContract._address,
+      //to: curve._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
@@ -275,26 +301,12 @@ async function getTxObject({ data }) {
     }
     //calldata = curveContract.methods.curveRemoveLiquidity().encodeABI()
     return {
-      to: contract._address,
+      //to: contract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
   } else {
     throw new RelayerError(`Unknown job type: ${data.type}`)
-  }
-}
-
-async function isOutdatedTreeRevert(receipt, currentTx) {
-  try {
-    await web3.eth.call(currentTx.tx, receipt.blockNumber)
-    console.log('Simulated call successful')
-    return false
-  } catch (e) {
-    console.log('Decoded revert reason:', e.message)
-    return (
-      e.message.indexOf('Outdated account merkle root') !== -1 ||
-      e.message.indexOf('Outdated tree update merkle root') !== -1
-    )
   }
 }
 

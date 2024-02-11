@@ -18,10 +18,10 @@ async function zkProofVerifier(web3, proof, input, job) {
       verifierContractAddress = await hubContract.methods.getVerifier("uniswapCollectFees").call()
    } else if (job === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY){
       verifierContractAddress = await hubContract.methods.getVerifier("uniswapRemoveLiquidity").call()
-   } else if (job === jobType.PG_DARKPOOL_CURVE_EXCHANGE){
-      verifierContractAddress = await hubContract.methods.getVerifier("curveExchange").call()
-   } else if (job === jobType.PG_DARKPOOL_CURVE_LP){
-      verifierContractAddress = await hubContract.methods.getVerifier("curveLP").call()
+   } else if (job === jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE){
+      verifierContractAddress = await hubContract.methods.getVerifier("curveMultiExchange").call()
+   } else if (job === jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY){
+      verifierContractAddress = await hubContract.methods.getVerifier("curveAddLiquidity").call()
    } else if (job === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY){
       verifierContractAddress = await hubContract.methods.getVerifier("curveRemoveLiquidity").call()
    } else{

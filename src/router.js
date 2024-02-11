@@ -26,7 +26,8 @@ router.post('/v1/pgDarkPoolUniswapSingleSwap', controller.pgDarkPoolUniswapSingl
 router.post('/v1/pgDarkPoolUniswapLP', controller.pgDarkPoolUniswapLP)
 router.post('/v1/pgDarkPoolUniswapCollectFees', controller.pgDarkPoolUniswapCollectFees)
 router.post('/v1/pgDarkPoolUniswapRemoveLiquidity', controller.pgDarkPoolUniswapRemoveLiquidity)
-//router.post('/v1/miningReward', controller.miningReward)
-//router.post('/v1/miningWithdraw', controller.miningWithdraw)
+router.post('/v1/pgDarkPoolCurveMultiExchange', controller.pgDarkPoolCurveMultiExchange)
+router.post('/v1/pgDarkPoolCurveAddLiquidity', controller.pgDarkPoolCurveAddLiquidity)
+router.post('/v1/pgDarkPoolCurveRemoveLiquidity', controller.pgDarkPoolCurveRemoveLiquidity)
 
 module.exports = router
