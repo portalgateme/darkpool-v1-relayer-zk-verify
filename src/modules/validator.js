@@ -64,7 +64,7 @@ const pgDarkPoolWithdrawSchema = {
       type: 'array',
       maxItems: 5,
       minItems: 5,
-      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type],
+      items: new Array(5).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -92,9 +92,9 @@ const pgDarkPoolUniswapSSSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 2,
-      minItems: 2,
-      items: [bytes32Type, bytes32Type],
+      maxItems: 6,
+      minItems: 6,
+      items: new Array(6).fill(bytes32Type),
     },
   },
   additionalProperties: false,
@@ -129,12 +129,9 @@ const pgDarkPoolUniswapLPSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
-      items: [
-        bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type,
-        bytes32Type
-      ],
+      maxItems: 12,
+      minItems: 12,
+      items: new Array(12).fill(bytes32Type),
     }
   },
   additionalProperties: false,
