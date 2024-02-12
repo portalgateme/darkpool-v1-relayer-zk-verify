@@ -290,9 +290,19 @@ async function getTxObject({ data }) {
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
-    //calldata = curveContract.methods.curveLP().encodeABI()
+    let address
+    if (data.useUnderlying !== undefined) {
+      calldata = curveSLPContract.methods.curveAddLiquidity().encodeABI()
+      address = curveSLPContract._address
+    }else if (data.isETH !== undefined) {
+      calldata = curveCPContract.methods.curveAddLiquidity().encodeABI()
+      address = curveCPContract._address
+    }else{
+      calldata = curveSPPContract.methods.curveAddLiquidity().encodeABI()
+      address = curveSPPContract._address
+    }
     return {
-      //to: curve._address,
+      to: address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
@@ -301,9 +311,19 @@ async function getTxObject({ data }) {
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
-    //calldata = curveContract.methods.curveRemoveLiquidity().encodeABI()
+    let address
+    if (data.useUnderlying !== undefined) {
+      calldata = curveSLPContract.methods.curveAddLiquidity().encodeABI()
+      address = curveSLPContract._address
+    }else if (data.isETH !== undefined) {
+      calldata = curveCPContract.methods.curveAddLiquidity().encodeABI()
+      address = curveCPContract._address
+    }else{
+      calldata = curveSPPContract.methods.curveAddLiquidity().encodeABI()
+      address = curveSPPContract._address
+    }
     return {
-      //to: contract._address,
+      to: address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
