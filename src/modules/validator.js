@@ -156,10 +156,7 @@ const pgDarkPoolUniswapFeeCollectingSchema = {
       type: 'array',
       maxItems: 6,
       minItems: 6,
-      items: [
-        bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type,
-        bytes32Type
-      ],
+      items: new Array(6).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -184,10 +181,7 @@ const pgDarkPoolUniswapRemoveLiquiditySchema = {
       type: 'array',
       maxItems: 6,
       minItems: 6,
-      items: [
-        bytes32Type, bytes32Type, bytes32Type, bytes32Type, bytes32Type,
-        bytes32Type
-      ],
+      items: new Array(6).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -206,8 +200,7 @@ const pgDarkPoolCurveMultiExchangeSchema = {
       type: 'array',
       maxItems: 11,
       minItems: 11,
-      items: [addressType, addressType, addressType, addressType, addressType,
-        addressType, addressType, addressType, addressType, addressType, addressType]
+      items: new Array(11).fill(addressType),
     },
     swapParams: {
       type: "array",
@@ -226,7 +219,7 @@ const pgDarkPoolCurveMultiExchangeSchema = {
       type: 'array',
       maxItems: 5,
       minItems: 5,
-      items: [addressType, addressType, addressType, addressType, addressType]
+      items: new Array(5).fill(addressType),
     },
     routeHash: bytes32Type,
     assetOut: assetType,
@@ -238,10 +231,7 @@ const pgDarkPoolCurveMultiExchangeSchema = {
       type: 'array',
       maxItems: 7,
       minItems: 7,
-      items: [
-        bytes32Type, bytes32Type, bytes32Type, bytes32Type,
-        bytes32Type, bytes32Type, bytes32Type
-      ],
+      items: new Array(7).fill(bytes32Type),
     },
   },
   additionalProperties: false,
@@ -276,8 +266,8 @@ const pgDarkPoolCurveAddLiquiditySchema = {
     },
     pool: addressType,
     lpToken: assetType,
-    useUnderlying: {"type" : "boolean"},
-    isETH: {"type" : "boolean"},
+    useUnderlying: { "type": "boolean" },
+    isETH: { "type": "boolean" },
     noteFooters: {
       type: 'array',
       maxItems: 4,
@@ -285,7 +275,7 @@ const pgDarkPoolCurveAddLiquiditySchema = {
       items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type]
     },
     relayer: relayerType,
-    gasRefund:{
+    gasRefund: {
       type: 'array',
       maxItems: 4,
       minItems: 4,
@@ -296,17 +286,13 @@ const pgDarkPoolCurveAddLiquiditySchema = {
       type: 'array',
       maxItems: 15,
       minItems: 15,
-      items: [
-        bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,
-        bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,
-        bytes32Type
-      ],
+      items: new Array(15).fill(bytes32Type),
     },
   },
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'nullifiers', 'assets', 'amouts', 'pool',
-    'lpToken', 'noteFooters', 'relayer', 'gasRefund','verifierArgs'
+    'lpToken', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
@@ -326,8 +312,8 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
       minItems: 4,
       items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
     },
-    useUnderlying: {"type" : "boolean"},
-    isETH: {"type" : "boolean"},
+    useUnderlying: { "type": "boolean" },
+    isETH: { "type": "boolean" },
     noteFooters: {
       type: 'array',
       maxItems: 5,
@@ -335,7 +321,7 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
       items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type]
     },
     relayer: relayerType,
-    gasRefund:{
+    gasRefund: {
       type: 'array',
       maxItems: 4,
       minItems: 4,
@@ -346,17 +332,13 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
       type: 'array',
       maxItems: 15,
       minItems: 15,
-      items: [
-        bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,
-        bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,bytes32Type,
-        bytes32Type
-      ],
+      items: new Array(15).fill(bytes32Type),
     },
   },
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'nullifier', 'asset', 'amout', 'amountBurn',
-    'pool', 'assetsOut', 'noteFooters', 'relayer', 'gasRefund','verifierArgs'
+    'pool', 'assetsOut', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
@@ -366,7 +348,7 @@ const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
 const validatePgDarkPoolUniswapFeeCollecting = ajv.compile(pgDarkPoolUniswapFeeCollectingSchema)
 const validatePgDarkPoolUniswapRemoveLiquidity = ajv.compile(pgDarkPoolUniswapRemoveLiquiditySchema)
 const validatePgDarkPoolCurveMultiExchange = ajv.compile(pgDarkPoolCurveMultiExchangeSchema)
-const validatePgDarkPoolCurveAddLiquidity = ajv.compile(pgDarkPoolCurveLPSchema)
+const validatePgDarkPoolCurveAddLiquidity = ajv.compile(pgDarkPoolCurveAddLiquiditySchema)
 const validatePgDarkPoolCurveRemoveLiquidity = ajv.compile(pgDarkPoolCurveRemoveLiquiditySchema)
 
 function getInputError(validator, data) {
