@@ -180,10 +180,10 @@ async function getTxObject({ data }) {
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
   } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_LP) {
-    // const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_LP)
-    // if (!validProof) {
-    //   throw new RelayerError('Invalid proof')
-    // }
+    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_LP)
+    if (!validProof) {
+      throw new RelayerError('Invalid proof')
+    }
     const param = {
       noteData1: {
         assetAddress: data.asset1,
@@ -220,7 +220,6 @@ async function getTxObject({ data }) {
     }
     const param = {
       merkleRoot: data.merkleRoot,
-      positionNoteCommitment: data.positionNoteCommitment,
       tokenId: data.tokenId,
       feeNoteFooters: [data.feeNoteFooter1, data.feeNoteFooter2],
       relayerGasFees: [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2],
