@@ -239,7 +239,7 @@ async function getTxObject({ data }) {
     }
     const param = {
       merkleRoot: data.merkleRoot,
-      positionNote:{
+      positionNote: {
         assetAddress: data.nftAddress,
         amount: data.tokenId,
         nullifier: data.nullifier,
@@ -249,7 +249,7 @@ async function getTxObject({ data }) {
       relayer: data.relayer,
     }
     console.log(param)
-    calldata = uniswapContract.methods.uniswapRemoveLiquidity(param, data.proof).encodeABI()    
+    calldata = uniswapContract.methods.uniswapRemoveLiquidity(param, data.proof).encodeABI()
     return {
       to: uniswapContract._address,
       data: calldata,
@@ -274,7 +274,6 @@ async function getTxObject({ data }) {
       relayer: data.relayer,
       gasRefund: data.gasRefund,
     }
-    console.log(exchangeArgs)
     calldata = curveMultiExchangeContract.methods.curveMultiExchange(
       data.proof,
       exchangeArgs,
@@ -289,15 +288,30 @@ async function getTxObject({ data }) {
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
+
+    let lpArgs = {
+      merkleRoot: data.merkleRoot,
+      nullifiers: data.nullifiers,
+      assets: data.assets,
+      amounts: data.amounts,
+      pool: data.pool,
+      lpToken: data.lpToken,
+      noteFooter: data.noteFooter,
+      relayer: data.relayer,
+      gasRefund: data.gasRefund,
+    }
+
     let address
     if (data.useUnderlying !== undefined) {
-      calldata = curveSLPContract.methods.curveAddLiquidity().encodeABI()
+      lpArgs.useUnderlying = data.useUnderlying,
+        calldata = curveSLPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
       address = curveSLPContract._address
-    }else if (data.isETH !== undefined) {
-      calldata = curveCPContract.methods.curveAddLiquidity().encodeABI()
+    } else if (data.isETH !== undefined) {
+      lpArgs.isETH = data.isETH
+      calldata = curveCPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
       address = curveCPContract._address
-    }else{
-      calldata = curveSPPContract.methods.curveAddLiquidity().encodeABI()
+    } else {
+      calldata = curveSPPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
       address = curveSPPContract._address
     }
     return {
@@ -314,10 +328,10 @@ async function getTxObject({ data }) {
     if (data.useUnderlying !== undefined) {
       calldata = curveSLPContract.methods.curveAddLiquidity().encodeABI()
       address = curveSLPContract._address
-    }else if (data.isETH !== undefined) {
+    } else if (data.isETH !== undefined) {
       calldata = curveCPContract.methods.curveAddLiquidity().encodeABI()
       address = curveCPContract._address
-    }else{
+    } else {
       calldata = curveSPPContract.methods.curveAddLiquidity().encodeABI()
       address = curveSPPContract._address
     }

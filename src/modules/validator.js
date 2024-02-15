@@ -250,38 +250,32 @@ const pgDarkPoolCurveAddLiquiditySchema = {
       type: 'array',
       maxItems: 4,
       minItems: 4,
-      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type]
+      items: Array(4).fill(bytes32Type)
     },
     assets: {
       type: 'array',
       maxItems: 4,
       minItems: 4,
-      items: [assetType, assetType, assetType, assetType]
+      items: Array(4).fill(assetType)
     },
     amounts: {
       type: 'array',
       maxItems: 4,
       minItems: 4,
-      items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
+      items: Array(4).fill(Uint256Type)
     },
     pool: addressType,
     lpToken: assetType,
     useUnderlying: { "type": "boolean" },
     isETH: { "type": "boolean" },
-    noteFooters: {
-      type: 'array',
-      maxItems: 4,
-      minItems: 4,
-      items: [bytes32Type, bytes32Type, bytes32Type, bytes32Type]
-    },
+    noteFooter: bytes32Type,
     relayer: relayerType,
     gasRefund: {
       type: 'array',
       maxItems: 4,
       minItems: 4,
-      items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
+      items: Array(4).fill(Uint256Type)
     },
-
     verifierArgs: {
       type: 'array',
       maxItems: 15,
@@ -289,10 +283,10 @@ const pgDarkPoolCurveAddLiquiditySchema = {
       items: new Array(15).fill(bytes32Type),
     },
   },
-  additionalProperties: false,
+  additionalProperties: true,
   required: [
-    'proof', 'merkleRoot', 'nullifiers', 'assets', 'amouts', 'pool',
-    'lpToken', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
+    'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool',
+    'lpToken', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
