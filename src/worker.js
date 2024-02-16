@@ -324,15 +324,29 @@ async function getTxObject({ data }) {
     if (!validProof) {
       throw new RelayerError('Invalid proof')
     }
+    let removeLpArgs = {
+      merkleRoot: data.merkleRoot,
+      nullifier: data.nullifier,
+      asset: data.asset,
+      amount: data.amount,
+      amountBurn: data.amountBurn,
+      pool: data.pool,
+      assetsOut: data.assetsOut,
+      noteFooters: data.noteFooters,
+      relayer: data.relayer,
+      gasRefund: data.gasRefund,
+    }
     let address
     if (data.useUnderlying !== undefined) {
-      calldata = curveSLPContract.methods.curveAddLiquidity().encodeABI()
+      removeLpArgs.useUnderlying = data.useUnderlying,
+      calldata = curveSLPContract.methods.curveRemoveLiquidity(data.proof,removeLpArgs).encodeABI()
       address = curveSLPContract._address
     } else if (data.isETH !== undefined) {
-      calldata = curveCPContract.methods.curveAddLiquidity().encodeABI()
+      removeLpArgs.isETH = data.isETH
+      calldata = curveCPContract.methods.curveRemoveLiquidity(data.proof,removeLpArgs).encodeABI()
       address = curveCPContract._address
     } else {
-      calldata = curveSPPContract.methods.curveAddLiquidity().encodeABI()
+      calldata = curveSPPContract.methods.curveRemoveLiquidity(data.proof,removeLpArgs).encodeABI()
       address = curveSPPContract._address
     }
     return {

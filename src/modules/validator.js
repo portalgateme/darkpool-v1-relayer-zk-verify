@@ -331,7 +331,7 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
   },
   additionalProperties: false,
   required: [
-    'proof', 'merkleRoot', 'nullifier', 'asset', 'amout', 'amountBurn',
+    'proof', 'merkleRoot', 'nullifier', 'asset', 'amount', 'amountBurn',
     'pool', 'assetsOut', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
