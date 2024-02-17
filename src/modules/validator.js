@@ -268,8 +268,9 @@ const pgDarkPoolCurveAddLiquiditySchema = {
     pool: addressType,
     poolType: curvePoolType,
     lpToken: assetType,
+    isPlain: { "type": "boolean" },
     isLegacy: { "type": "boolean" },
-    isWrapped: { "type": "boolean" },
+    booleanFlag: { "type": "boolean" },
     noteFooter: bytes32Type,
     relayer: relayerType,
     gasRefund: {
@@ -303,8 +304,9 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
     amountBurn: Uint256Type,
     pool: addressType,
     poolType: curvePoolType,
+    isPlain: { "type": "boolean" },
     isLegacy: { "type": "boolean" },
-    isWrapped: { "type": "boolean" },
+    booleanFlag: { "type": "boolean" },
     assetsOut: {
       type: 'array',
       maxItems: 4,

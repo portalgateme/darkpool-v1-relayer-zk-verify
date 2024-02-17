@@ -14,9 +14,8 @@ module.exports = {
   pgDarkPoolAssetManager: pgConfig[`netId${netId}`].darkpoolAssetManager,
   pgDarkPoolUniswapAssetManager: pgConfig[`netId${netId}`].uniswapAssetManager,
   pgDarkPoolCurveMultiExchangeAssetManager: pgConfig[`netId${netId}`].curveMultiExchangeAssetManager,
-  pgDarkPoolCurveSLPAssetManager: pgConfig[`netId${netId}`].curveSLPAssetManager,
-  pgDarkPoolCurveSPPAssetManager: pgConfig[`netId${netId}`].curveSPPAssetManager,
-  pgDarkPoolCurveCPAssetManager: pgConfig[`netId${netId}`].curveCPAssetManager,
+  pgDarkPoolCurveAddLiquidityAssetManager: pgConfig[`netId${netId}`].curveAddLiquidityAssetManager,
+  pgDarkPoolCurveRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveRemoveLiquidityAssetManager,
 
   pgDarkPoolVerifierHub: pgConfig[`netId${netId}`].verifierHub,
   privateKey: process.env.PRIVATE_KEY,

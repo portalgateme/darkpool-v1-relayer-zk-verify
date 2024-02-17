@@ -3,10 +3,8 @@ const { GasPriceOracle } = require('gas-price-oracle')
 const pgDarkPoolABI = require('../abis/pgDarkPool.abi')
 const pgDarkPoolUniswapABI = require('../abis/pgDarkPoolUniswap.abi')
 const pgDarkPoolCurveMultiExchangeABI = require('../abis/pgDarkPoolCurveMultiExchange.abi')
-const pgDarkPoolCurveSPPABI = require('../abis/pgDarkPoolCurveSPP.abi')
-const pgDarkPoolCurveSLPABI = require('../abis/pgDarkPoolCurveSLP.abi')
-const pgDarkPoolCurveCPABI = require('../abis/pgDarkPoolCurveCP.abi')
-
+const pgDarkPoolCurveAddLiquidityABI = require('../abis/pgDarkPoolCurveAddLiquidityABI.abi')
+const pgDarkPoolCurveRemoveLiquidityABI = require('../abis/pgDarkPoolCurveRemoveLiquidityABI.abi')
 
 const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
@@ -25,9 +23,8 @@ const {
   pgDarkPoolAssetManager,
   pgDarkPoolUniswapAssetManager,
   pgDarkPoolCurveMultiExchangeAssetManager,
-  pgDarkPoolCurveSPPAssetManager,
-  pgDarkPoolCurveSLPAssetManager,
-  pgDarkPoolCurveCPAssetManager,
+  pgDarkPoolCurveAddLiquidityAssetManager,
+  pgDarkPoolCurveRemoveLiquidityAssetManager,
   gasLimits,
   privateKey,
   httpRpcUrl,
@@ -136,9 +133,8 @@ async function getTxObject({ data }) {
   const darkPoolContract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
   const uniswapContract = new web3.eth.Contract(pgDarkPoolUniswapABI.abi, pgDarkPoolUniswapAssetManager)
   const curveMultiExchangeContract = new web3.eth.Contract(pgDarkPoolCurveMultiExchangeABI.abi, pgDarkPoolCurveMultiExchangeAssetManager)
-  const curveSPPContract = new web3.eth.Contract(pgDarkPoolCurveSPPABI.abi, pgDarkPoolCurveSPPAssetManager)
-  const curveSLPContract = new web3.eth.Contract(pgDarkPoolCurveSLPABI.abi, pgDarkPoolCurveSLPAssetManager)
-  const curveCPContract = new web3.eth.Contract(pgDarkPoolCurveCPABI.abi, pgDarkPoolCurveCPAssetManager)
+  const curveRemoveLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveRemoveLiquidityABI.abi, pgDarkPoolCurveRemoveLiquidityAssetManager)
+  const curveAddLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveAddLiquidityABI.abi, pgDarkPoolCurveAddLiquidityAssetManager)
 
   if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
     const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_WITHDRAW)
@@ -296,27 +292,19 @@ async function getTxObject({ data }) {
       amounts: data.amounts,
       pool: data.pool,
       lpToken: data.lpToken,
+      isPlain: data.isPlain,
+      isLegacy: data.isLegacy,
+      booleanFlag: data.booleanFlag,
       noteFooter: data.noteFooter,
       relayer: data.relayer,
       gasRefund: data.gasRefund,
     }
 
-    let address
-    if (data.poolType === curvePoolType.LENDING) {
-      lpArgs.useUnderlying = !data.isWrapped
-      calldata = curveSLPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
-      address = curveSLPContract._address
-    } else if (data.poolType === curvePoolType.CRYPTO) {
-      lpArgs.isETH = !data.isWrapped
-      lpArgs.isLegacy = data.isLegacy
-      calldata = curveCPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
-      address = curveCPContract._address
-    } else {
-      calldata = curveSPPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
-      address = curveSPPContract._address
-    }
+    calldata = curveAddLiquidityContract.methods
+      .curveAddLiquidity(data.proof, lpArgs).encodeABI()
+
     return {
-      to: address,
+      to: curveAddLiquidityContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
@@ -333,26 +321,19 @@ async function getTxObject({ data }) {
       amountBurn: data.amountBurn,
       pool: data.pool,
       assetsOut: data.assetsOut,
+      isPlain: data.isPlain,
+      isLegacy: data.isLegacy,
+      booleanFlag: data.booleanFlag,
       noteFooters: data.noteFooters,
       relayer: data.relayer,
       gasRefund: data.gasRefund,
     }
-    let address
-    if (data.poolType === curvePoolType.LENDING) {
-      removeLpArgs.useUnderlying = !data.isWrapped
-      console.log(removeLpArgs)
-      calldata = curveSLPContract.methods.curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
-      address = curveSLPContract._address
-    }else if (data.poolType === curvePoolType.CRYPTO) {
-      removeLpArgs.isETH = !data.isWrapped
-      calldata = curveCPContract.methods.curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
-      address = curveCPContract._address
-    } else {
-      calldata = curveSPPContract.methods.curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
-      address = curveSPPContract._address
-    }
+    
+    calldata = curveRemoveLiquidityContract.methods
+      .curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
+
     return {
-      to: address,
+      to: curveRemoveLiquidityContract._address,
       data: calldata,
       gasLimit: gasLimits['DEFI_WITH_EXTRA'],
     }
