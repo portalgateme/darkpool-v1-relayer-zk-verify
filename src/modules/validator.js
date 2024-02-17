@@ -47,6 +47,7 @@ const int24Type = { type: 'integer' }
 const intType = { type: 'interger' }
 const assetType = { ...addressType }
 const relayerType = { ...addressType, isFeeRecipient: true }
+const curvePoolType = { type: 'string', enum: ['PLAIN', 'LENDING', 'META', 'CRYPTO'] }
 
 const pgDarkPoolWithdrawSchema = {
   type: 'object',
@@ -265,9 +266,10 @@ const pgDarkPoolCurveAddLiquiditySchema = {
       items: Array(4).fill(Uint256Type)
     },
     pool: addressType,
+    poolType: curvePoolType,
     lpToken: assetType,
-    useUnderlying: { "type": "boolean" },
-    isETH: { "type": "boolean" },
+    isLegacy: { "type": "boolean" },
+    isWrapped: { "type": "boolean" },
     noteFooter: bytes32Type,
     relayer: relayerType,
     gasRefund: {
@@ -285,8 +287,8 @@ const pgDarkPoolCurveAddLiquiditySchema = {
   },
   additionalProperties: true,
   required: [
-    'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool',
-    'lpToken', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
+    'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool', 'poolType',
+    'lpToken', 'isLegacy', 'isWrapped', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
@@ -300,14 +302,15 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
     amount: Uint256Type,
     amountBurn: Uint256Type,
     pool: addressType,
+    poolType: curvePoolType,
+    isLegacy: { "type": "boolean" },
+    isWrapped: { "type": "boolean" },
     assetsOut: {
       type: 'array',
       maxItems: 4,
       minItems: 4,
       items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
     },
-    useUnderlying: { "type": "boolean" },
-    isETH: { "type": "boolean" },
     noteFooters: {
       type: 'array',
       maxItems: 5,
@@ -332,7 +335,7 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'nullifier', 'asset', 'amount', 'amountBurn',
-    'pool', 'assetsOut', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
+    'pool', 'poolType', 'assetsOut', 'isLegacy', 'isWrapped', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 

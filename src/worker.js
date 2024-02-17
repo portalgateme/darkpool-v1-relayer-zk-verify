@@ -20,7 +20,7 @@ const {
   toChecksumAddress,
   getRateToEth,
 } = require('./utils')
-const { jobType, status } = require('./config/constants')
+const { jobType, status, curvePoolType } = require('./config/constants')
 const {
   pgDarkPoolAssetManager,
   pgDarkPoolUniswapAssetManager,
@@ -302,12 +302,13 @@ async function getTxObject({ data }) {
     }
 
     let address
-    if (data.useUnderlying !== undefined) {
-      lpArgs.useUnderlying = data.useUnderlying,
-        calldata = curveSLPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
+    if (data.poolType === curvePoolType.LENDING) {
+      lpArgs.useUnderlying = !data.isWrapped
+      calldata = curveSLPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
       address = curveSLPContract._address
-    } else if (data.isETH !== undefined) {
-      lpArgs.isETH = data.isETH
+    } else if (data.poolType === curvePoolType.CRYPTO) {
+      lpArgs.isETH = !data.isWrapped
+      lpArgs.isLegacy = data.isLegacy
       calldata = curveCPContract.methods.curveAddLiquidity(data.proof, lpArgs).encodeABI()
       address = curveCPContract._address
     } else {
@@ -337,16 +338,17 @@ async function getTxObject({ data }) {
       gasRefund: data.gasRefund,
     }
     let address
-    if (data.useUnderlying !== undefined) {
-      removeLpArgs.useUnderlying = data.useUnderlying,
-      calldata = curveSLPContract.methods.curveRemoveLiquidity(data.proof,removeLpArgs).encodeABI()
+    if (data.poolType === curvePoolType.LENDING) {
+      removeLpArgs.useUnderlying = !data.isWrapped
+      console.log(removeLpArgs)
+      calldata = curveSLPContract.methods.curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
       address = curveSLPContract._address
-    } else if (data.isETH !== undefined) {
-      removeLpArgs.isETH = data.isETH
-      calldata = curveCPContract.methods.curveRemoveLiquidity(data.proof,removeLpArgs).encodeABI()
+    }else if (data.poolType === curvePoolType.CRYPTO) {
+      removeLpArgs.isETH = !data.isWrapped
+      calldata = curveCPContract.methods.curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
       address = curveCPContract._address
     } else {
-      calldata = curveSPPContract.methods.curveRemoveLiquidity(data.proof,removeLpArgs).encodeABI()
+      calldata = curveSPPContract.methods.curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
       address = curveSPPContract._address
     }
     return {
@@ -388,7 +390,7 @@ async function submitTx(job, retry = 0) {
         updateStatus(status.SENT)
       })
       .on('mined', receipt => {
-        console.log('Mined in block', receipt.blockNumber)
+        console.log(receipt.status)
         updateStatus(status.MINED)
       })
       .on('confirmations', updateConfirmations)

@@ -37,17 +37,17 @@
         },
         {
           "internalType": "address",
+          "name": "keyringManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
           "name": "merkleTreeOperator",
           "type": "address"
         },
         {
           "internalType": "address",
           "name": "mimc254",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "keyringCredentials",
           "type": "address"
         },
         {
@@ -232,19 +232,6 @@
     },
     {
       "inputs": [],
-      "name": "KEYRING_POLICY_ID",
-      "outputs": [
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "P",
       "outputs": [
         {
@@ -403,7 +390,7 @@
     },
     {
       "inputs": [],
-      "name": "getKeyringCredentials",
+      "name": "getKeyringManager",
       "outputs": [
         {
           "internalType": "address",
