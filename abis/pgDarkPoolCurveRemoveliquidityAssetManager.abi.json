@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "CurveSPPAssetManager",
-  "sourceName": "contracts/defi/curve/CurveSPPAssetManager.sol",
+  "contractName": "CurveRemoveliquidityAssetManager",
+  "sourceName": "contracts/defi/curve/CurveRemoveLiquidityAssetManager.sol",
   "abi": [
     {
       "inputs": [
@@ -196,42 +196,7 @@
             }
           ],
           "indexed": false,
-          "internalType": "struct CurveSPPAssetManager.EventOutput",
-          "name": "outPut",
-          "type": "tuple"
-        }
-      ],
-      "name": "CurveAddLiquidity",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "noteOut",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "asset",
-              "type": "address"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "noteFooter",
-              "type": "bytes32"
-            }
-          ],
-          "indexed": false,
-          "internalType": "struct CurveSPPAssetManager.EventOutput[5]",
+          "internalType": "struct CurveRemoveliquidityAssetManager.EventOutput[5]",
           "name": "outPut",
           "type": "tuple[5]"
         }
@@ -257,6 +222,10 @@
       ],
       "name": "OwnershipTransferred",
       "type": "event"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "fallback"
     },
     {
       "inputs": [],
@@ -325,71 +294,6 @@
               "type": "bytes32"
             },
             {
-              "internalType": "bytes32[4]",
-              "name": "nullifiers",
-              "type": "bytes32[4]"
-            },
-            {
-              "internalType": "address[4]",
-              "name": "assets",
-              "type": "address[4]"
-            },
-            {
-              "internalType": "uint256[4]",
-              "name": "amounts",
-              "type": "uint256[4]"
-            },
-            {
-              "internalType": "address",
-              "name": "pool",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "lpToken",
-              "type": "address"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "noteFooter",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "address payable",
-              "name": "relayer",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256[4]",
-              "name": "gasRefund",
-              "type": "uint256[4]"
-            }
-          ],
-          "internalType": "struct CurveSPPAssetManager.LPArgs",
-          "name": "_args",
-          "type": "tuple"
-        }
-      ],
-      "name": "curveAddLiquidity",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
-        },
-        {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "merkleRoot",
-              "type": "bytes32"
-            },
-            {
               "internalType": "bytes32",
               "name": "nullifier",
               "type": "bytes32"
@@ -420,6 +324,21 @@
               "type": "address[4]"
             },
             {
+              "internalType": "bool",
+              "name": "isPlain",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isLegacy",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "booleanFlag",
+              "type": "bool"
+            },
+            {
               "internalType": "bytes32[5]",
               "name": "noteFooters",
               "type": "bytes32[5]"
@@ -435,7 +354,7 @@
               "type": "uint256[4]"
             }
           ],
-          "internalType": "struct CurveSPPAssetManager.RemoveLiquidityArgs",
+          "internalType": "struct CurveRemoveliquidityAssetManager.RemoveLiquidityArgs",
           "name": "_args",
           "type": "tuple"
         }
@@ -576,6 +495,24 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "asset",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "releaseToAsssetPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "renounceOwnership",
       "outputs": [],
@@ -672,6 +609,10 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
     }
   ],
   "bytecode": "",
