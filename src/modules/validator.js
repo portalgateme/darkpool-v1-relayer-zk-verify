@@ -266,7 +266,6 @@ const pgDarkPoolCurveAddLiquiditySchema = {
       items: Array(4).fill(Uint256Type)
     },
     pool: addressType,
-    poolType: curvePoolType,
     lpToken: assetType,
     isPlain: { "type": "boolean" },
     isLegacy: { "type": "boolean" },
@@ -288,8 +287,8 @@ const pgDarkPoolCurveAddLiquiditySchema = {
   },
   additionalProperties: true,
   required: [
-    'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool', 'poolType',
-    'lpToken', 'isLegacy', 'isWrapped', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
+    'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool',
+    'lpToken', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
@@ -303,7 +302,6 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
     amount: Uint256Type,
     amountBurn: Uint256Type,
     pool: addressType,
-    poolType: curvePoolType,
     isPlain: { "type": "boolean" },
     isLegacy: { "type": "boolean" },
     booleanFlag: { "type": "boolean" },
@@ -337,7 +335,7 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'nullifier', 'asset', 'amount', 'amountBurn',
-    'pool', 'poolType', 'assetsOut', 'isLegacy', 'isWrapped', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
+    'pool', 'assetsOut', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 

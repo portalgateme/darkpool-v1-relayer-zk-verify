@@ -1,10 +1,10 @@
 const fs = require('fs')
 const { GasPriceOracle } = require('gas-price-oracle')
-const pgDarkPoolABI = require('../abis/pgDarkPool.abi')
-const pgDarkPoolUniswapABI = require('../abis/pgDarkPoolUniswap.abi')
-const pgDarkPoolCurveMultiExchangeABI = require('../abis/pgDarkPoolCurveMultiExchange.abi')
-const pgDarkPoolCurveAddLiquidityABI = require('../abis/pgDarkPoolCurveAddLiquidityABI.abi')
-const pgDarkPoolCurveRemoveLiquidityABI = require('../abis/pgDarkPoolCurveRemoveLiquidityABI.abi')
+const pgDarkPoolABI = require('../abis/pgDarkPool.abi.json')
+const pgDarkPoolUniswapABI = require('../abis/pgDarkPoolUniswap.abi.json')
+const pgDarkPoolCurveMultiExchangeABI = require('../abis/pgDarkPoolCurveMultiExchange.abi.json')
+const pgDarkPoolCurveAddLiquidityABI = require('../abis/pgDarkPoolCurveAddliquidityAssetManager.abi.json')
+const pgDarkPoolCurveRemoveLiquidityABI = require('../abis/pgDarkPoolCurveRemoveliquidityAssetManager.abi.json')
 
 const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
@@ -299,6 +299,8 @@ async function getTxObject({ data }) {
       relayer: data.relayer,
       gasRefund: data.gasRefund,
     }
+
+    console.log(lpArgs)
 
     calldata = curveAddLiquidityContract.methods
       .curveAddLiquidity(data.proof, lpArgs).encodeABI()
