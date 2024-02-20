@@ -20,13 +20,13 @@ module.exports = {
     //deployedBlock: 9739503,
   },
   netId31337: {
-    verifierHub: '0x29023DE63D7075B4cC2CE30B55f050f9c67548d4',
-    merkleTreeOperator: '0x876939152C56362e17D508B9DEA77a3fDF9e4083',
-    darkpoolAssetManager: '0x82A9286dB983093Ff234cefCea1d8fA66382876B',
-    uniswapAssetManager: '0x6431AF84d34F0522cAA58b221d94A150B5AdAC69',
-    curveMultiExchangeAssetManager: '0xCC5Bc84C3FDbcF262AaDD9F76652D6784293dD9e',
-    curveAddLiquidityAssetManager: '0x59c7D03d2E9893FB7bAa89dA50a9452e1e9B8b90',
-    curveRemoveLiquidityAssetManager: '0x3Af511B1bdD6A0377e23796aD6B7391d8De68636',
+    verifierHub: '0xCA87833e830652C2ab07E1e03eBa4F2c246D3b58',
+    merkleTreeOperator: '0xD56e6F296352B03C3c3386543185E9B8c2e5Fd0b',
+    darkpoolAssetManager: '0x41219a0a9C0b86ED81933c788a6B63Dfef8f17eE',
+    uniswapAssetManager: '0x18b7CBdfFA52d1e7BB992fd50f394c5b59E20B72',
+    curveMultiExchangeAssetManager: '0x04F75a27cE2FDC591C71a88f1EcaC7e5Ce44f5Fc',
+    curveAddLiquidityAssetManager: '0x834Ea01e45F9b5365314358159d92d134d89feEb',
+    curveRemoveLiquidityAssetManager: '0x10537D7bD661C9c34F547b38EC662D6FD482Ae95',
     //deployedBlock: 9739503,
   }
 }
