@@ -47,7 +47,8 @@ const int24Type = { type: 'integer' }
 const intType = { type: 'interger' }
 const assetType = { ...addressType }
 const relayerType = { ...addressType, isFeeRecipient: true }
-const curvePoolType = { type: 'string', enum: ['PLAIN', 'LENDING', 'META', 'CRYPTO'] }
+const curvePoolType = { type: 'string', enum: ['META', 'FSN', 'NORMAL'] }
+const curveBasePoolType = { type: 'integer', enum: [0, 1, 2] }
 
 const pgDarkPoolWithdrawSchema = {
   type: 'object',
@@ -119,20 +120,19 @@ const pgDarkPoolUniswapLPSchema = {
     refundToken1: bytes32Type,
     refundToken2: bytes32Type,
     merkleRoot: bytes32Type,
-    amountForToken2: Uint256Type,
-    noteFooterForSplittedNote: bytes32Type,
-    noteFooterForChangeNote: bytes32Type,
+    changeNoteFooter1: bytes32Type,
+    changeNoteFooter2: bytes32Type,
     tickMin: int24Type,
     tickMax: int24Type,
     outNoteFooter: bytes32Type,
-    poolFee: bytes32Type,
+    feeTier: bytes32Type,
     fee: bytes32Type,
 
     verifierArgs: {
       type: 'array',
-      maxItems: 12,
-      minItems: 12,
-      items: new Array(12).fill(bytes32Type),
+      maxItems: 14,
+      minItems: 14,
+      items: new Array(14).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -266,10 +266,11 @@ const pgDarkPoolCurveAddLiquiditySchema = {
       items: Array(4).fill(Uint256Type)
     },
     pool: addressType,
+    poolType: curvePoolType,
+    basePoolType: curveBasePoolType,
     lpToken: assetType,
-    isMetaReg: { "type": "boolean" },
     isPlain: { "type": "boolean" },
-    isLegacy: { "type": "boolean" },
+    isLegacy: bytes32Type,
     booleanFlag: { "type": "boolean" },
     noteFooter: bytes32Type,
     relayer: relayerType,
@@ -289,7 +290,7 @@ const pgDarkPoolCurveAddLiquiditySchema = {
   additionalProperties: true,
   required: [
     'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool',
-    'lpToken','isMetaReg', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
+    'lpToken', 'poolType', 'basePoolType', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
@@ -303,9 +304,10 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
     amount: Uint256Type,
     amountBurn: Uint256Type,
     pool: addressType,
-    isMetaReg: { "type": "boolean" },
+    poolType: curvePoolType,
+    basePoolType: curveBasePoolType,
     isPlain: { "type": "boolean" },
-    isLegacy: { "type": "boolean" },
+    isLegacy: bytes32Type,
     booleanFlag: { "type": "boolean" },
     assetsOut: {
       type: 'array',
@@ -337,7 +339,7 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'nullifier', 'asset', 'amount', 'amountBurn',
-    'pool', 'assetsOut','isMetaReg', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
+    'pool', 'assetsOut', 'poolType', 'basePoolType', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 

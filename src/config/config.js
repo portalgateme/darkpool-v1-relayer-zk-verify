@@ -12,10 +12,18 @@ module.exports = {
   oracleRpcUrl: process.env.ORACLE_RPC_URL || 'https://mainnet.infura.io/',
   offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
   pgDarkPoolAssetManager: pgConfig[`netId${netId}`].darkpoolAssetManager,
-  pgDarkPoolUniswapAssetManager: pgConfig[`netId${netId}`].uniswapAssetManager,
+  pgDarkPoolUniswapSwapAssetManager: pgConfig[`netId${netId}`].uniswapSwapAssetManager,
+  pgDarkPoolUniswapLiquidityAssetManager: pgConfig[`netId${netId}`].uniswapLiquidityAssetManager,
   pgDarkPoolCurveMultiExchangeAssetManager: pgConfig[`netId${netId}`].curveMultiExchangeAssetManager,
   pgDarkPoolCurveAddLiquidityAssetManager: pgConfig[`netId${netId}`].curveAddLiquidityAssetManager,
   pgDarkPoolCurveRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveRemoveLiquidityAssetManager,
+  pgDarkPoolCurveFSNAddLiquidityAssetManager: pgConfig[`netId${netId}`].curveFSNAddLiquidityAssetManager,
+  pgDarkPoolCurveFSNRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveFSNRemoveLiquidityAssetManager,
+  pgDarkPoolCurveMPAddLiquidityAssetManager: pgConfig[`netId${netId}`].curveMPAddLiquidityAssetManager,
+  pgDarkPoolCurveMPRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveMPRemoveLiquidityAssetManager,
+
+
+  
 
   pgDarkPoolVerifierHub: pgConfig[`netId${netId}`].verifierHub,
   privateKey: process.env.PRIVATE_KEY,

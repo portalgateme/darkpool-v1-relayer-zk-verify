@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "CurveRemoveLiquidityAssetManager",
-  "sourceName": "contracts/defi/curve/CurveRemoveLiquidityAssetManager.sol",
+  "contractName": "CurveMPAddLiquidityAssetManager",
+  "sourceName": "contracts/defi/curve/CurveMPAddLiquidityAssetManager.sol",
   "abi": [
     {
       "inputs": [
@@ -98,11 +98,6 @@
     },
     {
       "inputs": [],
-      "name": "FunctionNotSupported",
-      "type": "error"
-    },
-    {
-      "inputs": [],
       "name": "LpTokenNotCorrect",
       "type": "error"
     },
@@ -173,35 +168,31 @@
       "anonymous": false,
       "inputs": [
         {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "nullifiers",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "noteOut",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amountOut",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "noteFooter",
-              "type": "bytes32"
-            }
-          ],
           "indexed": false,
-          "internalType": "struct CurveRemoveLiquidityAssetManager.EventOutput[5]",
-          "name": "outPut",
-          "type": "tuple[5]"
+          "internalType": "bytes32[4]",
+          "name": "nullifiers",
+          "type": "bytes32[4]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteOut",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountOut",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteFooter",
+          "type": "bytes32"
         }
       ],
-      "name": "CurveRemoveLiquidity",
+      "name": "CurveAddLiquidity",
       "type": "event"
     },
     {
@@ -281,24 +272,19 @@
               "type": "bytes32"
             },
             {
-              "internalType": "bytes32",
-              "name": "nullifier",
-              "type": "bytes32"
+              "internalType": "bytes32[4]",
+              "name": "nullifiers",
+              "type": "bytes32[4]"
             },
             {
-              "internalType": "address",
-              "name": "asset",
-              "type": "address"
+              "internalType": "address[4]",
+              "name": "assets",
+              "type": "address[4]"
             },
             {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amountBurn",
-              "type": "uint256"
+              "internalType": "uint256[4]",
+              "name": "amounts",
+              "type": "uint256[4]"
             },
             {
               "internalType": "address",
@@ -306,29 +292,19 @@
               "type": "address"
             },
             {
-              "internalType": "address[4]",
-              "name": "assetsOut",
-              "type": "address[4]"
-            },
-            {
-              "internalType": "bool",
-              "name": "isPlain",
-              "type": "bool"
-            },
-            {
               "internalType": "uint256",
-              "name": "isLegacy",
+              "name": "basePoolType",
               "type": "uint256"
             },
             {
-              "internalType": "bool",
-              "name": "booleanFlag",
-              "type": "bool"
+              "internalType": "address",
+              "name": "lpToken",
+              "type": "address"
             },
             {
-              "internalType": "bytes32[5]",
-              "name": "noteFooters",
-              "type": "bytes32[5]"
+              "internalType": "bytes32",
+              "name": "noteFooter",
+              "type": "bytes32"
             },
             {
               "internalType": "address payable",
@@ -341,12 +317,12 @@
               "type": "uint256[4]"
             }
           ],
-          "internalType": "struct CurveRemoveLiquidityAssetManager.RemoveLiquidityArgs",
+          "internalType": "struct CurveMPAddLiquidityAssetManager.AddLiquidityArgs",
           "name": "_args",
           "type": "tuple"
         }
       ],
-      "name": "curveRemoveLiquidity",
+      "name": "curveAddLiquidity",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"

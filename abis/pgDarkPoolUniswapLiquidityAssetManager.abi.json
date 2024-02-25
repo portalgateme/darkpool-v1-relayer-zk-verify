@@ -1,0 +1,1070 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "UniswapLiquidityAssetManager",
+  "sourceName": "contracts/defi/uniswap/UniswapLiquidityAssetManager.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "assetPoolERC20",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "assetPoolERC721",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "assetPoolETH",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "verifierHub",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "relayerHub",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "feeManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "keyringManager",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "merkleTreeOperator",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "mimcBn254",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "initialOwner",
+          "type": "address"
+        },
+        {
+          "internalType": "contract INonfungiblePositionManager",
+          "name": "_nonfungiblePositionManager",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "target",
+          "type": "address"
+        }
+      ],
+      "name": "AddressEmptyCode",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "AddressInsufficientBalance",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "FailedInnerCall",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "MerkleRootNotAllowed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoteAlreadyCreated",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoteFooterUsed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NullifierUsed",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "RelayerNotRegistered",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "SafeERC20FailedOperation",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[2]",
+          "name": "amounts",
+          "type": "uint256[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[2]",
+          "name": "feeNoteCommitments",
+          "type": "uint256[2]"
+        }
+      ],
+      "name": "UniswapCollectFees",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "positionNote",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[2]",
+          "name": "nullifiers",
+          "type": "bytes32[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[2]",
+          "name": "changeAmounts",
+          "type": "uint256[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[2]",
+          "name": "changeNoteCommitments",
+          "type": "uint256[2]"
+        }
+      ],
+      "name": "UniswapLiquidityProvision",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "positionNullifier",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[2]",
+          "name": "amounts",
+          "type": "uint256[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[2]",
+          "name": "outNoteCommitments",
+          "type": "uint256[2]"
+        }
+      ],
+      "name": "UniswapRemoveLiquidity",
+      "type": "event"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "inputs": [],
+      "name": "ASSET_ETH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "ETH_ADDRESS",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "P",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "WETH_ADDRESS",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "name": "_boolToBytes32",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAssetPoolERC20",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAssetPoolERC721",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAssetPoolETH",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getComplianceManager",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getFeeManager",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getMerkleTreeOperator",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getMimc254",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getRelayerHub",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getVerifierHub",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nonfungiblePositionManager",
+      "outputs": [
+        {
+          "internalType": "contract INonfungiblePositionManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "onERC721Received",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "asset",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "releaseToAsssetPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "assetPoolERC20",
+          "type": "address"
+        }
+      ],
+      "name": "setAssetPoolERC20",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "assetPoolERC721",
+          "type": "address"
+        }
+      ],
+      "name": "setAssetPoolERC721",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "assetPoolETH",
+          "type": "address"
+        }
+      ],
+      "name": "setAssetPoolETH",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "complianceManager",
+          "type": "address"
+        }
+      ],
+      "name": "setComplianceManager",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "feeManager",
+          "type": "address"
+        }
+      ],
+      "name": "setFeeManager",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "relayerHub",
+          "type": "address"
+        }
+      ],
+      "name": "setRelayerHub",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "verifierHub",
+          "type": "address"
+        }
+      ],
+      "name": "setVerifierHub",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "merkleRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[2]",
+              "name": "feeNoteFooters",
+              "type": "bytes32[2]"
+            },
+            {
+              "internalType": "uint256[2]",
+              "name": "relayerGasFees",
+              "type": "uint256[2]"
+            },
+            {
+              "internalType": "address payable",
+              "name": "relayer",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct UniswapLiquidityAssetManager.UniswapCollectFeesArgs",
+          "name": "args",
+          "type": "tuple"
+        },
+        {
+          "internalType": "bytes",
+          "name": "proof",
+          "type": "bytes"
+        }
+      ],
+      "name": "uniswapCollectFees",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "actualAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "normalizedAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "noteCommitment",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "serviceFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "relayerRefund",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct UniswapCoreAssetManager.FeesDetails",
+              "name": "feesDetails",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct UniswapCoreAssetManager.TransferFundsToVaultWithFeesAndCreateNoteData",
+          "name": "dataToken1",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "actualAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "normalizedAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "noteCommitment",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "serviceFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "relayerRefund",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct UniswapCoreAssetManager.FeesDetails",
+              "name": "feesDetails",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct UniswapCoreAssetManager.TransferFundsToVaultWithFeesAndCreateNoteData",
+          "name": "dataToken2",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "uniswapLPData",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "token1",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token2",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "assetAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "nullifier",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct UniswapCoreAssetManager.UniswapNoteData",
+              "name": "noteData1",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "assetAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "nullifier",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct UniswapCoreAssetManager.UniswapNoteData",
+              "name": "noteData2",
+              "type": "tuple"
+            },
+            {
+              "internalType": "address payable",
+              "name": "relayer",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256[2]",
+              "name": "relayerGasFees",
+              "type": "uint256[2]"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "merkleRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32[2]",
+              "name": "changeNoteFooters",
+              "type": "bytes32[2]"
+            },
+            {
+              "internalType": "int24",
+              "name": "tickMin",
+              "type": "int24"
+            },
+            {
+              "internalType": "int24",
+              "name": "tickMax",
+              "type": "int24"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "positionNoteFooter",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint24",
+              "name": "poolFee",
+              "type": "uint24"
+            }
+          ],
+          "internalType": "struct UniswapLiquidityAssetManager.UniswapLiquidityProvisionArgs",
+          "name": "args",
+          "type": "tuple"
+        },
+        {
+          "internalType": "bytes",
+          "name": "proof",
+          "type": "bytes"
+        }
+      ],
+      "name": "uniswapLiquidityProvision",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "serviceFee",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "relayerRefund",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct UniswapCoreAssetManager.FeesDetails",
+          "name": "feesDetails",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "merkleRoot",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "assetAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "nullifier",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct UniswapCoreAssetManager.UniswapNoteData",
+              "name": "positionNote",
+              "type": "tuple"
+            },
+            {
+              "internalType": "bytes32[2]",
+              "name": "outNoteFooters",
+              "type": "bytes32[2]"
+            },
+            {
+              "internalType": "uint256[2]",
+              "name": "relayerGasFees",
+              "type": "uint256[2]"
+            },
+            {
+              "internalType": "address payable",
+              "name": "relayer",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct UniswapLiquidityAssetManager.UniswapRemoveLiquidityArgs",
+          "name": "args",
+          "type": "tuple"
+        },
+        {
+          "internalType": "bytes",
+          "name": "proof",
+          "type": "bytes"
+        }
+      ],
+      "name": "uniswapRemoveLiquidity",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "actualAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "normalizedAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "noteCommitment",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "serviceFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "relayerRefund",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct UniswapCoreAssetManager.FeesDetails",
+              "name": "feesDetails",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct UniswapCoreAssetManager.TransferFundsToVaultWithFeesAndCreateNoteData",
+          "name": "dataToken1",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "actualAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "normalizedAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "noteCommitment",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "serviceFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "relayerRefund",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct UniswapCoreAssetManager.FeesDetails",
+              "name": "feesDetails",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct UniswapCoreAssetManager.TransferFundsToVaultWithFeesAndCreateNoteData",
+          "name": "dataToken2",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "bytecode": "",
+  "deployedBytecode": "",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -37,7 +37,7 @@
         },
         {
           "internalType": "address",
-          "name": "keyringManager",
+          "name": "complianceManager",
           "type": "address"
         },
         {
@@ -169,6 +169,12 @@
       "inputs": [
         {
           "indexed": false,
+          "internalType": "bytes32[4]",
+          "name": "nullifiers",
+          "type": "bytes32[4]"
+        },
+        {
+          "indexed": false,
           "internalType": "bytes32",
           "name": "noteOut",
           "type": "bytes32"
@@ -176,14 +182,8 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "amount",
+          "name": "amountOut",
           "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "asset",
-          "type": "address"
         },
         {
           "indexed": false,
@@ -298,18 +298,13 @@
             },
             {
               "internalType": "bool",
-              "name": "isMetaReg",
-              "type": "bool"
-            },
-            {
-              "internalType": "bool",
               "name": "isPlain",
               "type": "bool"
             },
             {
-              "internalType": "bool",
+              "internalType": "uint256",
               "name": "isLegacy",
-              "type": "bool"
+              "type": "uint256"
             },
             {
               "internalType": "bool",
@@ -383,7 +378,7 @@
     },
     {
       "inputs": [],
-      "name": "getFeeManager",
+      "name": "getComplianceManager",
       "outputs": [
         {
           "internalType": "address",
@@ -396,7 +391,7 @@
     },
     {
       "inputs": [],
-      "name": "getKeyringManager",
+      "name": "getFeeManager",
       "outputs": [
         {
           "internalType": "address",
@@ -532,6 +527,19 @@
         }
       ],
       "name": "setAssetPoolETH",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "complianceManager",
+          "type": "address"
+        }
+      ],
+      "name": "setComplianceManager",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

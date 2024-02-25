@@ -9,6 +9,12 @@ const jobType = Object.freeze({
   PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY: 'PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY',
 })
 
+const POOL_TYPE = Object.freeze({
+  META: 'META',
+  FSN: 'FSN',
+  NORMAL: 'NORMAL',
+})
+
 const status = Object.freeze({
   QUEUED: 'QUEUED',
   ACCEPTED: 'ACCEPTED',
@@ -30,4 +36,5 @@ module.exports = {
   jobType,
   status,
   curvePoolType,
+  POOL_TYPE,
 }  

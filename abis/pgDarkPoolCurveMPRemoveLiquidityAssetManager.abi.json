@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "CurveRemoveLiquidityAssetManager",
-  "sourceName": "contracts/defi/curve/CurveRemoveLiquidityAssetManager.sol",
+  "contractName": "CurveMPRemoveLiquidityAssetManager",
+  "sourceName": "contracts/defi/curve/CurveMPRemoveLiquidityAssetManager.sol",
   "abi": [
     {
       "inputs": [
@@ -196,7 +196,7 @@
             }
           ],
           "indexed": false,
-          "internalType": "struct CurveRemoveLiquidityAssetManager.EventOutput[5]",
+          "internalType": "struct CurveMPRemoveLiquidityAssetManager.EventOutput[5]",
           "name": "outPut",
           "type": "tuple[5]"
         }
@@ -311,19 +311,9 @@
               "type": "address[4]"
             },
             {
-              "internalType": "bool",
-              "name": "isPlain",
-              "type": "bool"
-            },
-            {
               "internalType": "uint256",
-              "name": "isLegacy",
+              "name": "basePoolType",
               "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "booleanFlag",
-              "type": "bool"
             },
             {
               "internalType": "bytes32[5]",
@@ -341,7 +331,7 @@
               "type": "uint256[4]"
             }
           ],
-          "internalType": "struct CurveRemoveLiquidityAssetManager.RemoveLiquidityArgs",
+          "internalType": "struct CurveMPRemoveLiquidityAssetManager.RemoveLiquidityArgs",
           "name": "_args",
           "type": "tuple"
         }
