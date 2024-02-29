@@ -7,9 +7,9 @@ const pgDarkPoolCurveMultiExchangeABI = require('../abis/pgDarkPoolCurveMultiExc
 const pgDarkPoolCurveAddLiquidityABI = require('../abis/pgDarkPoolCurveAddliquidityAssetManager.abi.json')
 const pgDarkPoolCurveRemoveLiquidityABI = require('../abis/pgDarkPoolCurveRemoveliquidityAssetManager.abi.json')
 const pgDarkPoolCurveFSNAddLiquidityABI = require('../abis/pgDarkPoolCurveFSNAddLiquidityAssetManager.abi.json')
-const pgDarkPoolCurveFSNRemoveLiquidityABI = require('../abis/pgDarkPoolCurveFSNRemoveliquidityAssetManager.abi.json')
-const pgDarkPoolCurveMPAddLiquidityABI = require('../abis/pgDarkPoolCurveMPAddliquidityAssetManager.abi.json')
-const pgDarkPoolCurveMPRemoveLiquidityABI = require('../abis/pgDarkPoolCurveMPRemoveliquidityAssetManager.abi.json')
+const pgDarkPoolCurveFSNRemoveLiquidityABI = require('../abis/pgDarkPoolCurveFSNRemoveLiquidityAssetManager.abi.json')
+const pgDarkPoolCurveMPAddLiquidityABI = require('../abis/pgDarkPoolCurveMPAddLiquidityAssetManager.abi.json')
+const pgDarkPoolCurveMPRemoveLiquidityABI = require('../abis/pgDarkPoolCurveMPRemoveLiquidityAssetManager.abi.json')
 
 
 const erc20ABI = require('../abis/erc20Simple.abi')
