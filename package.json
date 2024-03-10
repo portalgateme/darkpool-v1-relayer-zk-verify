@@ -12,7 +12,7 @@
     "prettier:fix": "npx prettier --write . --config .prettierrc",
     "lint": "yarn eslint && yarn prettier:check",
     "test": "mocha",
-    "start": "yarn server & yarn priceWatcher & yarn worker & yarn healthWatcher"
+    "start": "yarn server & yarn worker & yarn healthWatcher"
   },
   "author": "portalgate.me",
   "license": "MIT",
