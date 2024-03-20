@@ -161,7 +161,7 @@ async function getTxObject({ data }) {
     if (isETH(data.asset)) {
       calldata = darkPoolContract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.refund, data.amount).encodeABI()
     } else {
-      calldata = darkPoolContract.methods.withdrawERC20(data.asset, data.assetMod, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.refund, data.amount).encodeABI()
+      calldata = darkPoolContract.methods.withdrawERC20(data.asset, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.refund, data.amount).encodeABI()
     }
     return {
       to: darkPoolContract._address,
