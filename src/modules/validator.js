@@ -60,7 +60,6 @@ const pgDarkPoolWithdrawSchema = {
     recipient: addressType,
     relayer: relayerType,
     amount: Uint256Type,
-    fee: bytes32Type,
     refund: bytes32Type,
     verifierArgs: {
       type: 'array',
