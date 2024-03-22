@@ -37,7 +37,7 @@
         },
         {
           "internalType": "address",
-          "name": "keyringManager",
+          "name": "complianceManager",
           "type": "address"
         },
         {
@@ -160,20 +160,26 @@
         {
           "indexed": false,
           "internalType": "bytes32",
-          "name": "noteOut",
+          "name": "nullifiers",
           "type": "bytes32"
         },
         {
           "indexed": false,
+          "internalType": "address",
+          "name": "assetOut",
+          "type": "address"
+        },
+        {
+          "indexed": false,
           "internalType": "uint256",
-          "name": "amount",
+          "name": "amountOut",
           "type": "uint256"
         },
         {
           "indexed": false,
-          "internalType": "address",
-          "name": "asset",
-          "type": "address"
+          "internalType": "bytes32",
+          "name": "noteOut",
+          "type": "bytes32"
         },
         {
           "indexed": false,
@@ -203,6 +209,10 @@
       ],
       "name": "OwnershipTransferred",
       "type": "event"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "fallback"
     },
     {
       "inputs": [],
@@ -377,7 +387,7 @@
     },
     {
       "inputs": [],
-      "name": "getFeeManager",
+      "name": "getComplianceManager",
       "outputs": [
         {
           "internalType": "address",
@@ -390,7 +400,7 @@
     },
     {
       "inputs": [],
-      "name": "getKeyringManager",
+      "name": "getFeeManager",
       "outputs": [
         {
           "internalType": "address",
@@ -467,6 +477,24 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "asset",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "releaseToAsssetPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "renounceOwnership",
       "outputs": [],
@@ -508,6 +536,19 @@
         }
       ],
       "name": "setAssetPoolETH",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "complianceManager",
+          "type": "address"
+        }
+      ],
+      "name": "setComplianceManager",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -563,6 +604,10 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
     }
   ],
   "bytecode": "",

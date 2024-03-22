@@ -179,15 +179,27 @@
         },
         {
           "indexed": false,
+          "internalType": "address[2]",
+          "name": "assets",
+          "type": "address[2]"
+        },
+        {
+          "indexed": false,
           "internalType": "uint256[2]",
           "name": "amounts",
           "type": "uint256[2]"
         },
         {
           "indexed": false,
-          "internalType": "uint256[2]",
+          "internalType": "bytes32[2]",
           "name": "feeNoteCommitments",
-          "type": "uint256[2]"
+          "type": "bytes32[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[2]",
+          "name": "feeNoteFooters",
+          "type": "bytes32[2]"
         }
       ],
       "name": "UniswapCollectFees",
@@ -204,9 +216,9 @@
         },
         {
           "indexed": false,
-          "internalType": "uint256",
+          "internalType": "bytes32",
           "name": "positionNote",
-          "type": "uint256"
+          "type": "bytes32"
         },
         {
           "indexed": false,
@@ -222,9 +234,15 @@
         },
         {
           "indexed": false,
-          "internalType": "uint256[2]",
+          "internalType": "bytes32[2]",
           "name": "changeNoteCommitments",
-          "type": "uint256[2]"
+          "type": "bytes32[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[2]",
+          "name": "changeNoteFooters",
+          "type": "bytes32[2]"
         }
       ],
       "name": "UniswapLiquidityProvision",
@@ -253,9 +271,15 @@
         },
         {
           "indexed": false,
-          "internalType": "uint256[2]",
+          "internalType": "bytes32[2]",
           "name": "outNoteCommitments",
-          "type": "uint256[2]"
+          "type": "bytes32[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[2]",
+          "name": "outNoteFooters",
+          "type": "bytes32[2]"
         }
       ],
       "name": "UniswapRemoveLiquidity",
@@ -467,28 +491,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "operator",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "data",
-          "type": "bytes"
-        }
-      ],
+      "inputs": [],
       "name": "onERC721Received",
       "outputs": [
         {
@@ -497,7 +500,7 @@
           "type": "bytes4"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "pure",
       "type": "function"
     },
     {
@@ -697,9 +700,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint256",
+              "internalType": "bytes32",
               "name": "noteCommitment",
-              "type": "uint256"
+              "type": "bytes32"
             },
             {
               "components": [
@@ -736,9 +739,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint256",
+              "internalType": "bytes32",
               "name": "noteCommitment",
-              "type": "uint256"
+              "type": "bytes32"
             },
             {
               "components": [
@@ -892,11 +895,6 @@
       "name": "uniswapLiquidityProvision",
       "outputs": [
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
           "components": [
             {
               "internalType": "uint256",
@@ -989,9 +987,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint256",
+              "internalType": "bytes32",
               "name": "noteCommitment",
-              "type": "uint256"
+              "type": "bytes32"
             },
             {
               "components": [
@@ -1028,9 +1026,9 @@
               "type": "address"
             },
             {
-              "internalType": "uint256",
+              "internalType": "bytes32",
               "name": "noteCommitment",
-              "type": "uint256"
+              "type": "bytes32"
             },
             {
               "components": [

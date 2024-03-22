@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "CurveMFPRemoveLiquidityAssetManager",
-  "sourceName": "contracts/defi/curve/CurveMFPRemoveLiquidityAssetManager.sol",
+  "contractName": "CurveFSNRemoveLiquidityAssetManager",
+  "sourceName": "contracts/defi/curve/CurveFSNRemoveLiquidityAssetManager.sol",
   "abi": [
     {
       "inputs": [
@@ -173,32 +173,71 @@
       "anonymous": false,
       "inputs": [
         {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "nullifiers",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "noteOut",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amountOut",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "noteFooter",
-              "type": "bytes32"
-            }
-          ],
           "indexed": false,
-          "internalType": "struct CurveMFPRemoveLiquidityAssetManager.EventOutput[5]",
-          "name": "outPut",
-          "type": "tuple[5]"
+          "internalType": "bytes32[4]",
+          "name": "nullifiers",
+          "type": "bytes32[4]"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "asset",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountOut",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteOut",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteFooter",
+          "type": "bytes32"
+        }
+      ],
+      "name": "CurveAddLiquidity",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "nullifier",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[5]",
+          "name": "assets",
+          "type": "address[5]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[5]",
+          "name": "amountsOut",
+          "type": "uint256[5]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[5]",
+          "name": "notesOut",
+          "type": "bytes32[5]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[5]",
+          "name": "noteFooters",
+          "type": "bytes32[5]"
         }
       ],
       "name": "CurveRemoveLiquidity",
@@ -326,7 +365,7 @@
               "type": "uint256[4]"
             }
           ],
-          "internalType": "struct CurveMFPRemoveLiquidityAssetManager.RemoveLiquidityArgs",
+          "internalType": "struct CurveFSNRemoveLiquidityAssetManager.RemoveLiquidityArgs",
           "name": "_args",
           "type": "tuple"
         }
