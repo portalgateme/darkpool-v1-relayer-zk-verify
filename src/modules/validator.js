@@ -63,9 +63,9 @@ const pgDarkPoolWithdrawSchema = {
     refund: bytes32Type,
     verifierArgs: {
       type: 'array',
-      maxItems: 5,
-      minItems: 5,
-      items: new Array(5).fill(bytes32Type),
+      maxItems: 6,
+      minItems: 6,
+      items: new Array(6).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -93,9 +93,9 @@ const pgDarkPoolUniswapSSSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
-      items: new Array(6).fill(bytes32Type),
+      maxItems: 7,
+      minItems: 7,
+      items: new Array(7).fill(bytes32Type),
     },
   },
   additionalProperties: false,
@@ -129,9 +129,9 @@ const pgDarkPoolUniswapLPSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 14,
-      minItems: 14,
-      items: new Array(14).fill(bytes32Type),
+      maxItems: 15,
+      minItems: 15,
+      items: new Array(15).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -154,9 +154,9 @@ const pgDarkPoolUniswapFeeCollectingSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
-      items: new Array(6).fill(bytes32Type),
+      maxItems: 7,
+      minItems: 7,
+      items: new Array(7).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -179,9 +179,9 @@ const pgDarkPoolUniswapRemoveLiquiditySchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
-      items: new Array(6).fill(bytes32Type),
+      maxItems: 7,
+      minItems: 7,
+      items: new Array(7).fill(bytes32Type),
     }
   },
   additionalProperties: false,
@@ -229,9 +229,9 @@ const pgDarkPoolCurveMultiExchangeSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 7,
-      minItems: 7,
-      items: new Array(7).fill(bytes32Type),
+      maxItems: 8,
+      minItems: 8,
+      items: new Array(8).fill(bytes32Type),
     },
   },
   additionalProperties: false,
@@ -281,9 +281,9 @@ const pgDarkPoolCurveAddLiquiditySchema = {
     },
     verifierArgs: {
       type: 'array',
-      maxItems: 15,
-      minItems: 15,
-      items: new Array(15).fill(bytes32Type),
+      maxItems: 16,
+      minItems: 16,
+      items: new Array(16).fill(bytes32Type),
     },
   },
   additionalProperties: true,
@@ -330,9 +330,9 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 15,
-      minItems: 15,
-      items: new Array(15).fill(bytes32Type),
+      maxItems: 16,
+      minItems: 16,
+      items: new Array(16).fill(bytes32Type),
     },
   },
   additionalProperties: false,
