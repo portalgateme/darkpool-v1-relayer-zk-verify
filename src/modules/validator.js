@@ -93,9 +93,9 @@ const pgDarkPoolUniswapSSSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 7,
-      minItems: 7,
-      items: new Array(7).fill(bytes32Type),
+      maxItems: 9,
+      minItems: 9,
+      items: new Array(9).fill(bytes32Type),
     },
   },
   additionalProperties: false,
