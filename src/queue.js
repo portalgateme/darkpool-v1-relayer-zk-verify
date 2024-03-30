@@ -1,8 +1,8 @@
 const { v4: uuid } = require('uuid')
 const Queue = require('bull')
 
-const { netId } = require('./config')
-const { status } = require('./constants')
+const { netId } = require('./config/config')
+const { status } = require('./config/constants')
 const { redis, redisUrl } = require('./modules/redis')
 
 const queue = new Queue(`proofs_${netId}`, redisUrl, {

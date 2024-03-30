@@ -97,7 +97,7 @@ curl -X POST -H 'content-type:application/json' --data '<input data>' http://127
 
 Relayer should return a transaction hash.
 
-_Note._ If you want to change contracts' addresses go to [config.js](./config.js) file.
+_Note._ If you want to change contracts' addresses go to [config.js](./config/config.js) file.
 
 ## Input data example
 

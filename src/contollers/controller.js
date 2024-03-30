@@ -1,10 +1,15 @@
 const {
   getPgDarkPoolWithdrawInputError,
-  //getMiningRewardInputError,
-  //getMiningWithdrawInputError
+  getPgDarkPoolUniswapSSInputError,
+  getPgDarkPoolUniswapLPInputError,
+  getPgDarkPoolUniswapRemoveLiquidityInputError,
+  getPgDarkPoolUniswapFeeCollectingInputError,
+  getPgDarkPoolCurveMultiExchangeInputError,
+  getPgDarkPoolCurveAddLiquidityInputError,
+  getPgDarkPoolCurveRemoveLiquidityInputError,
 } = require('../modules/validator')
 const { postJob } = require('../queue')
-const { jobType } = require('../constants')
+const { jobType } = require('../config/constants')
 
 async function pgDarkPoolWithdraw(req, res) {
   const inputError = getPgDarkPoolWithdrawInputError(req.body)
@@ -20,36 +25,113 @@ async function pgDarkPoolWithdraw(req, res) {
   return res.json({ id })
 }
 
-/*async function miningReward(req, res) {
-  const inputError = getMiningRewardInputError(req.body)
+async function pgDarkPoolUniswapSingleSwap(req, res) {
+  const inputError = getPgDarkPoolUniswapSSInputError(req.body)
   if (inputError) {
     console.log('Invalid input:', inputError)
     return res.status(400).json({ error: inputError })
   }
 
   const id = await postJob({
-    type: jobType.MINING_REWARD,
+    type: jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP,
     request: req.body,
   })
   return res.json({ id })
 }
 
-async function miningWithdraw(req, res) {
-  const inputError = getMiningWithdrawInputError(req.body)
+async function pgDarkPoolUniswapRemoveLiquidity(req, res) {
+  const inputError = getPgDarkPoolUniswapRemoveLiquidityInputError(req.body)
   if (inputError) {
     console.log('Invalid input:', inputError)
     return res.status(400).json({ error: inputError })
   }
 
   const id = await postJob({
-    type: jobType.MINING_WITHDRAW,
+    type: jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY,
     request: req.body,
   })
   return res.json({ id })
-}*/
+}
+
+async function pgDarkPoolUniswapCollectFees(req, res) {
+  const inputError = getPgDarkPoolUniswapFeeCollectingInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+
+async function pgDarkPoolUniswapLP(req, res) {
+  const inputError = getPgDarkPoolUniswapLPInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_UNISWAP_LP,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolCurveMultiExchange(req, res) {
+  const inputError = getPgDarkPoolCurveMultiExchangeInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolCurveAddLiquidity(req, res) {
+  const inputError = getPgDarkPoolCurveAddLiquidityInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolCurveRemoveLiquidity(req, res) {
+  const inputError = getPgDarkPoolCurveRemoveLiquidityInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
 
 module.exports = {
   pgDarkPoolWithdraw,
-  //miningReward,
-  //miningWithdraw,
+  pgDarkPoolUniswapSingleSwap,
+  pgDarkPoolUniswapLP,
+  pgDarkPoolUniswapCollectFees,
+  pgDarkPoolUniswapRemoveLiquidity,
+  pgDarkPoolCurveMultiExchange,
+  pgDarkPoolCurveAddLiquidity,
+  pgDarkPoolCurveRemoveLiquidity,
 }

@@ -1,16 +1,27 @@
 const fs = require('fs')
-//const MerkleTree = require('fixed-merkle-tree')
 const { GasPriceOracle } = require('gas-price-oracle')
-//const { Controller } = require('tornado-anonymity-mining')
-//const miningABI = require('../abis/mining.abi.json')
-const pgDarkPoolABI = require('../abis/pgDarkPool.abi')
+const pgDarkPoolABI = require('../abis/pgDarkPool.abi.json')
+const pgDarkPoolUniswapSwapABI = require('../abis/pgDarkPoolUniswapSwapAssetManager.abi.json')
+const pgDarkPoolUniswapLiquidityABI = require('../abis/pgDarkPoolUniswapLiquidityAssetManager.abi.json')
+const pgDarkPoolCurveMultiExchangeABI = require('../abis/pgDarkPoolCurveMultiExchange.abi.json')
+const pgDarkPoolCurveAddLiquidityABI = require('../abis/pgDarkPoolCurveAddliquidityAssetManager.abi.json')
+const pgDarkPoolCurveRemoveLiquidityABI = require('../abis/pgDarkPoolCurveRemoveliquidityAssetManager.abi.json')
+const pgDarkPoolCurveFSNAddLiquidityABI = require('../abis/pgDarkPoolCurveFSNAddLiquidityAssetManager.abi.json')
+const pgDarkPoolCurveFSNRemoveLiquidityABI = require('../abis/pgDarkPoolCurveFSNRemoveLiquidityAssetManager.abi.json')
+const pgDarkPoolCurveMPAddLiquidityABI = require('../abis/pgDarkPoolCurveMPAddLiquidityAssetManager.abi.json')
+const pgDarkPoolCurveMPRemoveLiquidityABI = require('../abis/pgDarkPoolCurveMPRemoveLiquidityAssetManager.abi.json')
+const { WithdrawWorker } = require('./worker/withdrawWorker')
+const { UniswapSingleSwapWorker } = require('./worker/uniswapSingleSwapWorker')
+const { UniswapAddLiquidityWorker } = require('./worker/uniswapAddLiquidityWorker')
+const { UniswapRemoveLiquidityWorker } = require('./worker/uniswapRemoveLiquidityWorker')
+const { UniswapCollectFeesWorker } = require('./worker/uniswapCollectFeesWorker')
+const { CurveMultiExchangeWorker } = require('./worker/curveMultiExchangeWorker')
+const { CurveAddLiquidityWorker } = require('./worker/curveAddLiquidityWorker')
+const { CurveRemoveLiquidityWorker } = require('./worker/curveRemoveLiquidityWorker')
+
 const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
 const {
-  //poseidonHash2,
-  //getInstance,
-  fromDecimals,
-  //sleep,
   toBN,
   toWei,
   fromWei,
@@ -18,58 +29,49 @@ const {
   logRelayerError,
   isETH,
   toChecksumAddress,
+  getRateToEth,
 } = require('./utils')
-const { jobType, status } = require('./constants')
+const { jobType, status, POOL_TYPE } = require('./config/constants')
 const {
-  pgFUZKAddress,
-  //minerAddress,
+  pgDarkPoolAssetManager,
+  pgDarkPoolUniswapSwapAssetManager,
+  pgDarkPoolUniswapLiquidityAssetManager,
+  pgDarkPoolCurveMultiExchangeAssetManager,
+  pgDarkPoolCurveAddLiquidityAssetManager,
+  pgDarkPoolCurveRemoveLiquidityAssetManager,
+  pgDarkPoolCurveFSNAddLiquidityAssetManager,
+  pgDarkPoolCurveFSNRemoveLiquidityAssetManager,
+  pgDarkPoolCurveMPAddLiquidityAssetManager,
+  pgDarkPoolCurveMPRemoveLiquidityAssetManager,
   gasLimits,
   privateKey,
   httpRpcUrl,
   oracleRpcUrl,
   baseFeeReserve,
   pgServiceFee,
-} = require('./config')
+} = require('./config/config')
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
+const { zkProofVerifier } = require('./modules/verifier')
 
 let web3
 let currentTx
 let currentJob
-//let tree
 let txManager
-//let controller
-//let minerContract
 const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
 
-/*async function fetchTree() {
-  const elements = await redis.get('tree:elements')
-  const convert = (_, val) => (typeof val === 'string' ? toBN(val) : val)
-  tree = MerkleTree.deserialize(JSON.parse(elements, convert), poseidonHash2)
 
-  if (currentTx && currentJob && ['MINING_REWARD', 'MINING_WITHDRAW'].includes(currentJob.data.type)) {
-    const { proof, args } = currentJob.data
-    if (toBN(args.account.inputRoot).eq(toBN(tree.root()))) {
-      console.log('Account root is up to date. Skipping Root Update operation...')
-      return
-    } else {
-      console.log('Account root is outdated. Starting Root Update operation...')
-    }
-
-    const update = await controller.treeUpdate(args.account.outputCommitment, tree)
-    const instance = new web3.eth.Contract(miningABI, minerAddress)
-    const data =
-      currentJob.data.type === 'MINING_REWARD'
-        ? instance.methods.reward(proof, args, update.proof, update.args).encodeABI()
-        : instance.methods.withdraw(proof, args, update.proof, update.args).encodeABI()
-    await currentTx.replace({
-      to: minerAddress,
-      data,
-    })
-    console.log('replaced pending tx')
-  }
-}*/
+const workerMapping = {
+  [jobType.PG_DARKPOOL_WITHDRAW]: new WithdrawWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP]: new UniswapSingleSwapWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_LP]: new UniswapAddLiquidityWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY]: new UniswapRemoveLiquidityWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING]: new UniswapCollectFeesWorker(),
+  [jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE]: new CurveMultiExchangeWorker(),
+  [jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]: new CurveAddLiquidityWorker(),
+  [jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]: new CurveRemoveLiquidityWorker(),
+}
 
 async function start() {
   try {
@@ -86,15 +88,6 @@ async function start() {
         BASE_FEE_RESERVE_PERCENTAGE: baseFeeReserve,
       },
     })
-    //minerContract = new web3.eth.Contract(miningABI, minerAddress)
-    //redisSubscribe.subscribe('treeUpdate', fetchTree)
-    //await fetchTree()
-   /* const provingKeys = {
-      treeUpdateCircuit: require('../keys/TreeUpdate.json'),
-      treeUpdateProvingKey: fs.readFileSync('./keys/TreeUpdate_proving_key.bin').buffer,
-    }*/
-    //controller = new Controller({ provingKeys })
-    //await controller.init()
     queue.process(processJob)
     console.log('Worker started')
   } catch (e) {
@@ -103,11 +96,6 @@ async function start() {
   }
 }
 
-function checkFee({ data }) {
-  if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    return checkPgFee(data)
-  }
-}
 
 async function getGasPrice() {
   const block = await web3.eth.getBlock('latest')
@@ -120,39 +108,41 @@ async function getGasPrice() {
   return toBN(toWei(fast.toString(), 'gwei'))
 }
 
-async function checkPgFee({ args, asset }) {
+async function checkPgFee(asset, amount, fee, refund) {
   const isEth = isETH(asset)
-  const [amount, fee, refund] = [args[4], args[5], args[6]].map(toBN)
   const gasPrice = await getGasPrice()
-  const ethPrice = await redis.hget('prices', currency)
   const expense = gasPrice.mul(toBN(gasLimits[jobType.PG_DARKPOOL_WITHDRAW]))
 
+  amount = toBN(amount)
+  fee = toBN(fee)
+  refund = toBN(refund)
+
+  if (fee.lt(refund) || amount.lt(fee)) {
+    throw new RelayerError('Provided fee is not enough. Probably it is a Gas Price spike, try to resubmit.', 0)
+  }
+
   let serviceFee
+  let desiredFee
   let decimals
 
-  if (!isEth){  
+  if (isEth) {
+    serviceFee = amount.mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100))
+    decimals = 18
+  } else {
     const erc20 = new web3.eth.Contract(erc20ABI, toChecksumAddress(asset))
     decimals = await erc20.methods.decimals().call()
-  } else{
-    decimals = 18
+    const ethRate = await redis.hget('rates', asset)
+
+    if (!ethRate) {
+      ethRate = await getRateToEth(asset, decimals, true)
+    }
+
+    serviceFee = toBN(amount)
+      .mul(toBN(ethRate))
+      .div(toBN(10).pow(toBN(decimals)))
+      .mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100))
   }
-  
-  serviceFee = toBN(fromDecimals(amount, decimals))
-  .mul(toBN(parseInt(pgServiceFee * 1e10)))
-  .div(toBN(1e10 * 100))
-
-
-  let desiredFee
-  if(isEth){
-      desiredFee = expense.add(serviceFee)
-  } else{
-    desiredFee = expense
-    .add(refund)
-    .mul(toBN(10 ** decimals))
-    .div(toBN(ethPrice))
-    desiredFee = desiredFee.add(serviceFee)
-  }
-
+  desiredFee = expense.add(serviceFee)
   console.log(
     'sent fee, desired fee, serviceFee',
     fromWei(fee.toString()),
@@ -168,43 +158,20 @@ async function checkPgFee({ args, asset }) {
 }
 
 async function getTxObject({ data }) {
-  if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    const contract = new web3.eth.Contract(pgDarkPoolABI, pgFUZKAddress)
-    let calldata
-    if(isETH(data.asset)){
-      calldata = contract.methods.withdraw_eth(data.proof, ...data.args).encodeABI()
-    }else{
-      calldata = contract.methods.withdraw_erc20(data.asset, data.proof, ...data.args).encodeABI()
-    }
-
-    return {
-      value: data.args[6],
-      to: contract._address,
-      data: calldata,
-      gasLimit: gasLimits['WITHDRAW_WITH_EXTRA'],
-    }
-  } else {
-    //const method = data.type === jobType.MINING_REWARD ? 'reward' : 'withdraw'
-    //const calldata = minerContract.methods[method](data.proof, data.args).encodeABI()
-    return {
-      //to: minerContract._address,
-     // data: calldata,
-      //gasLimit: gasLimits[data.type],
-    }
+  const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, data.type)
+  if (!validProof) {
+    throw new RelayerError('Invalid proof')
   }
-}
 
-async function isOutdatedTreeRevert(receipt, currentTx) {
-  try {
-    await web3.eth.call(currentTx.tx, receipt.blockNumber)
-    console.log('Simulated call successful')
-    return false
-  } catch (e) {
-    console.log('Decoded revert reason:', e.message)
-    return (
-      e.message.indexOf('Outdated account merkle root') !== -1 ||
-      e.message.indexOf('Outdated tree update merkle root') !== -1
-    )
+  const worker = workerMapping[data.type]
+  if (worker) {
+    const gasAmount = await worker.estimateGas(web3, data)
+    const gasPrice = await getGasPrice()
+    const gasFee = gasPrice.mul(toBN(gasAmount))
+
+    return worker.getTxObj(web3, data, gasFee)
+  } else {
+    throw new RelayerError(`Unknown job type: ${data.type}`)
   }
 }
 
@@ -218,19 +185,16 @@ async function processJob(job) {
     console.log(`Start processing a new ${job.data.type} job #${job.id}`)
     await submitTx(job)
   } catch (e) {
-    console.error('processJob', e.message)
+    console.error('processJob', e.message, e.stack)
     await updateStatus(status.FAILED)
     throw new RelayerError(e.message)
   }
 }
 
 async function submitTx(job, retry = 0) {
-  await checkFee(job)
-  currentTx = await txManager.createTx(await getTxObject(job))
+  // await checkPgFee(job.data.asset, job.data.amount, job.data.fee, job.data.refund)
 
-  /*if (job.data.type !== jobType.PORTALGATE_WITHDRAW) {
-    await fetchTree()
-  }*/
+  currentTx = await txManager.createTx(await getTxObject(job))
 
   try {
     const receipt = await currentTx
@@ -240,7 +204,6 @@ async function submitTx(job, retry = 0) {
         updateStatus(status.SENT)
       })
       .on('mined', receipt => {
-        console.log('Mined in block', receipt.blockNumber)
         updateStatus(status.MINED)
       })
       .on('confirmations', updateConfirmations)
@@ -248,35 +211,10 @@ async function submitTx(job, retry = 0) {
     if (receipt.status === 1) {
       await updateStatus(status.CONFIRMED)
     } else {
-      /*if (job.data.type !== jobType.PORTALGATE_WITHDRAW && (await isOutdatedTreeRevert(receipt, currentTx))) {
-        if (retry < 3) {
-          await updateStatus(status.RESUBMITTED)
-          await submitTx(job, retry + 1)
-        } else {
-          throw new RelayerError('Tree update retry limit exceeded')
-        }
-      } else {*/
       throw new RelayerError('Submitted transaction failed')
-      //}
     }
   } catch (e) {
-    // todo this could result in duplicated error logs
-    // todo handle a case where account tree is still not up to date (wait and retry)?
-    /*if (
-      job.data.type !== jobType.PORTALGATE_WITHDRAW &&
-      (e.message.indexOf('Outdated account merkle root') !== -1 ||
-        e.message.indexOf('Outdated tree update merkle root') !== -1)
-    ) {
-      if (retry < 5) {
-        await sleep(3000)
-        console.log('Tree is still not up to date, resubmitting')
-        await submitTx(job, retry + 1)
-      } else {
-        throw new RelayerError('Tree update retry limit exceeded')
-      }
-    } else {*/
-    throw new RelayerError(`Revert by smart contract ${e.message}`)
-    //}
+    throw new RelayerError(`Revert by smart contract ${e.message} ${e.stack}`)
   }
 }
 
