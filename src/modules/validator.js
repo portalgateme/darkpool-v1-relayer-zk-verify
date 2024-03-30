@@ -123,19 +123,24 @@ const pgDarkPoolUniswapLPSchema = {
     changeNoteFooter2: bytes32Type,
     tickMin: int24Type,
     tickMax: int24Type,
+    deadline: Uint256Type,
     outNoteFooter: bytes32Type,
     feeTier: bytes32Type,
-    fee: bytes32Type,
+    amountMin1: Uint256Type,
+    amountMin2: Uint256Type,
 
     verifierArgs: {
       type: 'array',
-      maxItems: 15,
-      minItems: 15,
-      items: new Array(15).fill(bytes32Type),
+      maxItems: 19,
+      minItems: 19,
+      items: new Array(19).fill(bytes32Type),
     }
   },
-  additionalProperties: false,
-  required: ['asset1', 'asset2', 'proof', 'verifierArgs'],
+  additionalProperties: true,
+  required: ['asset1', 'asset2', 'amount1', 'amount2', 'nullifier1', 'nullifier2',
+    'relayer', 'refundToken1', 'refundToken2', 'merkleRoot', 'changeNoteFooter1', 'changeNoteFooter2',
+    'tickMin', 'tickMax', 'deadline', 'outNoteFooter', 'feeTier', 'amountMin1', 'amountMin2',
+    'proof', 'verifierArgs'],
 }
 
 const pgDarkPoolUniswapFeeCollectingSchema = {
@@ -143,24 +148,23 @@ const pgDarkPoolUniswapFeeCollectingSchema = {
   properties: {
     proof: proofType,
     merkleRoot: bytes32Type,
-    positionNoteCommitment: bytes32Type,
     tokenId: Uint256Type,
     feeNoteFooter1: bytes32Type,
     feeNoteFooter2: bytes32Type,
     relayerGasFeeFromToken1: bytes32Type,
     relayerGasFeeFromToken2: bytes32Type,
     relayer: relayerType,
-    fee: bytes32Type,
 
     verifierArgs: {
       type: 'array',
-      maxItems: 7,
-      minItems: 7,
-      items: new Array(7).fill(bytes32Type),
+      maxItems: 6,
+      minItems: 6,
+      items: new Array(6).fill(bytes32Type),
     }
   },
   additionalProperties: false,
-  required: ['merkleRoot', 'positionNoteCommitment', 'tokenId', 'proof', 'verifierArgs'],
+  required: ['proof', 'merkleRoot', 'tokenId', 'feeNoteFooter1', 'feeNoteFooter2',
+    'relayerGasFeeFromToken1', 'relayerGasFeeFromToken2', 'relayer', 'verifierArgs'],
 }
 const pgDarkPoolUniswapRemoveLiquiditySchema = {
   type: 'object',
@@ -175,13 +179,15 @@ const pgDarkPoolUniswapRemoveLiquiditySchema = {
     relayerGasFeeFromToken1: bytes32Type,
     relayerGasFeeFromToken2: bytes32Type,
     relayer: relayerType,
-    fee: bytes32Type,
+    deadline: Uint256Type,
+    amount1Min: Uint256Type,
+    amount2Min: Uint256Type,
 
     verifierArgs: {
       type: 'array',
-      maxItems: 7,
-      minItems: 7,
-      items: new Array(7).fill(bytes32Type),
+      maxItems: 10,
+      minItems: 10,
+      items: new Array(10).fill(bytes32Type),
     }
   },
   additionalProperties: false,

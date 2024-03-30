@@ -10,7 +10,14 @@ const pgDarkPoolCurveFSNAddLiquidityABI = require('../abis/pgDarkPoolCurveFSNAdd
 const pgDarkPoolCurveFSNRemoveLiquidityABI = require('../abis/pgDarkPoolCurveFSNRemoveLiquidityAssetManager.abi.json')
 const pgDarkPoolCurveMPAddLiquidityABI = require('../abis/pgDarkPoolCurveMPAddLiquidityAssetManager.abi.json')
 const pgDarkPoolCurveMPRemoveLiquidityABI = require('../abis/pgDarkPoolCurveMPRemoveLiquidityAssetManager.abi.json')
-
+const { WithdrawWorker } = require('./worker/withdrawWorker')
+const { UniswapSingleSwapWorker } = require('./worker/uniswapSingleSwapWorker')
+const { UniswapAddLiquidityWorker } = require('./worker/uniswapAddLiquidityWorker')
+const { UniswapRemoveLiquidityWorker } = require('./worker/uniswapRemoveLiquidityWorker')
+const { UniswapCollectFeesWorker } = require('./worker/uniswapCollectFeesWorker')
+const { CurveMultiExchangeWorker } = require('./worker/curveMultiExchangeWorker')
+const { CurveAddLiquidityWorker } = require('./worker/curveAddLiquidityWorker')
+const { CurveRemoveLiquidityWorker } = require('./worker/curveRemoveLiquidityWorker')
 
 const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
@@ -54,6 +61,17 @@ let currentJob
 let txManager
 const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
 
+
+const workerMapping = {
+  [jobType.PG_DARKPOOL_WITHDRAW]: new WithdrawWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP]: new UniswapSingleSwapWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_LP]: new UniswapAddLiquidityWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY]: new UniswapRemoveLiquidityWorker(),
+  [jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING]: new UniswapCollectFeesWorker(),
+  [jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE]: new CurveMultiExchangeWorker(),
+  [jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]: new CurveAddLiquidityWorker(),
+  [jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]: new CurveRemoveLiquidityWorker(),
+}
 
 async function start() {
   try {
@@ -140,316 +158,18 @@ async function checkPgFee(asset, amount, fee, refund) {
 }
 
 async function getTxObject({ data }) {
-  let calldata
-  const darkPoolContract = new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
-  const uniswapSwapContract = new web3.eth.Contract(pgDarkPoolUniswapSwapABI.abi, pgDarkPoolUniswapSwapAssetManager)
-  const uniswapLiquidityContract = new web3.eth.Contract(pgDarkPoolUniswapLiquidityABI.abi, pgDarkPoolUniswapLiquidityAssetManager)
-  const curveMultiExchangeContract = new web3.eth.Contract(pgDarkPoolCurveMultiExchangeABI.abi, pgDarkPoolCurveMultiExchangeAssetManager)
-  const curveRemoveLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveRemoveLiquidityABI.abi, pgDarkPoolCurveRemoveLiquidityAssetManager)
-  const curveAddLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveAddLiquidityABI.abi, pgDarkPoolCurveAddLiquidityAssetManager)
-  const curveFSNAddLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveFSNAddLiquidityABI.abi, pgDarkPoolCurveFSNAddLiquidityAssetManager)
-  const curveFSNRemoveLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveFSNRemoveLiquidityABI.abi, pgDarkPoolCurveFSNRemoveLiquidityAssetManager)
-  const curveMPAddLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveMPAddLiquidityABI.abi, pgDarkPoolCurveMPAddLiquidityAssetManager)
-  const curveMPRemoveLiquidityContract = new web3.eth.Contract(pgDarkPoolCurveMPRemoveLiquidityABI.abi, pgDarkPoolCurveMPRemoveLiquidityAssetManager)
+  const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, data.type)
+  if (!validProof) {
+    throw new RelayerError('Invalid proof')
+  }
 
+  const worker = workerMapping[data.type]
+  if (worker) {
+    const gasAmount = await worker.estimateGas(web3, data)
+    const gasPrice = await getGasPrice()
+    const gasFee = gasPrice.mul(toBN(gasAmount))
 
-  if (data.type === jobType.PG_DARKPOOL_WITHDRAW) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_WITHDRAW)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-    if (isETH(data.asset)) {
-      calldata = darkPoolContract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.refund, data.amount).encodeABI()
-    } else {
-      calldata = darkPoolContract.methods.withdrawERC20(data.asset, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount, data.refund).encodeABI()
-    }
-    return {
-      to: darkPoolContract._address,
-      data: calldata,
-      gasLimit: gasLimits['WITHDRAW_WITH_EXTRA'],
-    }
-  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-    calldata = uniswapSwapContract.methods.uniswapSimpleSwap({
-      inNoteData: {
-        assetAddress: data.asset,
-        amount: data.amount,
-        nullifier: data.nullifier,
-      },
-      merkleRoot: data.merkleRoot,
-      assetOut: data.assetOut,
-      relayer: data.relayer,
-      amountOutMin: data.amountOutMin,
-      noteFooter: data.noteFooterOut,
-      relayerGasFee: data.refund,
-      poolFee: data.poolFee,
-    }, data.proof).encodeABI()
-    return {
-      to: uniswapSwapContract._address,
-      data: calldata,
-      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-    }
-  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_LP) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_LP)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-    const param = {
-      noteData1: {
-        assetAddress: data.asset1,
-        amount: data.amount1,
-        nullifier: data.nullifier1,
-      },
-      noteData2: {
-        assetAddress: data.asset2,
-        amount: data.amount2,
-        nullifier: data.nullifier2,
-      },
-      relayer: data.relayer,
-      relayerGasFees: [data.refundToken1, data.refundToken2],
-      merkleRoot: data.merkleRoot,
-      changeNoteFooters: [data.changeNoteFooter1, data.changeNoteFooter2],
-      tickMin: data.tickMin,
-      tickMax: data.tickMax,
-      positionNoteFooter: data.outNoteFooter,
-      poolFee: data.feeTier,
-    }
-    console.log(param)
-    calldata = uniswapLiquidityContract.methods.uniswapLiquidityProvision(param, data.proof).encodeABI()
-    return {
-      to: uniswapLiquidityContract._address,
-      data: calldata,
-      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-    }
-  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-    const param = {
-      merkleRoot: data.merkleRoot,
-      tokenId: data.tokenId,
-      feeNoteFooters: [data.feeNoteFooter1, data.feeNoteFooter2],
-      relayerGasFees: [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2],
-      relayer: data.relayer,
-    }
-    console.log(param)
-    calldata = uniswapLiquidityContract.methods.uniswapCollectFees(param, data.proof).encodeABI()
-    return {
-      to: uniswapLiquidityContract._address,
-      data: calldata,
-      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-    }
-  } else if (data.type === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-    const param = {
-      merkleRoot: data.merkleRoot,
-      positionNote: {
-        assetAddress: data.nftAddress,
-        amount: data.tokenId,
-        nullifier: data.nullifier,
-      },
-      outNoteFooters: [data.outNoteFooter1, data.outNoteFooter2],
-      relayerGasFees: [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2],
-      relayer: data.relayer,
-    }
-    console.log(param)
-    calldata = uniswapLiquidityContract.methods.uniswapRemoveLiquidity(param, data.proof).encodeABI()
-    return {
-      to: uniswapLiquidityContract._address,
-      data: calldata,
-      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-    }
-  } else if (data.type === jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-    const exchangeArgs = {
-      merkleRoot: data.merkleRoot,
-      nullifier: data.nullifier,
-      assetIn: data.assetIn,
-      amountIn: data.amountIn,
-      route: data.routes,
-      swapParams: data.swapParams,
-      pools: data.pools,
-      routeHash: data.routeHash,
-      assetOut: data.assetOut,
-      noteFooter: data.noteFooterOut,
-      relayer: data.relayer,
-      gasRefund: data.gasRefund,
-    }
-    calldata = curveMultiExchangeContract.methods.curveMultiExchange(
-      data.proof,
-      exchangeArgs,
-    ).encodeABI()
-    return {
-      to: curveMultiExchangeContract._address,
-      data: calldata,
-      gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-    }
-  } else if (data.type === jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-
-    if (data.poolType == POOL_TYPE.META) {
-      let lpArgs = {
-        merkleRoot: data.merkleRoot,
-        nullifiers: data.nullifiers,
-        assets: data.assets,
-        amounts: data.amounts,
-        pool: data.pool,
-        basePoolType: data.basePoolType,
-        lpToken: data.lpToken,
-        noteFooter: data.noteFooter,
-        relayer: data.relayer,
-        gasRefund: data.gasRefund,
-      }
-      console.log("======META")
-      calldata = curveMPAddLiquidityContract.methods
-        .curveAddLiquidity(data.proof, lpArgs).encodeABI()
-      return {
-        to: curveMPAddLiquidityContract._address,
-        data: calldata,
-        gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-      }
-    } else if (data.poolType == POOL_TYPE.FSN) {
-      console.log("======FSN")
-
-      let lpArgs = {
-        merkleRoot: data.merkleRoot,
-        nullifiers: data.nullifiers,
-        assets: data.assets,
-        amounts: data.amounts,
-        pool: data.pool,
-        lpToken: data.lpToken,
-        noteFooter: data.noteFooter,
-        relayer: data.relayer,
-        gasRefund: data.gasRefund,
-      }
-
-      calldata = curveFSNAddLiquidityContract.methods
-        .curveAddLiquidity(data.proof, lpArgs).encodeABI()
-
-      return {
-        to: curveFSNAddLiquidityContract._address,
-        data: calldata,
-        gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-      }
-    } else {
-      let lpArgs = {
-        merkleRoot: data.merkleRoot,
-        nullifiers: data.nullifiers,
-        assets: data.assets,
-        amounts: data.amounts,
-        pool: data.pool,
-        lpToken: data.lpToken,
-        isPlain: data.isPlain,
-        isLegacy: data.isLegacy,
-        booleanFlag: data.booleanFlag,
-        noteFooter: data.noteFooter,
-        relayer: data.relayer,
-        gasRefund: data.gasRefund,
-      }
-
-      calldata = curveAddLiquidityContract.methods
-        .curveAddLiquidity(data.proof, lpArgs).encodeABI()
-
-      return {
-        to: curveAddLiquidityContract._address,
-        data: calldata,
-        gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-      }
-    }
-  } else if (data.type === jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY) {
-    const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY)
-    if (!validProof) {
-      throw new RelayerError('Invalid proof')
-    }
-    if (data.poolType == POOL_TYPE.META) {
-      console.log("======META")
-
-      let removeLpArgs = {
-        merkleRoot: data.merkleRoot,
-        nullifier: data.nullifier,
-        asset: data.asset,
-        amount: data.amount,
-        amountBurn: data.amountBurn,
-        pool: data.pool,
-        assetsOut: data.assetsOut,
-        basePoolType: data.basePoolType,
-        noteFooters: data.noteFooters,
-        relayer: data.relayer,
-        gasRefund: data.gasRefund,
-      }
-
-      calldata = curveMPRemoveLiquidityContract.methods
-        .curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
-
-      return {
-        to: curveMPRemoveLiquidityContract._address,
-        data: calldata,
-        gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-      }
-    } else if(data.poolType == POOL_TYPE.FSN){
-      console.log("======FSN")
-
-      let removeLpArgs = {
-        merkleRoot: data.merkleRoot,
-        nullifier: data.nullifier,
-        asset: data.asset,
-        amount: data.amount,
-        amountBurn: data.amountBurn,
-        pool: data.pool,
-        assetsOut: data.assetsOut,
-        noteFooters: data.noteFooters,
-        relayer: data.relayer,
-        gasRefund: data.gasRefund,
-      }
-
-      calldata = curveFSNRemoveLiquidityContract.methods
-        .curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
-
-      return {
-        to: curveFSNRemoveLiquidityContract._address,
-        data: calldata,
-        gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-      }
-    } else {
-      let removeLpArgs = {
-        merkleRoot: data.merkleRoot,
-        nullifier: data.nullifier,
-        asset: data.asset,
-        amount: data.amount,
-        amountBurn: data.amountBurn,
-        pool: data.pool,
-        assetsOut: data.assetsOut,
-        isPlain: data.isPlain,
-        isLegacy: data.isLegacy,
-        booleanFlag: data.booleanFlag,
-        noteFooters: data.noteFooters,
-        relayer: data.relayer,
-        gasRefund: data.gasRefund,
-      }
-
-      calldata = curveRemoveLiquidityContract.methods
-        .curveRemoveLiquidity(data.proof, removeLpArgs).encodeABI()
-
-      return {
-        to: curveRemoveLiquidityContract._address,
-        data: calldata,
-        gasLimit: gasLimits['DEFI_WITH_EXTRA'],
-      }
-    }
-
+    return worker.getTxObj(web3, data, gasFee)
   } else {
     throw new RelayerError(`Unknown job type: ${data.type}`)
   }
@@ -484,7 +204,6 @@ async function submitTx(job, retry = 0) {
         updateStatus(status.SENT)
       })
       .on('mined', receipt => {
-        console.log(receipt.status)
         updateStatus(status.MINED)
       })
       .on('confirmations', updateConfirmations)
@@ -495,7 +214,7 @@ async function submitTx(job, retry = 0) {
       throw new RelayerError('Submitted transaction failed')
     }
   } catch (e) {
-    throw new RelayerError(`Revert by smart contract ${e.message}`)
+    throw new RelayerError(`Revert by smart contract ${e.message} ${e.stack}`)
   }
 }
 
