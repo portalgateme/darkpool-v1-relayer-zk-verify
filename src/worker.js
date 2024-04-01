@@ -165,11 +165,11 @@ async function getTxObject({ data }) {
 
   const worker = workerMapping[data.type]
   if (worker) {
-    const gasAmount = await worker.estimateGas(web3, data)
-    const gasPrice = await getGasPrice()
-    const gasFee = gasPrice.mul(toBN(gasAmount))
+    // const gasAmount = await worker.estimateGas(web3, data)
+    // const gasPrice = await getGasPrice()
+    // const gasFee = gasPrice.mul(toBN(gasAmount))
 
-    return worker.getTxObj(web3, data, gasFee)
+    return worker.getTxObj(web3, data, 0n)
   } else {
     throw new RelayerError(`Unknown job type: ${data.type}`)
   }
