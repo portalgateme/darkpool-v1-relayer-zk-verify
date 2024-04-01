@@ -10,7 +10,7 @@ const {
     gasLimits
 } = require('../config/config')
 
-const {BaseWorker} = require('./baseWorker')
+const { BaseWorker } = require('./baseWorker')
 
 class CurveRemoveLiquidityWorker extends BaseWorker {
 
@@ -66,7 +66,8 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
             .curveRemoveLiquidity(data.proof, removeLpArgs)
     }
 
-    async estimateGas(contract, data) {
+    async estimateGas(web3, data) {
+        const contract = this.getContract(web3, data)
         const contractCall = this.getContractCall(contract, data)
         try {
             const gasLimit = await contractCall.estimateGas()
@@ -77,7 +78,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
         }
     }
 
-    async getTxObj(web3, data) {
+    getContract(web3, data) {
         let contract
         if (data.poolType == POOL_TYPE.META) {
             contract = new web3.eth.Contract(pgDarkPoolCurveMPRemoveLiquidityABI.abi, pgDarkPoolCurveMPRemoveLiquidityAssetManager)
@@ -86,6 +87,11 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
         } else {
             contract = new web3.eth.Contract(pgDarkPoolCurveRemoveLiquidityABI.abi, pgDarkPoolCurveRemoveLiquidityAssetManager)
         }
+        return contract
+    }
+
+    async getTxObj(web3, data) {
+        const contract = this.getContract(web3, data)
         const contractCall = this.getContractCall(contract, data)
 
         return {
@@ -96,6 +102,6 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
     }
 }
 
-module.exports ={
+module.exports = {
     CurveRemoveLiquidityWorker
 }

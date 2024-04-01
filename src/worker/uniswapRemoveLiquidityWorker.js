@@ -26,7 +26,7 @@ class UniswapRemoveLiquidityWorker extends BaseWorker {
             relayer: data.relayer,
             amountsMin: [data.amount1Min, data.amount2Min],
           }
-          calldata = uniswapLiquidityContract.methods.uniswapRemoveLiquidity(param, data.proof)
+          calldata = contract.methods.uniswapRemoveLiquidity(param, data.proof)
 
 
         return calldata
