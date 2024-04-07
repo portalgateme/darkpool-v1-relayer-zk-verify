@@ -27,7 +27,7 @@ module.exports = {
     curveRemoveLiquidityAssetManager: '0x4e303B3F03FEdAec500B1FaEdd5A9348841EC231',
     curveSingleExchangeAssetManager: '0x9FF0049024881532893eE1CFEA3044cEE86B3169',
     darkpoolAssetManager: '0x112CcF777988FE7713056E2Ca4359b8dE9009145',
-    uniswapLiquidityAssetManager: '0x253Ab1e7df7908b39FfF571D25C87997E8595975',
+    uniswapLiquidityAssetManager: '0x5c24a766B2A3B1B075840fD2fbAd377651E00133',
     uniswapSwapAssetManager: '0x81BC62f709D6337De0bBaaa482Ec5a35B1cBcE3F',
     //deployedBlock: 9739503,
     uniswapNfpManager: '0x1238536071E1c677A632429e3655c799b22cDA52',
