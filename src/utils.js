@@ -8,7 +8,7 @@ const sleep = ms => new Promise(res => setTimeout(res, ms))
 const erc20ABI = require('../abis/erc20Simple.abi.json')
 const { getDecimal, setDecimal } = require('./modules/cache')
 
-async function getDecimalByAddress(address) {
+async function getDecimalByAddress(web3, address) {
   const decimal = await getDecimal(address)
   if (decimal) {
     return decimal
