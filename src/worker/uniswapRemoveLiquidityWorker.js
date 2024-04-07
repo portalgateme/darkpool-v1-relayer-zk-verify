@@ -1,33 +1,33 @@
 const pgDarkPoolUniswapLiquidityABI = require('../../abis/pgDarkPoolUniswapLiquidityAssetManager.abi.json')
-
 const {
     pgDarkPoolUniswapLiquidityAssetManager,
     gasLimits,
 } = require('../config/config')
 
-const { BaseWorker } = require('./baseWorker')
+const { getLiquidity } = require('../defi/uniswap')
+const { calculateFeeForTokens } = require('../modules/fees')
 
+const { BaseWorker } = require('./baseWorker')
 
 class UniswapRemoveLiquidityWorker extends BaseWorker {
 
-    getContractCall(contract, data) {
+    getContractCall(contract, data, gasRefunds) {
         let calldata
 
         const param = {
             merkleRoot: data.merkleRoot,
             positionNote: {
-              assetAddress: data.nftAddress,
-              amount: data.tokenId,
-              nullifier: data.nullifier,
+                assetAddress: data.nftAddress,
+                amount: data.tokenId,
+                nullifier: data.nullifier,
             },
             outNoteFooters: [data.outNoteFooter1, data.outNoteFooter2],
-            relayerGasFees: [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2],
+            relayerGasFees: gasRefunds,
             deadline: data.deadline,
             relayer: data.relayer,
             amountsMin: [data.amount1Min, data.amount2Min],
-          }
-          calldata = contract.methods.uniswapRemoveLiquidity(param, data.proof)
-
+        }
+        calldata = contract.methods.uniswapRemoveLiquidity(param, data.proof)
 
         return calldata
     }
@@ -35,7 +35,7 @@ class UniswapRemoveLiquidityWorker extends BaseWorker {
     async estimateGas(web3, data) {
         const contract = this.getContract(web3, data)
 
-        const contractCall = this.getContractCall(contract, data)
+        const contractCall = this.getContractCall(contract, data, [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2])
         try {
             const gasLimit = await contractCall.estimateGas()
             return gasLimit
@@ -51,7 +51,14 @@ class UniswapRemoveLiquidityWorker extends BaseWorker {
 
     async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data)
+        const { token0Address, token1Address, token0Amount, token1Amount, fee0, fee1 } = await getLiquidity(web3, data.tokenId)
+        const fees = await calculateFeeForTokens(gasFee, [token0Address, token1Address], [token0Amount + fee0, token1Amount + fee1])
+        if (fees[0].gasFeeInToken + fees[0].serviceFeeInToken > token0Amount + fee0
+            || fees[1].gasFeeInToken + fees[1].serviceFeeInToken > token1Amount + fee1) {
+            throw new Error('Insufficient amount to pay fees')
+        }
+
+        const contractCall = this.getContractCall(contract, data, [fees[0].gasFeeInToken, fees[1].gasFeeInToken])
 
         return {
             to: contract._address,

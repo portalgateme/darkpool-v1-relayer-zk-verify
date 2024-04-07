@@ -1,6 +1,8 @@
 const pgDarkPoolABI = require('../../abis/pgDarkPool.abi.json')
 
-const { isETH } = require('../utils')
+const { isETH, toBN, RelayerError } = require('../utils')
+const { calculateFeesForOneToken } = require('../modules/fees')
+
 const {
   pgDarkPoolAssetManager,
   gasLimits,
@@ -8,12 +10,10 @@ const {
 
 const { BaseWorker } = require('./baseWorker')
 
-
 class WithdrawWorker extends BaseWorker {
 
   getContractCall(contract, data, refund) {
     let calldata
-
     if (isETH(data.asset)) {
       calldata = contract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, refund, data.amount)
     } else {
@@ -34,13 +34,19 @@ class WithdrawWorker extends BaseWorker {
     }
   }
 
-  getContract(web3, data) {
+  getContract(web3) {
     return new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
   }
 
   async getTxObj(web3, data, gasFee) {
-    const contract = this.getContract(web3, data)
-    const contractCall = this.getContractCall(contract, data, data.refund)
+    const contract = this.getContract(web3)
+    const { gasFeeInToken, serviceFeeInToken } = await calculateFeesForOneToken(gasFee, data.asset, data.amount)
+    console.log(gasFee,gasFeeInToken,serviceFeeInToken, BigInt(data.amount))
+    if (gasFeeInToken + serviceFeeInToken > BigInt(data.amount)) {
+      throw new RelayerError('Insufficient funds to pay fees')
+    }
+
+    const contractCall = this.getContractCall(contract, data, gasFeeInToken)
 
     return {
       to: contract._address,
