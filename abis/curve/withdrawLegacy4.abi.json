@@ -1,0 +1,24 @@
+[
+    {
+        "name": "calc_withdraw_one_coin",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": ""
+            }
+        ],
+        "inputs": [
+            {
+                "type": "uint256",
+                "name": "_token_amount"
+            },
+            {
+                "type": "uint256",
+                "name": "i"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "gas": "1609"
+    }
+]

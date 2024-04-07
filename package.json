@@ -14,9 +14,11 @@
     "test": "mocha",
     "start": "yarn server & yarn worker & yarn healthWatcher"
   },
+
   "author": "portalgate.me",
   "license": "MIT",
   "dependencies": {
+    "@uniswap/v3-sdk": "^3.11.0",
     "ajv": "^6.12.5",
     "async-mutex": "^0.2.4",
     "bull": "^3.12.1",

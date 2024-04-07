@@ -32,9 +32,17 @@ const curvePoolType = Object.freeze({
   CRYPTO: 'CRYPTO',
 })
 
+const BASEPOOL_TYPE = Object.freeze({
+  THREE_POOL: 1,
+  FRAXUSDC: 2,
+})
+
+
+
 module.exports = {
   jobType,
   status,
   curvePoolType,
   POOL_TYPE,
+  BASEPOOL_TYPE
 }  

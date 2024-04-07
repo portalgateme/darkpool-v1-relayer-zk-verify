@@ -4,15 +4,15 @@ const {
     pgDarkPoolUniswapSwapAssetManager,
     gasLimits,
 } = require('../config/config')
+const { calculateFeesForOneToken } = require('../modules/fees')
+const { toBN } = require('../utils')
 
 const { BaseWorker } = require('./baseWorker')
 
 class UniswapSingleSwapWorker extends BaseWorker {
 
-    getContractCall(contract, data) {
-        let calldata
-
-        calldata = contract.methods.uniswapSimpleSwap({
+    getContractCall(contract, data, refund) {
+        let calldata = contract.methods.uniswapSimpleSwap({
             inNoteData: {
                 assetAddress: data.asset,
                 amount: data.amount,
@@ -23,7 +23,7 @@ class UniswapSingleSwapWorker extends BaseWorker {
             relayer: data.relayer,
             amountOutMin: data.amountOutMin,
             noteFooter: data.noteFooterOut,
-            relayerGasFee: data.refund,
+            relayerGasFee: refund,
             poolFee: data.poolFee,
         }, data.proof)
 
@@ -32,7 +32,7 @@ class UniswapSingleSwapWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3)
-        const contractCall = this.getContractCall(contract, data)
+        const contractCall = this.getContractCall(contract, data, data.refund)
         try {
             const gasLimit = await contractCall.estimateGas()
             return gasLimit
@@ -48,7 +48,14 @@ class UniswapSingleSwapWorker extends BaseWorker {
 
     async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3)
-        const contractCall = this.getContractCall(contract, data)
+        const {gasFeeInToken, serviceFeeInToken} = await calculateFeesForOneToken(gasFee, data.asset, data.amount)
+        if(gasFeeInToken+ serviceFeeInToken > BigInt(data.amount)){
+            throw new Error('Insufficient amount to pay fees')
+        }
+
+        console.log(gasFee, gasFeeInToken, serviceFeeInToken, BigInt(data.amount))
+
+        const contractCall = this.getContractCall(contract, data, gasFeeInToken)
 
         return {
             to: contract._address,

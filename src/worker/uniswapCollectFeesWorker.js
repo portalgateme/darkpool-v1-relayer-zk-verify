@@ -5,6 +5,9 @@ const {
     gasLimits,
 } = require('../config/config')
 
+const { getLiquidity } = require('../defi/uniswap')
+const { calculateFeeForTokens } = require('../modules/fees')
+
 const { BaseWorker } = require('./baseWorker')
 
 class UniswapCollectFeesWorker extends BaseWorker {
@@ -42,7 +45,15 @@ class UniswapCollectFeesWorker extends BaseWorker {
 
     async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data)
+
+        const { token0Address, token1Address, fee0, fee1 } = await getLiquidity(web3, data.tokenId)
+        const fees = await calculateFeeForTokens(gasFee, [token0Address, token1Address], [fee0, fee1])
+        if (fees[0].gasFeeInToken + fees[0].serviceFeeInToken > fee0
+            || fees[1].gasFeeInToken + fees[1].serviceFeeInToken > fee1) {
+            throw new Error('Insufficient amount to pay fees')
+        }
+
+        const contractCall = this.getContractCall(contract, data, [fees[0].gasFeeInToken, fees[1].gasFeeInToken])
 
         return {
             to: contract._address,

@@ -9,12 +9,13 @@ const {
     pgDarkPoolCurveMPAddLiquidityAssetManager,
     gasLimits
 } = require('../config/config')
+const { calculateFeeForTokens } = require('../modules/fees')
 
 const { BaseWorker } = require('./baseWorker')
 
 class CurveAddLiquidityWorker extends BaseWorker {
 
-    getContractCall(contract, data) {
+    getContractCall(contract, data, gasRefunds) {
         let calldata
         let lpArgs
 
@@ -29,7 +30,7 @@ class CurveAddLiquidityWorker extends BaseWorker {
                 lpToken: data.lpToken,
                 noteFooter: data.noteFooter,
                 relayer: data.relayer,
-                gasRefund: data.gasRefund,
+                gasRefund: gasRefunds,
             }
         } else if (data.poolType == POOL_TYPE.FSN) {
             lpArgs = {
@@ -41,7 +42,7 @@ class CurveAddLiquidityWorker extends BaseWorker {
                 lpToken: data.lpToken,
                 noteFooter: data.noteFooter,
                 relayer: data.relayer,
-                gasRefund: data.gasRefund,
+                gasRefund: gasRefunds,
             }
         } else {
             lpArgs = {
@@ -56,7 +57,7 @@ class CurveAddLiquidityWorker extends BaseWorker {
                 booleanFlag: data.booleanFlag,
                 noteFooter: data.noteFooter,
                 relayer: data.relayer,
-                gasRefund: data.gasRefund,
+                gasRefund: gasRefunds,
             }
         }
 
@@ -68,7 +69,7 @@ class CurveAddLiquidityWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data)
+        const contractCall = this.getContractCall(contract, data, data.gasRefund)
         try {
             const gasLimit = await contractCall.estimateGas()
             return gasLimit
@@ -92,7 +93,15 @@ class CurveAddLiquidityWorker extends BaseWorker {
 
     async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data)
+        const fees = await calculateFeeForTokens(gasFee, data.assets, data.amounts)
+        for (let i = 0; i < fees.length; i++) {
+            if (BigInt(data.amounts[i]) > 0n && fees[i].gasFeeInToken + fees[i].serviceFeeInToken > BigInt(data.amounts[i])) {
+                throw new Error('Insufficient amount to pay fees')
+            }
+        }
+
+        const gasRefunds = fees.map(fee => fee.gasFeeInToken)
+        const contractCall = this.getContractCall(contract, data, gasRefunds)
 
         return {
             to: contract._address,

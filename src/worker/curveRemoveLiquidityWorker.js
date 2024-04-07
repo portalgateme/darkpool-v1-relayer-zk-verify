@@ -10,14 +10,21 @@ const {
     gasLimits
 } = require('../config/config')
 
+const { calculateFeeForTokens, calculateFeesForOneToken } = require('../modules/fees')
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+
 const { BaseWorker } = require('./baseWorker')
+const { RelayerError } = require('../utils')
+const { estimateWithdrawOneCoinForMP, estimateWithdrawOneCoin, estimateWithdrawAllForMP, estimateWithdrawAll } = require('../defi/curveService')
 
 class CurveRemoveLiquidityWorker extends BaseWorker {
 
-    getContractCall(contract, data) {
+    getContractCall(contract, data, gasRefunds) {
         let removeLpArgs
 
-        if (data.poolType == POOL_TYPE.META) {
+        if (data.poolType == POOL_TYPE.META && data.booleanFlag) {
             removeLpArgs = {
                 merkleRoot: data.merkleRoot,
                 nullifier: data.nullifier,
@@ -29,7 +36,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 basePoolType: data.basePoolType,
                 noteFooters: data.noteFooters,
                 relayer: data.relayer,
-                gasRefund: data.gasRefund,
+                gasRefund: gasRefunds,
             }
         } else if (data.poolType == POOL_TYPE.FSN) {
             removeLpArgs = {
@@ -42,7 +49,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 assetsOut: data.assetsOut,
                 noteFooters: data.noteFooters,
                 relayer: data.relayer,
-                gasRefund: data.gasRefund,
+                gasRefund: gasRefunds,
             }
         } else {
             removeLpArgs = {
@@ -58,7 +65,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 booleanFlag: data.booleanFlag,
                 noteFooters: data.noteFooters,
                 relayer: data.relayer,
-                gasRefund: data.gasRefund,
+                gasRefund: gasRefunds,
             }
         }
 
@@ -68,7 +75,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data)
+        const contractCall = this.getContractCall(contract, data, data.gasRefund)
         try {
             const gasLimit = await contractCall.estimateGas()
             return gasLimit
@@ -90,9 +97,53 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
         return contract
     }
 
-    async getTxObj(web3, data) {
+    async getEstimatedOut(web3, data, gasFee) {
+        const coins = data.assetsOut.filter(address => address !== ZERO_ADDRESS)
+        let gasRefunds = [0n, 0n, 0n, 0n]
+        if (coins.length == 1) {
+            const index = data.assetsOut.findIndex(address => address !== ZERO_ADDRESS)
+            const asset = data.assetsOut[index]
+            let estimatedOut
+            if (data.poolType == POOL_TYPE.META && data.booleanFlag) {
+                console.log("one coin, MP underlying")
+                estimatedOut = await estimateWithdrawOneCoinForMP(web3, data.pool, data.basePoolType, data.amountBurn, index)
+            } else {
+                console.log("one coin, normal")
+                estimatedOut = await estimateWithdrawOneCoin(web3, data.pool, data.isLegacy, data.amountBurn, index)
+            }
+
+            const { gasFeeInToken, serviceFeeInToken } = await calculateFeesForOneToken(gasFee, asset, estimatedOut)
+            if (gasFeeInToken + serviceFeeInToken > BigInt(estimatedOut)) {
+                throw new RelayerError('Insufficient amount to pay fees')
+            }
+            gasRefunds[index] = gasFeeInToken
+        } else if (coins.length >= 2) {
+            let estimatedOuts
+            if (data.poolType == POOL_TYPE.META && data.booleanFlag) {
+                estimatedOuts = await estimateWithdrawAllForMP(web3, data.pool,data.basePoolType, data.asset, data.amountBurn, coins.length)
+            } else {
+                estimatedOuts = await estimateWithdrawAll(web3, data.pool, data.asset, data.amountBurn, coins.length)
+            }
+            const fees = await calculateFeeForTokens(gasFee, coins, estimatedOuts)
+            for (let i = 0; i < fees.length; i++) {
+                const { gasFeeInToken, serviceFeeInToken } = fees[i]
+                if (gasFeeInToken + serviceFeeInToken > BigInt(estimatedOuts[i])) {
+                    throw new RelayerError('Insufficient amount to pay fees')
+                }
+                gasRefunds[i] = gasFeeInToken
+            }
+        } else {
+            throw new RelayerError("Invalid coin number")
+        }
+
+        return gasRefunds
+    }
+
+    async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data)
+        const gasRefunds = await this.getEstimatedOut(web3, data, gasFee)
+
+        const contractCall = this.getContractCall(contract, data, gasRefunds)
 
         return {
             to: contract._address,

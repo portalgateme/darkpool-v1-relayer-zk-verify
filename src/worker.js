@@ -1,15 +1,5 @@
 const fs = require('fs')
 const { GasPriceOracle } = require('gas-price-oracle')
-const pgDarkPoolABI = require('../abis/pgDarkPool.abi.json')
-const pgDarkPoolUniswapSwapABI = require('../abis/pgDarkPoolUniswapSwapAssetManager.abi.json')
-const pgDarkPoolUniswapLiquidityABI = require('../abis/pgDarkPoolUniswapLiquidityAssetManager.abi.json')
-const pgDarkPoolCurveMultiExchangeABI = require('../abis/pgDarkPoolCurveMultiExchange.abi.json')
-const pgDarkPoolCurveAddLiquidityABI = require('../abis/pgDarkPoolCurveAddliquidityAssetManager.abi.json')
-const pgDarkPoolCurveRemoveLiquidityABI = require('../abis/pgDarkPoolCurveRemoveliquidityAssetManager.abi.json')
-const pgDarkPoolCurveFSNAddLiquidityABI = require('../abis/pgDarkPoolCurveFSNAddLiquidityAssetManager.abi.json')
-const pgDarkPoolCurveFSNRemoveLiquidityABI = require('../abis/pgDarkPoolCurveFSNRemoveLiquidityAssetManager.abi.json')
-const pgDarkPoolCurveMPAddLiquidityABI = require('../abis/pgDarkPoolCurveMPAddLiquidityAssetManager.abi.json')
-const pgDarkPoolCurveMPRemoveLiquidityABI = require('../abis/pgDarkPoolCurveMPRemoveLiquidityAssetManager.abi.json')
 const { WithdrawWorker } = require('./worker/withdrawWorker')
 const { UniswapSingleSwapWorker } = require('./worker/uniswapSingleSwapWorker')
 const { UniswapAddLiquidityWorker } = require('./worker/uniswapAddLiquidityWorker')
@@ -19,48 +9,28 @@ const { CurveMultiExchangeWorker } = require('./worker/curveMultiExchangeWorker'
 const { CurveAddLiquidityWorker } = require('./worker/curveAddLiquidityWorker')
 const { CurveRemoveLiquidityWorker } = require('./worker/curveRemoveLiquidityWorker')
 
-const erc20ABI = require('../abis/erc20Simple.abi')
 const { queue } = require('./queue')
 const {
-  toBN,
-  toWei,
-  fromWei,
   RelayerError,
   logRelayerError,
-  isETH,
-  toChecksumAddress,
-  getRateToEth,
 } = require('./utils')
-const { jobType, status, POOL_TYPE } = require('./config/constants')
+const { jobType, status } = require('./config/constants')
 const {
-  pgDarkPoolAssetManager,
-  pgDarkPoolUniswapSwapAssetManager,
-  pgDarkPoolUniswapLiquidityAssetManager,
-  pgDarkPoolCurveMultiExchangeAssetManager,
-  pgDarkPoolCurveAddLiquidityAssetManager,
-  pgDarkPoolCurveRemoveLiquidityAssetManager,
-  pgDarkPoolCurveFSNAddLiquidityAssetManager,
-  pgDarkPoolCurveFSNRemoveLiquidityAssetManager,
-  pgDarkPoolCurveMPAddLiquidityAssetManager,
-  pgDarkPoolCurveMPRemoveLiquidityAssetManager,
-  gasLimits,
   privateKey,
   httpRpcUrl,
   oracleRpcUrl,
   baseFeeReserve,
-  pgServiceFee,
 } = require('./config/config')
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
 const { zkProofVerifier } = require('./modules/verifier')
+const { calcGasFee } = require('./modules/fees')
 
 let web3
 let currentTx
 let currentJob
 let txManager
-const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
-
 
 const workerMapping = {
   [jobType.PG_DARKPOOL_WITHDRAW]: new WithdrawWorker(),
@@ -96,67 +66,6 @@ async function start() {
   }
 }
 
-
-async function getGasPrice() {
-  const block = await web3.eth.getBlock('latest')
-
-  if (block && block.baseFeePerGas) {
-    return toBN(block.baseFeePerGas)
-  }
-
-  const { fast } = await gasPriceOracle.gasPrices()
-  return toBN(toWei(fast.toString(), 'gwei'))
-}
-
-async function checkPgFee(asset, amount, fee, refund) {
-  const isEth = isETH(asset)
-  const gasPrice = await getGasPrice()
-  const expense = gasPrice.mul(toBN(gasLimits[jobType.PG_DARKPOOL_WITHDRAW]))
-
-  amount = toBN(amount)
-  fee = toBN(fee)
-  refund = toBN(refund)
-
-  if (fee.lt(refund) || amount.lt(fee)) {
-    throw new RelayerError('Provided fee is not enough. Probably it is a Gas Price spike, try to resubmit.', 0)
-  }
-
-  let serviceFee
-  let desiredFee
-  let decimals
-
-  if (isEth) {
-    serviceFee = amount.mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100))
-    decimals = 18
-  } else {
-    const erc20 = new web3.eth.Contract(erc20ABI, toChecksumAddress(asset))
-    decimals = await erc20.methods.decimals().call()
-    const ethRate = await redis.hget('rates', asset)
-
-    if (!ethRate) {
-      ethRate = await getRateToEth(asset, decimals, true)
-    }
-
-    serviceFee = toBN(amount)
-      .mul(toBN(ethRate))
-      .div(toBN(10).pow(toBN(decimals)))
-      .mul(toBN(parseInt(pgServiceFee * 1e10))).div(toBN(1e10 * 100))
-  }
-  desiredFee = expense.add(serviceFee)
-  console.log(
-    'sent fee, desired fee, serviceFee',
-    fromWei(fee.toString()),
-    fromWei(desiredFee.toString()),
-    fromWei(serviceFee.toString()),
-  )
-  if (fee.lt(desiredFee)) {
-    throw new RelayerError(
-      'Provided fee is not enough. Probably it is a Gas Price spike, try to resubmit.',
-      0,
-    )
-  }
-}
-
 async function getTxObject({ data }) {
   const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, data.type)
   if (!validProof) {
@@ -165,11 +74,9 @@ async function getTxObject({ data }) {
 
   const worker = workerMapping[data.type]
   if (worker) {
-    // const gasAmount = await worker.estimateGas(web3, data)
-    // const gasPrice = await getGasPrice()
-    // const gasFee = gasPrice.mul(toBN(gasAmount))
-
-    return worker.getTxObj(web3, data, 0n)
+    const gasAmount = await worker.estimateGas(web3, data)
+    const gasFee = await calcGasFee(web3, gasAmount)
+    return await worker.getTxObj(web3, data, gasFee)
   } else {
     throw new RelayerError(`Unknown job type: ${data.type}`)
   }

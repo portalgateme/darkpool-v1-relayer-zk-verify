@@ -1,14 +1,26 @@
 //const { poseidon } = require('circomlib')
-const { toBN, toChecksumAddress, BN, fromWei, isAddress, toWei } = require('web3-utils')
+const { toBN, toChecksumAddress, BN, fromWei, isAddress, toWei, toBigInt } = require('web3-utils')
 const { offchainOracleAddress } = require('./config/config')
 const web3 = require('./modules/web3')('oracle')
 const offchainOracleABI = require('../abis/OffchainOracle.abi.json')
 const offchainOracle = new web3.eth.Contract(offchainOracleABI, offchainOracleAddress)
 const sleep = ms => new Promise(res => setTimeout(res, ms))
+const erc20ABI = require('../abis/erc20Simple.abi.json')
+const { getDecimal, setDecimal } = require('./modules/cache')
 
+async function getDecimalByAddress(address) {
+  const decimal = await getDecimal(address)
+  if (decimal) {
+    return decimal
+  } else {
+    const contract = new web3.eth.Contract(erc20ABI, address)
+    const decimals = await contract.methods.decimals().call()
+    await setDecimal(address, decimals)
+    return decimals
+  }
+}
 
-
-function isETH(address){
+function isETH(address) {
   return address == "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 }
 
@@ -70,18 +82,14 @@ function getArgsForOracle() {
   return { tokenAddresses, oneUintAmount, currencyLookup }
 }
 
-async function getRateToEth(srcToken, srcTokenDecimal, useSrcWrappers){ 
+async function getRateToEth(srcToken, useSrcWrappers) {
 
-  let rateFormated
   try {
     const rate = await offchainOracle.methods.getRateToEth(srcToken, useSrcWrappers).call()
-    const numerator = toBN(10).pow(toBN(srcTokenDecimal))
-    const denominator = toBN(10).pow(toBN(18)) // eth decimals
-    rateFormated = toBN(rate).mul(numerator).div(denominator)//.div(denominator)
-  } catch(e){
+    return toBN(rate)
+  } catch (e) {
     throw new RelayerError("Can't get prices of " + srcToken, 1)
   }
-  return rateFormated
 }
 
 function fromDecimals(value, decimals) {
@@ -167,9 +175,11 @@ module.exports = {
   fromWei,
   toWei,
   BN,
+  toBigInt,
   isAddress,
   RelayerError,
   logRelayerError,
   readRelayerErrors,
-  getRateToEth
+  getRateToEth,
+  getDecimalByAddress
 }

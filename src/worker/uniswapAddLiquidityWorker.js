@@ -1,3 +1,4 @@
+const { toBN } = require('web3-utils')
 const pgDarkPoolUniswapLiquidityABI = require('../../abis/pgDarkPoolUniswapLiquidityAssetManager.abi.json')
 
 const {
@@ -6,6 +7,7 @@ const {
 } = require('../config/config')
 
 const { BaseWorker } = require('./baseWorker')
+const { calculateFeeForTokens } = require('../modules/fees')
 
 
 class UniswapAddLiquidityWorker extends BaseWorker {
@@ -25,7 +27,7 @@ class UniswapAddLiquidityWorker extends BaseWorker {
                 nullifier: data.nullifier2,
             },
             relayer: data.relayer,
-            relayerGasFees: [data.refundToken1, data.refundToken2],
+            relayerGasFees: [refundToken1, refundToken2],
             merkleRoot: data.merkleRoot,
             changeNoteFooters: [data.changeNoteFooter1, data.changeNoteFooter2],
             tickMin: data.tickMin,
@@ -40,7 +42,8 @@ class UniswapAddLiquidityWorker extends BaseWorker {
         return calldata
     }
 
-    async estimateGas(contract, data) {
+    async estimateGas(web3, data) {
+        const contract = this.getContract(web3)
         const contractCall = this.getContractCall(contract, data, data.refundToken1, data.refundToken2)
         try {
             const gasLimit = await contractCall.estimateGas()
@@ -51,9 +54,18 @@ class UniswapAddLiquidityWorker extends BaseWorker {
         }
     }
 
+    getContract(web3) {
+        return new web3.eth.Contract(pgDarkPoolUniswapLiquidityABI.abi, pgDarkPoolUniswapLiquidityAssetManager)
+    }
+
     async getTxObj(web3, data, gasFee) {
-        const contract = new web3.eth.Contract(pgDarkPoolUniswapLiquidityABI.abi, pgDarkPoolUniswapLiquidityAssetManager)
-        const contractCall = this.getContractCall(contract, data, data.refundToken1, data.refundToken2)
+        const contract = this.getContract(web3)
+        const fees = await calculateFeeForTokens(gasFee, [data.asset1, data.asset2], [data.amount1, data.amount2])
+        if (fees[0].gasFeeInToken + fees[0].serviceFeeInToken > BigInt(data.amount1)
+            || fees[1].gasFeeInToken + fees[1].serviceFeeInToken > BigInt(data.amount2)) {
+            throw new Error('Insufficient amount to pay fees')
+        }
+        const contractCall = this.getContractCall(contract, data, fees[0].gasFeeInToken, fees[1].gasFeeInToken)
 
         return {
             to: contract._address,
