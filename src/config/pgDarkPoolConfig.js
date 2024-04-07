@@ -1,5 +1,6 @@
 module.exports = {
   netId1: {
+    offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '',
     curveAddLiquidityAssetManager: '',
     curveFSNAddLiquidityAssetManager: '',
@@ -17,6 +18,7 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
   netId11155111: {
+    offchainOracleAddress: '0x4Fe44a9aC8Ef059Be2dB97f9e3bcA32Ab698C2f2',
     verifierHub: '0x9B7D847B5d87735af812e8240c78F340Ab2b332C',
     curveAddLiquidityAssetManager: '0x84C0c7De05B760dEad736c13D21a9e3Ca49790F0',
     curveFSNAddLiquidityAssetManager: '0x82c048ffF7cb9c53A18965A123f56e594a5B7822',
@@ -34,6 +36,7 @@ module.exports = {
     uniswapFactory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
   },
   netId31337: {
+    offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x834Ea01e45F9b5365314358159d92d134d89feEb',
     curveAddLiquidityAssetManager: '0x04F75a27cE2FDC591C71a88f1EcaC7e5Ce44f5Fc',
     curveFSNAddLiquidityAssetManager: '0x10537D7bD661C9c34F547b38EC662D6FD482Ae95',

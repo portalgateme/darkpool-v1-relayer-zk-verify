@@ -10,7 +10,7 @@ module.exports = {
   redisUrl: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
   httpRpcUrl: process.env.HTTP_RPC_URL,
   oracleRpcUrl: process.env.ORACLE_RPC_URL || 'https://mainnet.infura.io/',
-  offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
+  offchainOracleAddress: pgConfig[`netId${netId}`].offchainOracleAddress,
   pgDarkPoolAssetManager: pgConfig[`netId${netId}`].darkpoolAssetManager,
   pgDarkPoolUniswapSwapAssetManager: pgConfig[`netId${netId}`].uniswapSwapAssetManager,
   pgDarkPoolUniswapLiquidityAssetManager: pgConfig[`netId${netId}`].uniswapLiquidityAssetManager,
