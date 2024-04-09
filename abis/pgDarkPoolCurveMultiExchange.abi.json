@@ -88,7 +88,27 @@
     },
     {
       "inputs": [],
+      "name": "AssetNotInPool",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ETHtransferFailed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
       "name": "FailedInnerCall",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "FunctionNotSupported",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "LpTokenNotCorrect",
       "type": "error"
     },
     {
@@ -135,6 +155,11 @@
     },
     {
       "inputs": [],
+      "name": "PoolNotSupported",
+      "type": "error"
+    },
+    {
+      "inputs": [],
       "name": "RelayerNotRegistered",
       "type": "error"
     },
@@ -153,6 +178,43 @@
       ],
       "name": "SafeERC20FailedOperation",
       "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32[4]",
+          "name": "nullifiers",
+          "type": "bytes32[4]"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "asset",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountOut",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteOut",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteFooter",
+          "type": "bytes32"
+        }
+      ],
+      "name": "CurveAddLiquidity",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -195,6 +257,43 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "nullifier",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[5]",
+          "name": "assets",
+          "type": "address[5]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[5]",
+          "name": "amountsOut",
+          "type": "uint256[5]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[5]",
+          "name": "notesOut",
+          "type": "bytes32[5]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[5]",
+          "name": "noteFooters",
+          "type": "bytes32[5]"
+        }
+      ],
+      "name": "CurveRemoveLiquidity",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "internalType": "address",
           "name": "previousOwner",
@@ -211,8 +310,17 @@
       "type": "event"
     },
     {
-      "stateMutability": "payable",
-      "type": "fallback"
+      "inputs": [],
+      "name": "ADDRESS_PROVIDER",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [],
@@ -319,6 +427,11 @@
               "internalType": "address",
               "name": "assetOut",
               "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minExpectedAmountOut",
+              "type": "uint256"
             },
             {
               "internalType": "bytes32",

@@ -22,6 +22,7 @@ class CurveMultiExchangeWorker extends BaseWorker {
             pools: data.pools,
             routeHash: data.routeHash,
             assetOut: data.assetOut,
+            minExpectedAmountOut: data.minExpectedAmountOut,
             noteFooter: data.noteFooterOut,
             relayer: data.relayer,
             gasRefund: refund,

@@ -24,7 +24,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
     getContractCall(contract, data, gasRefunds) {
         let removeLpArgs
 
-        if (data.poolType == POOL_TYPE.META && data.booleanFlag) {
+        if (data.poolType == POOL_TYPE.META) {
             removeLpArgs = {
                 merkleRoot: data.merkleRoot,
                 nullifier: data.nullifier,
@@ -34,6 +34,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 pool: data.pool,
                 assetsOut: data.assetsOut,
                 basePoolType: data.basePoolType,
+                minExpectedAmountsOut: data.minExpectedAmountsOut,
                 noteFooters: data.noteFooters,
                 relayer: data.relayer,
                 gasRefund: gasRefunds,
@@ -47,6 +48,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 amountBurn: data.amountBurn,
                 pool: data.pool,
                 assetsOut: data.assetsOut,
+                minExpectedAmountsOut: data.minExpectedAmountsOut,
                 noteFooters: data.noteFooters,
                 relayer: data.relayer,
                 gasRefund: gasRefunds,
@@ -61,8 +63,9 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 pool: data.pool,
                 assetsOut: data.assetsOut,
                 isPlain: data.isPlain,
-                isLegacy: data.isLegacy,
+                poolFlag: data.poolFlag,
                 booleanFlag: data.booleanFlag,
+                minExpectedAmountsOut: data.minExpectedAmountsOut,
                 noteFooters: data.noteFooters,
                 relayer: data.relayer,
                 gasRefund: gasRefunds,
@@ -104,7 +107,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
             const index = data.assetsOut.findIndex(address => address !== ZERO_ADDRESS)
             const asset = data.assetsOut[index]
             let estimatedOut
-            if (data.poolType == POOL_TYPE.META && data.booleanFlag) {
+            if (data.poolType == POOL_TYPE.META) {
                 console.log("one coin, MP underlying")
                 estimatedOut = await estimateWithdrawOneCoinForMP(web3, data.pool, data.basePoolType, data.amountBurn, index)
             } else {
@@ -119,7 +122,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
             gasRefunds[index] = gasFeeInToken
         } else if (coins.length >= 2) {
             let estimatedOuts
-            if (data.poolType == POOL_TYPE.META && data.booleanFlag) {
+            if (data.poolType == POOL_TYPE.META) {
                 estimatedOuts = await estimateWithdrawAllForMP(web3, data.pool,data.basePoolType, data.asset, data.amountBurn, coins.length)
             } else {
                 estimatedOuts = await estimateWithdrawAll(web3, data.pool, data.asset, data.amountBurn, coins.length)

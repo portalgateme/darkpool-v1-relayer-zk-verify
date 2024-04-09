@@ -93,6 +93,11 @@
     },
     {
       "inputs": [],
+      "name": "ETHtransferFailed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
       "name": "FailedInnerCall",
       "type": "error"
     },
@@ -159,6 +164,11 @@
       "type": "error"
     },
     {
+      "inputs": [],
+      "name": "RouteHashNotCorrect",
+      "type": "error"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -204,6 +214,43 @@
         }
       ],
       "name": "CurveAddLiquidity",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "nullifiers",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "assetOut",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountOut",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteOut",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "noteFooter",
+          "type": "bytes32"
+        }
+      ],
+      "name": "CurveExchange",
       "type": "event"
     },
     {
@@ -263,8 +310,17 @@
       "type": "event"
     },
     {
-      "stateMutability": "payable",
-      "type": "fallback"
+      "inputs": [],
+      "name": "ADDRESS_PROVIDER",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [],
@@ -300,6 +356,19 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "ROUTER_PROVIDER",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -343,6 +412,11 @@
               "internalType": "address",
               "name": "lpToken",
               "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minMintAmount",
+              "type": "uint256"
             },
             {
               "internalType": "bytes32",
