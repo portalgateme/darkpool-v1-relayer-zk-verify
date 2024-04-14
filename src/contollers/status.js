@@ -27,7 +27,7 @@ async function status(req, res) {
 
 function index(req, res) {
   res.send(
-    'This is <a href=https://portalgate.me>Portal Gate</a> Relayer service. Check the <a href=/status>/status</a> for settings',
+    'This is <a href=https://www.thesingularity.network/>Singularity</a> Relayer service. Check the <a href=/status>/status</a> for settings',
   )
 }
 
