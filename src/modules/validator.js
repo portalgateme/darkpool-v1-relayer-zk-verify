@@ -275,7 +275,6 @@ const pgDarkPoolCurveAddLiquiditySchema = {
     poolType: curvePoolType,
     basePoolType: curveBasePoolType,
     lpToken: assetType,
-    isPlain: { "type": "boolean" },
     poolFlag: bytes32Type,
     booleanFlag: { "type": "boolean" },
     minMintAmount: bytes32Type,
@@ -297,7 +296,7 @@ const pgDarkPoolCurveAddLiquiditySchema = {
   additionalProperties: true,
   required: [
     'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool',
-    'lpToken', 'poolType', 'basePoolType', 'isPlain', 'poolFlag', 'booleanFlag',
+    'lpToken', 'poolType', 'basePoolType', 'poolFlag', 'booleanFlag',
     'minMintAmount', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }

@@ -62,7 +62,6 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 amountBurn: data.amountBurn,
                 pool: data.pool,
                 assetsOut: data.assetsOut,
-                isPlain: data.isPlain,
                 poolFlag: data.poolFlag,
                 booleanFlag: data.booleanFlag,
                 minExpectedAmountsOut: data.minExpectedAmountsOut,
