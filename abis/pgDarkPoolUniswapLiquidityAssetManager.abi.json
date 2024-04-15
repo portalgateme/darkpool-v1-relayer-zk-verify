@@ -59,6 +59,11 @@
           "internalType": "contract INonfungiblePositionManager",
           "name": "_nonfungiblePositionManager",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "wethAddress",
+          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -89,6 +94,11 @@
     {
       "inputs": [],
       "name": "FailedInnerCall",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidNoteParameters",
       "type": "error"
     },
     {
@@ -284,10 +294,6 @@
       ],
       "name": "UniswapRemoveLiquidity",
       "type": "event"
-    },
-    {
-      "stateMutability": "payable",
-      "type": "fallback"
     },
     {
       "inputs": [],
@@ -941,6 +947,11 @@
           "internalType": "struct UniswapCoreAssetManager.FeesDetails",
           "name": "feesDetails",
           "type": "tuple"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",

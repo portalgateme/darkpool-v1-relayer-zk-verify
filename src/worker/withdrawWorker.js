@@ -35,7 +35,7 @@ class WithdrawWorker extends BaseWorker {
   }
 
   getContract(web3) {
-    return new web3.eth.Contract(pgDarkPoolABI, pgDarkPoolAssetManager)
+    return new web3.eth.Contract(pgDarkPoolABI.abi, pgDarkPoolAssetManager)
   }
 
   async getTxObj(web3, data, gasFee) {

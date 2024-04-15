@@ -229,21 +229,22 @@ const pgDarkPoolCurveMultiExchangeSchema = {
     },
     routeHash: bytes32Type,
     assetOut: assetType,
+    minExpectedAmountOut: bytes32Type,
     noteFooterOut: bytes32Type,
     relayer: relayerType,
     gasRefund: bytes32Type,
 
     verifierArgs: {
       type: 'array',
-      maxItems: 8,
-      minItems: 8,
-      items: new Array(8).fill(bytes32Type),
+      maxItems: 9,
+      minItems: 9,
+      items: new Array(9).fill(bytes32Type),
     },
   },
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'nullifier', 'assetIn', 'amountIn', 'routes', 'swapParams',
-    'pools', 'routeHash', 'assetOut', 'noteFooterOut', 'relayer', 'gasRefund', 'verifierArgs'
+    'pools', 'routeHash', 'assetOut', 'minExpectedAmountOut', 'noteFooterOut', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
@@ -274,9 +275,9 @@ const pgDarkPoolCurveAddLiquiditySchema = {
     poolType: curvePoolType,
     basePoolType: curveBasePoolType,
     lpToken: assetType,
-    isPlain: { "type": "boolean" },
-    isLegacy: bytes32Type,
+    poolFlag: bytes32Type,
     booleanFlag: { "type": "boolean" },
+    minMintAmount: bytes32Type,
     noteFooter: bytes32Type,
     relayer: relayerType,
     gasRefund: {
@@ -287,15 +288,16 @@ const pgDarkPoolCurveAddLiquiditySchema = {
     },
     verifierArgs: {
       type: 'array',
-      maxItems: 16,
-      minItems: 16,
-      items: new Array(16).fill(bytes32Type),
+      maxItems: 19,
+      minItems: 19,
+      items: new Array(19).fill(bytes32Type),
     },
   },
   additionalProperties: true,
   required: [
     'proof', 'merkleRoot', 'nullifiers', 'assets', 'amounts', 'pool',
-    'lpToken', 'poolType', 'basePoolType', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
+    'lpToken', 'poolType', 'basePoolType', 'poolFlag', 'booleanFlag',
+    'minMintAmount', 'noteFooter', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 
@@ -311,10 +313,15 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
     pool: addressType,
     poolType: curvePoolType,
     basePoolType: curveBasePoolType,
-    isPlain: { "type": "boolean" },
-    isLegacy: bytes32Type,
+    poolFlag: bytes32Type,
     booleanFlag: { "type": "boolean" },
     assetsOut: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
+    },
+    minExpectedAmountsOut: {
       type: 'array',
       maxItems: 4,
       minItems: 4,
@@ -333,18 +340,17 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
       minItems: 4,
       items: [Uint256Type, Uint256Type, Uint256Type, Uint256Type]
     },
-
     verifierArgs: {
       type: 'array',
-      maxItems: 16,
-      minItems: 16,
-      items: new Array(16).fill(bytes32Type),
+      maxItems: 22,
+      minItems: 22,
+      items: new Array(22).fill(bytes32Type),
     },
   },
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'nullifier', 'asset', 'amount', 'amountBurn',
-    'pool', 'assetsOut', 'poolType', 'basePoolType', 'isPlain', 'isLegacy', 'booleanFlag', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
+    'pool', 'assetsOut', 'poolType', 'basePoolType', 'poolFlag', 'booleanFlag', 'noteFooters', 'relayer', 'gasRefund', 'verifierArgs'
   ],
 }
 

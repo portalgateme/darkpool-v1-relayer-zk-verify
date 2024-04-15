@@ -6,11 +6,11 @@ const { Position, Pool, computePoolAddress } = require('@uniswap/v3-sdk')
 const { Token } = require('@uniswap/sdk-core')
 const ethers = require('ethers')
 
+const MAX_UINT128 = ethers.BigNumber.from(2).pow(128).sub(1)
+
 async function getLiquidity(web3, tokenId) {
     const contract = new web3.eth.Contract(nfpManagerABI.abi, uniswapNfpManager)
     const result = await contract.methods.positions(tokenId).call()
-    const tokensOwed0 = result.tokensOwed0
-    const tokensOwed1 = result.tokensOwed1
     const token0Address = result.token0
     const token1Address = result.token1
     const liquidity = result.liquidity.toString()
@@ -25,12 +25,10 @@ async function getLiquidity(web3, tokenId) {
         tickUpper: Number(tickUpper)
     })
 
-    console.log(position.amount0.toExact(), position.amount1.toExact())
     const token0Amount = ethers.utils.parseUnits(position.amount0.toExact(), token0.decimals)
     const token1Amount = ethers.utils.parseUnits(position.amount1.toExact(), token1.decimals)
-    const fee0 = BigInt(tokensOwed0)
-    const fee1 = BigInt(tokensOwed1)
-    console.log(position)
+
+    const { fee0, fee1 } = await getUnClaimedFee(web3, tokenId)
 
     return {
         token0Address,
@@ -40,6 +38,26 @@ async function getLiquidity(web3, tokenId) {
         fee0,
         fee1
     }
+}
+
+async function getUnClaimedFee(web3, tokenId) {
+    const contract = new web3.eth.Contract(nfpManagerABI.abi, uniswapNfpManager)
+    const owner = await contract.methods.ownerOf(tokenId).call()
+    if (owner == '0x' || owner == ethers.constants.AddressZero) {
+        return [0n, 0n]
+    }
+
+    const result = await contract.methods.collect(
+        {
+            tokenId: ethers.utils.hexlify(tokenId),
+            recipient: owner,
+            amount0Max: MAX_UINT128,
+            amount1Max: MAX_UINT128,
+        }
+    ).call({ from: owner })
+    const fee0 = BigInt(result.amount0.toString())
+    const fee1 = BigInt(result.amount1.toString())
+    return { fee0, fee1 }
 }
 
 async function getPool(web3, token0Address, token1Address, feeTier) {
