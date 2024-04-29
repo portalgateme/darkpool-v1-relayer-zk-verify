@@ -89,8 +89,8 @@ async function estimateWithdrawOneCoin(
     amountBurn,
     coinIndex,
 
-) {
-    if (legacy & 4 == 4) {
+) {    
+    if ( (legacy & 4) === 4) {
         console.log("legacy 4")
         const contract = new web3.eth.Contract(withdrawLegacyAbi, pool)
         return BigInt(await contract.methods.calc_withdraw_one_coin(amountBurn, BigInt(coinIndex)).call())
