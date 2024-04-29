@@ -111,7 +111,7 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
                 estimatedOut = await estimateWithdrawOneCoinForMP(web3, data.pool, data.basePoolType, data.amountBurn, index)
             } else {
                 console.log("one coin, normal")
-                estimatedOut = await estimateWithdrawOneCoin(web3, data.pool, data.isLegacy, data.amountBurn, index)
+                estimatedOut = await estimateWithdrawOneCoin(web3, data.pool, parseInt(data.poolFlag,16), data.amountBurn, index)
             }
 
             const { gasFeeInToken, serviceFeeInToken } = await calculateFeesForOneToken(gasFee, asset, estimatedOut)

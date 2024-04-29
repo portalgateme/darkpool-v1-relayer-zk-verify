@@ -1,5 +1,6 @@
 const { RelayerError, toBN, isETH, getRateToEth } = require('../utils')
 const { pgServiceFee } = require('../config/config')
+const { getPriceToNativeFromLLama } = require('./priceOracle')
 
 const NATIVE_DECIMAL = 18
 const PRECISION = 1000000
@@ -40,7 +41,11 @@ function calcServiceFee(amount) {
 }
 
 async function calculateFeesForOneToken(gasFeeInEth, asset, amount) {
-    const rate = await rateToEth(asset)
+    let rate = await rateToEth(asset)
+    if(rate == 0n) {
+        const prices = await getPriceToNativeFromLLama([asset]);
+        rate = prices[asset];
+    }
 
     const gasFeeInToken = ethToToken(gasFeeInEth, rate)
     
@@ -55,13 +60,35 @@ async function calculateFeesForOneToken(gasFeeInEth, asset, amount) {
 async function calculateFeeForTokens(gasFeeInEth, assets, amounts) {
     let tmpTotal = BigInt(0);
     let tmpRateAndAmount = [];
+    let rateDict = {};
+    let fallbackAssets = [];
+    for (let i = 0; i < assets.length; i++) {
+        const asset = assets[i]
+        const amount = BigInt(amounts[i])
+        if (amount != 0n) {
+            const rate = await rateToEth(asset);
+            if(rate == 0n) {
+                fallbackAssets.push(asset);
+            } else{
+                rateDict[asset] = rate;
+            }
+        }
+    }
+
+    if(fallbackAssets.length > 0) {
+        const prices = await getPriceToNativeFromLLama(fallbackAssets);
+        for (const asset of fallbackAssets) {
+            rateDict[asset] = prices[asset];
+        }
+    }
+
     for (let i = 0; i < assets.length; i++) {
         const asset = assets[i]
         const amount = BigInt(amounts[i])
         if (amount === 0n) {
             tmpRateAndAmount.push({ rate: 0n, ethAmount: 0n, amount: 0n });
         } else {
-            const rate = await rateToEth(asset);
+            const rate = rateDict[asset];
             const ethAmount = tokenToEth(amount, rate);
             tmpTotal = tmpTotal + ethAmount;
             tmpRateAndAmount.push({ rate, ethAmount, amount });
