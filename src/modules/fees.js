@@ -1,21 +1,35 @@
-const { RelayerError, toBN, isETH, getRateToEth } = require('../utils')
+const { RelayerError, toBN, toWei, isETH, getRateToEth } = require('../utils')
 const { pgServiceFee } = require('../config/config')
 const { getPriceToNativeFromLLama } = require('./priceOracle')
+const { GasPriceOracle } = require('gas-price-oracle')
+const { oracleRpcUrl } = require('../config/config')
 
 const NATIVE_DECIMAL = 18
 const PRECISION = 1000000
 const GAS_PRECISION = 10
-const GAS_BUFF = 1
+const GAS_UNIT_BUFF = 1
+const GAS_PRIORITY_BUFF = 2
+
+const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
 
 async function getGasPrice(web3) {
-    const gasPrice = await web3.eth.getGasPrice()
-    return toBN(gasPrice.toString())
+    const block = await web3.eth.getBlock('latest')
+    if (block && block.baseFeePerGas) {
+        console.log("=====baseFeePerGas:", block.baseFeePerGas);
+        return toBN(block.baseFeePerGas)
+    }
+
+    const { fast } = await gasPriceOracle.gasPrices()
+    return toBN(toWei(fast.toString(), 'gwei'))
 }
 
 async function calcGasFee(web3, gasAmount) {
     const gasPrice = await getGasPrice(web3)
-    const gasFee = BigInt(gasPrice.mul(toBN(gasAmount)).toString())
-    return gasFee * BigInt(GAS_PRECISION + GAS_BUFF) / BigInt(GAS_PRECISION)
+    const refinedGasPrice = gasPrice.mul(toBN(GAS_PRECISION + GAS_PRIORITY_BUFF)).div(toBN(GAS_PRECISION))
+    const refinedGasAmount = toBN(gasAmount).mul(toBN(GAS_PRECISION + GAS_UNIT_BUFF)).div(toBN(GAS_PRECISION))
+    const gasFee = BigInt(refinedGasPrice.mul(refinedGasAmount))
+    console.log("=====gasPrice, gasAmount, gasFee :", BigInt(gasPrice), gasAmount, gasFee.toString());
+    return gasFee
 }
 
 function ethToToken(ethAmount, rateToEth) {
@@ -42,13 +56,13 @@ function calcServiceFee(amount) {
 
 async function calculateFeesForOneToken(gasFeeInEth, asset, amount) {
     let rate = await rateToEth(asset)
-    if(rate == 0n) {
+    if (rate == 0n) {
         const prices = await getPriceToNativeFromLLama([asset]);
         rate = prices[asset];
     }
 
     const gasFeeInToken = ethToToken(gasFeeInEth, rate)
-    
+
     const serviceFeeInToken = calcServiceFee(amount)
 
     return {
@@ -67,15 +81,15 @@ async function calculateFeeForTokens(gasFeeInEth, assets, amounts) {
         const amount = BigInt(amounts[i])
         if (amount != 0n) {
             const rate = await rateToEth(asset);
-            if(rate == 0n) {
+            if (rate == 0n) {
                 fallbackAssets.push(asset);
-            } else{
+            } else {
                 rateDict[asset] = rate;
             }
         }
     }
 
-    if(fallbackAssets.length > 0) {
+    if (fallbackAssets.length > 0) {
         const prices = await getPriceToNativeFromLLama(fallbackAssets);
         for (const asset of fallbackAssets) {
             rateDict[asset] = prices[asset];
