@@ -6,9 +6,11 @@ const { calculateFeesForOneToken } = require('../modules/fees')
 const {
   pgDarkPoolAssetManager,
   gasLimits,
+  gasUnitFallback,
 } = require('../config/config')
 
 const { BaseWorker } = require('./baseWorker')
+const { jobType } = require('../config/constants')
 
 class WithdrawWorker extends BaseWorker {
 
@@ -30,7 +32,7 @@ class WithdrawWorker extends BaseWorker {
       return await contractCall.estimateGas()
     } catch (error) {
       console.error('Estimate gas failed: ', error)
-      return gasLimits['WITHDRAW_WITH_EXTRA']
+      return gasUnitFallback[jobType.PG_DARKPOOL_WITHDRAW]
     }
   }
 
