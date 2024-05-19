@@ -3,7 +3,9 @@ const pgDarkPoolUniswapLiquidityABI = require('../../abis/pgDarkPoolUniswapLiqui
 const {
     pgDarkPoolUniswapLiquidityAssetManager,
     gasLimits,
+    gasUnitFallback,
 } = require('../config/config')
+const { jobType } = require('../config/constants')
 
 const { getLiquidity } = require('../defi/uniswap')
 const { calculateFeeForTokens } = require('../modules/fees')
@@ -35,7 +37,7 @@ class UniswapCollectFeesWorker extends BaseWorker {
             return gasLimit
         } catch (error) {
             console.error('Estimate gas failed: ', error)
-            return gasLimits['DEFI_WITH_EXTRA']
+            return gasUnitFallback[jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING]
         }
     }
 

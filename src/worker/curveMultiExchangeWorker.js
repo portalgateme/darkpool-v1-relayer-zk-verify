@@ -2,7 +2,9 @@ const pgDarkPoolCurveMultiExchangeABI = require('../../abis/pgDarkPoolCurveMulti
 const {
     pgDarkPoolCurveMultiExchangeAssetManager,
     gasLimits,
+    gasUnitFallback,
 } = require('../config/config')
+const { jobType } = require('../config/constants')
 const { calculateFeesForOneToken } = require('../modules/fees')
 
 const { BaseWorker } = require('./baseWorker')
@@ -42,7 +44,7 @@ class CurveMultiExchangeWorker extends BaseWorker {
             return gasLimit
         } catch (error) {
             console.error('Estimate gas failed: ', error)
-            return gasLimits['DEFI_WITH_EXTRA']
+            return gasUnitFallback[jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE]
         }
     }
 
