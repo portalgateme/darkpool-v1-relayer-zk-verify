@@ -50,8 +50,8 @@ module.exports = {
     darkpoolAssetManager: '0x81F82957608f74441E085851cA5Cc091b23d17A2',
     generalDefiIntegrationAssetManager: '0xE0a1556ef66873d965A2F4caD06F051646BE6707',
     rocketPoolStakeAssetManager: '0x1c32f8818e38a50d37d1E98c72B9516a50985227',
-    sablierCreateDynamicAssetManager: '0xe8c3F27D20472e4f3C546A3f73C04B54DD72871d',
-    sablierCreateLinearAssetManager: '0x37453c92a0E3C63949ba340ee213c6C97931F96D',
+    sablierDynamicAssetManager: '0xe8c3F27D20472e4f3C546A3f73C04B54DD72871d',
+    sablierLinearAssetManager: '0x37453c92a0E3C63949ba340ee213c6C97931F96D',
     uniswapLiquidityAssetManager: '0x30A6d2B697635a0ECf1975d2386A0FE6b608B0Fb',
     uniswapSwapAssetManager: '0x86c64cB21f88fA9E2c46b61c35889E75f08FDce1',
 
