@@ -2,12 +2,13 @@ const pgDarkPoolCurveAddLiquidityABI = require('../../abis/pgDarkPoolCurveAddliq
 const pgDarkPoolCurveFSNAddLiquidityABI = require('../../abis/pgDarkPoolCurveFSNAddLiquidityAssetManager.abi.json')
 const pgDarkPoolCurveMPAddLiquidityABI = require('../../abis/pgDarkPoolCurveMPAddLiquidityAssetManager.abi.json')
 
-const { POOL_TYPE } = require('../config/constants')
+const { POOL_TYPE, jobType } = require('../config/constants')
 const {
     pgDarkPoolCurveAddLiquidityAssetManager,
     pgDarkPoolCurveFSNAddLiquidityAssetManager,
     pgDarkPoolCurveMPAddLiquidityAssetManager,
-    gasLimits
+    gasLimits,
+    gasUnitFallback
 } = require('../config/config')
 const { calculateFeeForTokens } = require('../modules/fees')
 
@@ -77,7 +78,7 @@ class CurveAddLiquidityWorker extends BaseWorker {
             return gasLimit
         } catch (error) {
             console.error('Estimate gas failed: ', error)
-            return gasLimits['DEFI_WITH_EXTRA']
+            return gasUnitFallback[jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]
         }
     }
 
