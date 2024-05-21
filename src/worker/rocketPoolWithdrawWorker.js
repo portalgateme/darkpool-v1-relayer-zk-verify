@@ -1,4 +1,5 @@
 const rocketPoolStakeAssetManagerAbi = require('../../abis/rocketPool/RocketPoolStakeAssetManager.json')
+const config = require('../config/config')
 
 const {
     pgDarkPoolRocketPoolStakeAssetManager,
@@ -42,7 +43,7 @@ class RocketPoolUnStakeWorker extends BaseWorker {
 
     async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3)
-        const {gasFeeInToken, serviceFeeInToken} = await calculateFeesForOneToken(gasFee, data.asset, data.amount)
+        const {gasFeeInToken, serviceFeeInToken} = await calculateFeesForOneToken(gasFee, config.nativeToken, data.amount)
         if(gasFeeInToken+ serviceFeeInToken > BigInt(data.amount)){
             throw new Error('Insufficient amount to pay fees')
         }

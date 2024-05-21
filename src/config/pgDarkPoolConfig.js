@@ -1,5 +1,7 @@
 module.exports = {
   netId1: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x6c3Fac202241F3c6B19EBCa043091E3aab21F3F2',
     curveAddLiquidityAssetManager: '0xEBeD6c7C2189bf8ad6687D3A4cf4b83fB4D1a3D2',
@@ -18,6 +20,8 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
   netId11155111: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0x',
     offchainOracleAddress: '0x4Fe44a9aC8Ef059Be2dB97f9e3bcA32Ab698C2f2',
     verifierHub: '0x8E8C7952fc55EEe930860Ee1AB3FD293A48078aB',
     curveAddLiquidityAssetManager: '0x2885533DCA501e939f087E3B75CcAc818a968dD7',
@@ -37,6 +41,8 @@ module.exports = {
     uniswapFactory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
   },
   netId31337: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0xe24e7570Fe7207AdAaAa8c6c89a59850391B5276',
     curveAddLiquidityAssetManager: '0xe519389F8c262d4301Fd2830196FB7D0021daf59',
