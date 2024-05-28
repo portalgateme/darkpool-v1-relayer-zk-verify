@@ -8,6 +8,12 @@ module.exports = {
         lpTokenFraxUsdc: '0x3175df0976dfa876431c2e9ee6bc45b65d3473cc',
     },
     [11155111]: {
+        zap3PoolAddress: '',
+        zapFraxUsdcAddress: '',
+        basePool3Pool: '',
+        basePoolFraxUsdc: '',
+        lpToken3Pool: '',
+        lpTokenFraxUsdc: '',
     },
     [31337]: {
         zap3PoolAddress: '0xA79828DF1850E8a3A3064576f380D90aECDD3359',
@@ -16,5 +22,21 @@ module.exports = {
         basePoolFraxUsdc: '0xdcef968d416a41cdac0ed8702fac8128a64241a2',
         lpToken3Pool: '0x6c3f90f043a72fa612cbac8115ee7e52bde6e490',
         lpTokenFraxUsdc: '0x3175df0976dfa876431c2e9ee6bc45b65d3473cc',
+    },
+    [31338]: {
+        zap3PoolAddress: '',
+        zapFraxUsdcAddress: '',
+        basePool3Pool: '',
+        basePoolFraxUsdc: '',
+        lpToken3Pool: '',
+        lpTokenFraxUsdc: '',
+    },
+    [31339]: {
+        zap3PoolAddress: '',
+        zapFraxUsdcAddress: '',
+        basePool3Pool: '',
+        basePoolFraxUsdc: '',
+        lpToken3Pool: '',
+        lpTokenFraxUsdc: '',
     }
 }

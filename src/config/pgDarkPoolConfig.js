@@ -51,5 +51,23 @@ module.exports = {
     uniswapSwapAssetManager: '0x5BFaaA02cAb795d576276a19CB1c2D2D2d652717',
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+  },
+  netId31338: {
+    offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
+    verifierHub: '0x868542bE225690DCfE753e2e8977E3500677e749',
+    curveAddLiquidityAssetManager: '0x0',
+    curveFSNAddLiquidityAssetManager: '0x0',
+    curveFSNRemoveLiquidityAssetManager: '0x0',
+    curveMPAddLiquidityAssetManager: '0x0',
+    curveMPRemoveLiquidityAssetManager: '0x0',
+    curveMultiExchangeAssetManager: '0x0',
+    curveRemoveLiquidityAssetManager: '0x0',
+    curveSingleExchangeAssetManager: '0x0',
+    darkpoolAssetManager: '0x920D80F5490c073A46076a61897A6e6dc88Bbf0D',
+    uniswapLiquidityAssetManager: '0xF4844d9CD10c9f68e626310579996F7539A7c4F3',
+    uniswapSwapAssetManager: '0xc538D528a9eE0A8137C99a15d1DE873e902C1115',
+
+    uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
+    uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   }
 }
