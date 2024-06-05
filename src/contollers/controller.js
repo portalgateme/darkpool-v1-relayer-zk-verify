@@ -7,6 +7,8 @@ const {
   getPgDarkPoolCurveMultiExchangeInputError,
   getPgDarkPoolCurveAddLiquidityInputError,
   getPgDarkPoolCurveRemoveLiquidityInputError,
+  getPgDarkPoolZkStakeInputError,
+  getPgDarkPoolZkRedeemInputError
 } = require('../modules/validator')
 const { postJob } = require('../queue')
 const { jobType } = require('../config/constants')
@@ -124,6 +126,34 @@ async function pgDarkPoolCurveRemoveLiquidity(req, res) {
   return res.json({ id })
 }
 
+async function pgDarkPoolZkStake(req, res) {
+  const inputError = getPgDarkPoolZkStakeInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_ZK_STAKE,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolZkRedeem(req, res) {
+  const inputError = getPgDarkPoolZkRedeemInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_ZK_REDEEM,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
 
 module.exports = {
   pgDarkPoolWithdraw,
@@ -134,4 +164,6 @@ module.exports = {
   pgDarkPoolCurveMultiExchange,
   pgDarkPoolCurveAddLiquidity,
   pgDarkPoolCurveRemoveLiquidity,
+  pgDarkPoolZkStake,
+  pgDarkPoolZkRedeem,
 }

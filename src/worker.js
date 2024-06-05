@@ -8,6 +8,8 @@ const { UniswapCollectFeesWorker } = require('./worker/uniswapCollectFeesWorker'
 const { CurveMultiExchangeWorker } = require('./worker/curveMultiExchangeWorker')
 const { CurveAddLiquidityWorker } = require('./worker/curveAddLiquidityWorker')
 const { CurveRemoveLiquidityWorker } = require('./worker/curveRemoveLiquidityWorker')
+const { zkStakeWorker } = require('./worker/zkStakeWorker')
+const { zkRedeemWorker } = require('./worker/zkRedeemWorker')
 
 const { queue } = require('./queue')
 const {
@@ -41,6 +43,8 @@ const workerMapping = {
   [jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE]: new CurveMultiExchangeWorker(),
   [jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]: new CurveAddLiquidityWorker(),
   [jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]: new CurveRemoveLiquidityWorker(),
+  [jobType.PG_DARKPOOL_ZK_STAKE]: new zkStakeWorker(),
+  [jobType.PG_DARKPOOL_ZK_REDEEM]: new zkRedeemWorker(),
 }
 
 async function start() {

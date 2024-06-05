@@ -13,6 +13,7 @@ module.exports = {
     darkpoolAssetManager: '0x159F3668c72BBeCdF1fb31beeD606Ec9649654eB',
     uniswapLiquidityAssetManager: '0x53e5A08c95CF866E34F2A6A685ee9f90366e154E',
     uniswapSwapAssetManager: '0xc98b275a309f187b691e025b956e03603e12b420',
+    stakingAssetManager: '0x0',
     //deployedBlock: 18323404,
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
@@ -31,6 +32,7 @@ module.exports = {
     darkpoolAssetManager: '0x08c09146C9656F240453731ab9af5D27037D08aa',
     uniswapLiquidityAssetManager: '0x62952E82cfa3F2D9fC5350686891F6F5561BcEc7',
     uniswapSwapAssetManager: '0x9b33eF175bDBc0B2C1bB5dBCC0257c62f720B30F',
+    stakingAssetManager: '0x0',
     //deployedBlock: 9739503,
     uniswapNfpManager: '0x1238536071E1c677A632429e3655c799b22cDA52',
     uniswapFactory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
@@ -49,6 +51,8 @@ module.exports = {
     darkpoolAssetManager: '0x0BbfcD7a557FFB8A70CB0948FF680F0E573bbFf2',
     uniswapLiquidityAssetManager: '0x0b5dcAf621a877dAcF3C540c1e5208C8a3eb7B23',
     uniswapSwapAssetManager: '0x5BFaaA02cAb795d576276a19CB1c2D2D2d652717',
+    stakingAssetManager: '0x0',
+
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
@@ -66,6 +70,7 @@ module.exports = {
     darkpoolAssetManager: '0x920D80F5490c073A46076a61897A6e6dc88Bbf0D',
     uniswapLiquidityAssetManager: '0xF4844d9CD10c9f68e626310579996F7539A7c4F3',
     uniswapSwapAssetManager: '0xc538D528a9eE0A8137C99a15d1DE873e902C1115',
+    stakingAssetManager: '0x0',
 
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
