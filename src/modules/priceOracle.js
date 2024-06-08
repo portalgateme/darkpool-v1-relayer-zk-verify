@@ -7,7 +7,7 @@ const priceOracleConfig = priceOracleConfigs[netId]
 
 async function getPriceToNativeFromLLama(assets) {
     let tokens = []
-    const nativeToken = "coingecko:" + priceOracleConfig.defillamaNativeCoingecoId
+    const nativeToken = priceOracleConfig.defillamaChainPrefix + ":" + priceOracleConfig.nativeToken
     tokens.push(nativeToken)
     assets.forEach(asset => {
         tokens.push(priceOracleConfig.defillamaChainPrefix + ":" + asset)
