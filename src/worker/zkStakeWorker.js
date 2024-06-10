@@ -1,4 +1,6 @@
 const pgDarkPoolStakeABI = require('../../abis/pgDarkPoolStakingAssetManager.abi.json')
+const {RelayerError } = require('../utils')
+
 
 const {
     pgDarkPoolStakingAssetManager,
@@ -32,7 +34,7 @@ class zkStakeWorker extends BaseWorker {
             return gasLimit
         } catch (error) {
             console.error('Estimate gas failed: ', error)
-            throw new DarkPoolRelayerError('Estimate gas failed', error)
+            throw new RelayerError('Estimate gas failed', error)
         }
     }
 
