@@ -53,7 +53,7 @@ class zkRedeemWorker extends BaseWorker {
 
     async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3)
-        const originalAsset = await getOriginalToken(web3, data.inAsset)
+        const originalAsset = await this.getOriginalToken(web3, data.inAsset)
         const { gasFeeInToken } = await calculateFeesForOneToken(gasFee, originalAsset, data.inAmount)
         if (gasFeeInToken > BigInt(data.inAmount)) {
             throw new Error('Insufficient amount to pay fees')
