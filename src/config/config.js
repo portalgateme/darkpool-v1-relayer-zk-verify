@@ -34,8 +34,8 @@ module.exports = {
   pgServiceFee: Number(process.env.REGULAR_PG_DARKPOOL_SERVICE_FEE),
   rewardAccount: process.env.REWARD_ACCOUNT,
   gasLimits: {
-    WITHDRAW_WITH_EXTRA: 1300000,
-    DEFI_WITH_EXTRA: 8000000,
+    WITHDRAW_WITH_EXTRA: 3000000,
+    DEFI_WITH_EXTRA: 20000000,
   },
   gasUnitFallback: {
     [jobType.PG_DARKPOOL_WITHDRAW]:                 800000,
