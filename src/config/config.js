@@ -22,6 +22,8 @@ module.exports = {
   pgDarkPoolCurveFSNRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveFSNRemoveLiquidityAssetManager,
   pgDarkPoolCurveMPAddLiquidityAssetManager: pgConfig[`netId${netId}`].curveMPAddLiquidityAssetManager,
   pgDarkPoolCurveMPRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveMPRemoveLiquidityAssetManager,
+  pgDarkPoolStakingAssetManager: pgConfig[`netId${netId}`].stakingAssetManager,
+  pgDarkPoolStakingOperator: pgConfig[`netId${netId}`].stakingOperator,
   pgDarkPoolRocketPoolStakeAssetManager: pgConfig[`netId${netId}`].rocketPoolStakeAssetManager,
   uniswapNfpManager: pgConfig[`netId${netId}`].uniswapNfpManager,
   uniswapFactory: pgConfig[`netId${netId}`].uniswapFactory,

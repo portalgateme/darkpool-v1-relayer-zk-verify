@@ -7,6 +7,8 @@ const {
   getPgDarkPoolCurveMultiExchangeInputError,
   getPgDarkPoolCurveAddLiquidityInputError,
   getPgDarkPoolCurveRemoveLiquidityInputError,
+  getPgDarkPoolZkStakeInputError,
+  getPgDarkPoolZkRedeemInputError
   getPgDarkPoolRocketPoolStakeInputError,
   getPgDarkPoolRocketPoolUnStakeInputError
 } = require('../modules/validator')
@@ -126,6 +128,20 @@ async function pgDarkPoolCurveRemoveLiquidity(req, res) {
   return res.json({ id })
 }
 
+async function pgDarkPoolZkStake(req, res) {
+  const inputError = getPgDarkPoolZkStakeInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_ZK_STAKE,
+    request: req.body,
+  })
+  return res.json({ id })
+  
+  
+  
 async function pgDarkPoolRocketPoolStake(req, res) {
   const inputError = getPgDarkPoolRocketPoolStakeInputError(req.body)
   if (inputError) {
@@ -140,6 +156,21 @@ async function pgDarkPoolRocketPoolStake(req, res) {
   return res.json({ id })
 }
 
+async function pgDarkPoolZkRedeem(req, res) {
+  const inputError = getPgDarkPoolZkRedeemInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+  
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_ZK_REDEEM,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+  
+  
 async function pgDarkPoolRocketPoolUnStake(req, res) {
   const inputError = getPgDarkPoolRocketPoolUnStakeInputError(req.body)
   if (inputError) {
@@ -154,9 +185,6 @@ async function pgDarkPoolRocketPoolUnStake(req, res) {
   return res.json({ id })
 }
 
-
-
-
 module.exports = {
   pgDarkPoolWithdraw,
   pgDarkPoolUniswapSingleSwap,
@@ -166,6 +194,8 @@ module.exports = {
   pgDarkPoolCurveMultiExchange,
   pgDarkPoolCurveAddLiquidity,
   pgDarkPoolCurveRemoveLiquidity,
+  pgDarkPoolZkStake,
+  pgDarkPoolZkRedeem,
   pgDarkPoolRocketPoolStake,
   pgDarkPoolRocketPoolUnStake
 }
