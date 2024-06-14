@@ -493,6 +493,8 @@ function getPgDarkPoolZkStakeInputError(data) {
 
 function getPgDarkPoolZkRedeemInputError(data) {
   return getInputError(validatePgDarkPoolZkRedeem, data)
+}
+
 function getPgDarkPoolRocketPoolStakeInputError(data) {
   return getInputError(validatePgDarkPoolRocketPoolStake, data)
 }

@@ -8,9 +8,9 @@ const {
   getPgDarkPoolCurveAddLiquidityInputError,
   getPgDarkPoolCurveRemoveLiquidityInputError,
   getPgDarkPoolZkStakeInputError,
-  getPgDarkPoolZkRedeemInputError
+  getPgDarkPoolZkRedeemInputError,
   getPgDarkPoolRocketPoolStakeInputError,
-  getPgDarkPoolRocketPoolUnStakeInputError
+  getPgDarkPoolRocketPoolUnStakeInputError,
 } = require('../modules/validator')
 const { postJob } = require('../queue')
 const { jobType } = require('../config/constants')
@@ -139,9 +139,8 @@ async function pgDarkPoolZkStake(req, res) {
     request: req.body,
   })
   return res.json({ id })
-  
-  
-  
+}
+ 
 async function pgDarkPoolRocketPoolStake(req, res) {
   const inputError = getPgDarkPoolRocketPoolStakeInputError(req.body)
   if (inputError) {
