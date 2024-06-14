@@ -405,6 +405,31 @@ const pgDarkPoolZkRedeemSchema = {
   ],
 }
 
+const pgDarkPoolRocketPoolStakeSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    nullifier: bytes32Type,
+    amount: Uint256Type,
+    noteFooterOut: bytes32Type,
+    relayer: relayerType,
+    refund: bytes32Type,
+
+    verifierArgs: {
+      type: 'array',
+      maxItems: 6,
+      minItems: 6,
+      items: new Array(6).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'nullifier', 'noteFooterOut',
+    'amount', 'relayer', 'refund', 'verifierArgs'
+  ],
+}
+
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
 const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
 const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
@@ -415,6 +440,10 @@ const validatePgDarkPoolCurveAddLiquidity = ajv.compile(pgDarkPoolCurveAddLiquid
 const validatePgDarkPoolCurveRemoveLiquidity = ajv.compile(pgDarkPoolCurveRemoveLiquiditySchema)
 const validatePgDarkPoolZkStake = ajv.compile(pgDarkPoolZkStakeSchema)
 const validatePgDarkPoolZkRedeem = ajv.compile(pgDarkPoolZkRedeemSchema)
+const validatePgDarkPoolRocketPoolStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
+const validatePgDarkPoolRocketPoolUnStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
+
+
 
 function getInputError(validator, data) {
   validator(data)
@@ -464,6 +493,12 @@ function getPgDarkPoolZkStakeInputError(data) {
 
 function getPgDarkPoolZkRedeemInputError(data) {
   return getInputError(validatePgDarkPoolZkRedeem, data)
+function getPgDarkPoolRocketPoolStakeInputError(data) {
+  return getInputError(validatePgDarkPoolRocketPoolStake, data)
+}
+
+function getPgDarkPoolRocketPoolUnStakeInputError(data) {
+  return getInputError(validatePgDarkPoolRocketPoolUnStake, data)
 }
 
 module.exports = {
@@ -477,4 +512,6 @@ module.exports = {
   getPgDarkPoolCurveRemoveLiquidityInputError,
   getPgDarkPoolZkStakeInputError,
   getPgDarkPoolZkRedeemInputError,
+  getPgDarkPoolRocketPoolStakeInputError,
+  getPgDarkPoolRocketPoolUnStakeInputError
 }

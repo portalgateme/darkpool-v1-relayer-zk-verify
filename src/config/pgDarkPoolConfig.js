@@ -1,5 +1,7 @@
 module.exports = {
   netId1: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x6c3Fac202241F3c6B19EBCa043091E3aab21F3F2',
     curveAddLiquidityAssetManager: '0xEBeD6c7C2189bf8ad6687D3A4cf4b83fB4D1a3D2',
@@ -53,6 +55,8 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
   netId11155111: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0x',
     offchainOracleAddress: '0x4Fe44a9aC8Ef059Be2dB97f9e3bcA32Ab698C2f2',
     verifierHub: '0xcA64c6e94afE0e138fBcDd6f06D7a7d770A50DF8',
     curveAddLiquidityAssetManager: '0x0',
@@ -71,6 +75,8 @@ module.exports = {
     uniswapFactory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
   },
   netId31337: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0xA3b48c7b901fede641B596A4C10a4630052449A6',
     darkpoolAssetManager: '0x6c383Ef7C9Bf496b5c847530eb9c49a3ED6E4C56',
@@ -82,6 +88,10 @@ module.exports = {
     curveMultiExchangeAssetManager: '0xa51807d5a12E7e78148c66dC4851CD33EEd1FDfD',
     curveRemoveLiquidityAssetManager: '0x0BFC626B583e93A5F793Bc2cAa195BDBB2ED9F20',
     curveSingleExchangeAssetManager: '0x36B81ebd01C31643BAF132240C8Bc6874B329c4C',
+    generalDefiIntegrationAssetManager: '0xE0a1556ef66873d965A2F4caD06F051646BE6707',
+    rocketPoolStakeAssetManager: '0x1c32f8818e38a50d37d1E98c72B9516a50985227',
+    sablierDynamicAssetManager: '0xe8c3F27D20472e4f3C546A3f73C04B54DD72871d',
+    sablierLinearAssetManager: '0x37453c92a0E3C63949ba340ee213c6C97931F96D',
     stakingOperator: '0xAAd4F7BB5FB661181D500829e60010043833a85B',
     stakingAssetManager: '0x4Bd915C3e39cfF4eac842255965E79061c38cACD',
     uniswapLiquidityAssetManager: '0xd8E4Af8145A8288537B85878bb2371fa070Aa5eF',

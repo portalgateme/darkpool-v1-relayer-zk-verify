@@ -15,6 +15,8 @@ const verifierMap = {
    [jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]: 'curveRemoveLiquidity',
    [jobType.PG_DARKPOOL_ZK_STAKE]: 'zkLockNote',
    [jobType.PG_DARKPOOL_ZK_REDEEM]: 'zkUnlockNote',
+   [jobType.PG_DARKPOOL_ROCKET_POOL_STAKE]: 'rocketPoolStake',
+   [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: 'rocketPoolStake',
  }
 
 async function zkProofVerifier(web3, proof, input, job) {
