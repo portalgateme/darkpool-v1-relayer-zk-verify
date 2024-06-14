@@ -24,6 +24,10 @@ async function zkProofVerifier(web3, proof, input, job) {
       verifierContractAddress = await hubContract.methods.getVerifier("curveAddLiquidity").call()
    } else if (job === jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY){
       verifierContractAddress = await hubContract.methods.getVerifier("curveRemoveLiquidity").call()
+   } else if (job === jobType.PG_DARKPOOL_ROCKET_POOL_STAKE){
+      verifierContractAddress = await hubContract.methods.getVerifier("rocketPoolStake").call()
+   } else if (job === jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE){
+      verifierContractAddress = await hubContract.methods.getVerifier("rocketPoolStake").call()
    } else{
       throw new RelayerError('Unknown job type.' , 0)
    }

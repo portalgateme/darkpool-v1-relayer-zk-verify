@@ -10,6 +10,7 @@ module.exports = {
   redisUrl: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
   httpRpcUrl: process.env.HTTP_RPC_URL,
   oracleRpcUrl: process.env.ORACLE_RPC_URL || 'https://mainnet.infura.io/',
+  nativeToken: pgConfig[`netId${netId}`].nativeToken,
   offchainOracleAddress: pgConfig[`netId${netId}`].offchainOracleAddress,
   pgDarkPoolAssetManager: pgConfig[`netId${netId}`].darkpoolAssetManager,
   pgDarkPoolUniswapSwapAssetManager: pgConfig[`netId${netId}`].uniswapSwapAssetManager,
@@ -21,6 +22,7 @@ module.exports = {
   pgDarkPoolCurveFSNRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveFSNRemoveLiquidityAssetManager,
   pgDarkPoolCurveMPAddLiquidityAssetManager: pgConfig[`netId${netId}`].curveMPAddLiquidityAssetManager,
   pgDarkPoolCurveMPRemoveLiquidityAssetManager: pgConfig[`netId${netId}`].curveMPRemoveLiquidityAssetManager,
+  pgDarkPoolRocketPoolStakeAssetManager: pgConfig[`netId${netId}`].rocketPoolStakeAssetManager,
   uniswapNfpManager: pgConfig[`netId${netId}`].uniswapNfpManager,
   uniswapFactory: pgConfig[`netId${netId}`].uniswapFactory,
 

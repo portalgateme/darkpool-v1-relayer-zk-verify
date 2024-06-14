@@ -1,5 +1,7 @@
 module.exports = {
   netId1: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x6c3Fac202241F3c6B19EBCa043091E3aab21F3F2',
     curveAddLiquidityAssetManager: '0xEBeD6c7C2189bf8ad6687D3A4cf4b83fB4D1a3D2',
@@ -52,6 +54,8 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
   netId11155111: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0x',
     offchainOracleAddress: '0x4Fe44a9aC8Ef059Be2dB97f9e3bcA32Ab698C2f2',
     verifierHub: '0xcA64c6e94afE0e138fBcDd6f06D7a7d770A50DF8',
     curveAddLiquidityAssetManager: '0x0',
@@ -70,7 +74,10 @@ module.exports = {
     uniswapFactory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
   },
   netId31337: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
+
     verifierHub: '0xA8d14b3d9e2589CEA8644BB0f67EB90d21079f8B',
     curveAddLiquidityAssetManager: '0x67Fc5Aa53440518DdbAd4B381fD4b86fFD77B776',
     curveFSNAddLiquidityAssetManager: '0xcE7e5946C14Cdd1f8de4473dB9c20fd65EBd47d0',
@@ -81,6 +88,10 @@ module.exports = {
     curveRemoveLiquidityAssetManager: '0x33f4f8bf90d8AA3d19fF812B50e79c15Df0d0b03',
     curveSingleExchangeAssetManager: '0xC54051689e0931FdCF3e708b665f521f7ab42Fb0',
     darkpoolAssetManager: '0x0BbfcD7a557FFB8A70CB0948FF680F0E573bbFf2',
+    generalDefiIntegrationAssetManager: '0xE0a1556ef66873d965A2F4caD06F051646BE6707',
+    rocketPoolStakeAssetManager: '0x1c32f8818e38a50d37d1E98c72B9516a50985227',
+    sablierDynamicAssetManager: '0xe8c3F27D20472e4f3C546A3f73C04B54DD72871d',
+    sablierLinearAssetManager: '0x37453c92a0E3C63949ba340ee213c6C97931F96D',
     uniswapLiquidityAssetManager: '0x0b5dcAf621a877dAcF3C540c1e5208C8a3eb7B23',
     uniswapSwapAssetManager: '0x5BFaaA02cAb795d576276a19CB1c2D2D2d652717',
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
