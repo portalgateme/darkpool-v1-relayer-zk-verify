@@ -80,7 +80,14 @@ async function getTxObject({ data }) {
 
   const worker = workerMapping[data.type]
   if (worker) {
-    const gasAmount = await worker.estimateGas(web3, data)
+    let gasAmount
+    try {
+      gasAmount = await worker.estimateGas(web3, data)
+    } catch (e) {
+      
+      console.error('Failed to estimate gas', e.message, e.stack)
+      throw new RelayerError('Failed to estimate gas')
+    }
     const gasFee = await calcGasFee(web3, gasAmount)
     return await worker.getTxObj(web3, data, gasFee)
   } else {

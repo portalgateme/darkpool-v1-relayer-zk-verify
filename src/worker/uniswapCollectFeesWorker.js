@@ -14,14 +14,14 @@ const { BaseWorker } = require('./baseWorker')
 
 class UniswapCollectFeesWorker extends BaseWorker {
 
-    getContractCall(contract, data) {
+    getContractCall(contract, data, refund) {
         let calldata
 
         const param = {
             merkleRoot: data.merkleRoot,
             tokenId: data.tokenId,
             feeNoteFooters: [data.feeNoteFooter1, data.feeNoteFooter2],
-            relayerGasFees: [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2],
+            relayerGasFees: refund,
             relayer: data.relayer,
         }
         calldata = contract.methods.uniswapCollectFees(param, data.proof)
@@ -31,14 +31,8 @@ class UniswapCollectFeesWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data)
-        try {
-            const gasLimit = await contractCall.estimateGas()
-            return gasLimit
-        } catch (error) {
-            console.error('Estimate gas failed: ', error)
-            return gasUnitFallback[jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING]
-        }
+        const contractCall = this.getContractCall(contract, data, [0, 0])
+        return await contractCall.estimateGas()
     }
 
     getContract(web3, data) {

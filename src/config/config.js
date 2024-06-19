@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const { jobType } = require('./constants')
 const pgConfig = require('./pgDarkPoolConfig')
+const { gasLimitConfig } = require('./gasConfig')
 
 const netId = Number(process.env.NET_ID) || 1
 
@@ -35,10 +36,7 @@ module.exports = {
   port: process.env.APP_PORT || 8000,
   pgServiceFee: Number(process.env.REGULAR_PG_DARKPOOL_SERVICE_FEE),
   rewardAccount: process.env.REWARD_ACCOUNT,
-  gasLimits: {
-    WITHDRAW_WITH_EXTRA: 3000000,
-    DEFI_WITH_EXTRA: 20000000,
-  },
+  gasLimits: gasLimitConfig[netId],
   gasUnitFallback: {
     [jobType.PG_DARKPOOL_WITHDRAW]:                 800000,
     [jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP]:       2000000,
