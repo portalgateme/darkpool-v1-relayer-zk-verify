@@ -354,6 +354,82 @@ const pgDarkPoolCurveRemoveLiquiditySchema = {
   ],
 }
 
+const pgDarkPoolZkStakeSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    inNullifier: bytes32Type,
+    inAsset: assetType,
+    inAmount: Uint256Type,
+    outNoteFooter: bytes32Type,
+    relayer: relayerType,
+    refund: Uint256Type,
+    verifierArgs: {
+      type: 'array',
+      maxItems: 7,
+      minItems: 7,
+      items: new Array(7).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'inNullifier', 'inAsset', 'inAmount',
+    'outNoteFooter','relayer', 'refund', 'verifierArgs'
+  ],
+}
+
+
+const pgDarkPoolZkRedeemSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    inNullifier: bytes32Type,
+    inAsset: assetType,
+    inAmount: Uint256Type,
+    outNoteFooter: bytes32Type,
+    relayer: relayerType,
+    refund: Uint256Type,
+    verifierArgs: {
+      type: 'array',
+      maxItems: 7,
+      minItems: 7,
+      items: new Array(7).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'inNullifier', 'inAsset', 'inAmount',
+    'outNoteFooter','relayer', 'refund', 'verifierArgs'
+  ],
+}
+
+const pgDarkPoolRocketPoolStakeSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    nullifier: bytes32Type,
+    amount: Uint256Type,
+    noteFooterOut: bytes32Type,
+    relayer: relayerType,
+    refund: bytes32Type,
+
+    verifierArgs: {
+      type: 'array',
+      maxItems: 6,
+      minItems: 6,
+      items: new Array(6).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'nullifier', 'noteFooterOut',
+    'amount', 'relayer', 'refund', 'verifierArgs'
+  ],
+}
+
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
 const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
 const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
@@ -362,6 +438,12 @@ const validatePgDarkPoolUniswapRemoveLiquidity = ajv.compile(pgDarkPoolUniswapRe
 const validatePgDarkPoolCurveMultiExchange = ajv.compile(pgDarkPoolCurveMultiExchangeSchema)
 const validatePgDarkPoolCurveAddLiquidity = ajv.compile(pgDarkPoolCurveAddLiquiditySchema)
 const validatePgDarkPoolCurveRemoveLiquidity = ajv.compile(pgDarkPoolCurveRemoveLiquiditySchema)
+const validatePgDarkPoolZkStake = ajv.compile(pgDarkPoolZkStakeSchema)
+const validatePgDarkPoolZkRedeem = ajv.compile(pgDarkPoolZkRedeemSchema)
+const validatePgDarkPoolRocketPoolStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
+const validatePgDarkPoolRocketPoolUnStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
+
+
 
 function getInputError(validator, data) {
   validator(data)
@@ -405,6 +487,22 @@ function getPgDarkPoolCurveRemoveLiquidityInputError(data) {
   return getInputError(validatePgDarkPoolCurveRemoveLiquidity, data)
 }
 
+function getPgDarkPoolZkStakeInputError(data) {
+  return getInputError(validatePgDarkPoolZkStake, data)
+}
+
+function getPgDarkPoolZkRedeemInputError(data) {
+  return getInputError(validatePgDarkPoolZkRedeem, data)
+}
+
+function getPgDarkPoolRocketPoolStakeInputError(data) {
+  return getInputError(validatePgDarkPoolRocketPoolStake, data)
+}
+
+function getPgDarkPoolRocketPoolUnStakeInputError(data) {
+  return getInputError(validatePgDarkPoolRocketPoolUnStake, data)
+}
+
 module.exports = {
   getPgDarkPoolWithdrawInputError,
   getPgDarkPoolUniswapSSInputError,
@@ -413,5 +511,9 @@ module.exports = {
   getPgDarkPoolUniswapRemoveLiquidityInputError,
   getPgDarkPoolCurveMultiExchangeInputError,
   getPgDarkPoolCurveAddLiquidityInputError,
-  getPgDarkPoolCurveRemoveLiquidityInputError
+  getPgDarkPoolCurveRemoveLiquidityInputError,
+  getPgDarkPoolZkStakeInputError,
+  getPgDarkPoolZkRedeemInputError,
+  getPgDarkPoolRocketPoolStakeInputError,
+  getPgDarkPoolRocketPoolUnStakeInputError
 }

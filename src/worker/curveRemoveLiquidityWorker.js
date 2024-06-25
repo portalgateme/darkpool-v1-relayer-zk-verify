@@ -78,14 +78,8 @@ class CurveRemoveLiquidityWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data, data.gasRefund)
-        try {
-            const gasLimit = await contractCall.estimateGas()
-            return gasLimit
-        } catch (error) {
-            console.error('Estimate gas failed: ', error)
-            return gasUnitFallback[jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]
-        }
+        const contractCall = this.getContractCall(contract, data, [0,0,0,0])
+        return await contractCall.estimateGas()
     }
 
     getContract(web3, data) {

@@ -1,5 +1,3 @@
-const fs = require('fs')
-const { GasPriceOracle } = require('gas-price-oracle')
 const { WithdrawWorker } = require('./worker/withdrawWorker')
 const { UniswapSingleSwapWorker } = require('./worker/uniswapSingleSwapWorker')
 const { UniswapAddLiquidityWorker } = require('./worker/uniswapAddLiquidityWorker')
@@ -8,6 +6,10 @@ const { UniswapCollectFeesWorker } = require('./worker/uniswapCollectFeesWorker'
 const { CurveMultiExchangeWorker } = require('./worker/curveMultiExchangeWorker')
 const { CurveAddLiquidityWorker } = require('./worker/curveAddLiquidityWorker')
 const { CurveRemoveLiquidityWorker } = require('./worker/curveRemoveLiquidityWorker')
+const { zkStakeWorker } = require('./worker/zkStakeWorker')
+const { zkRedeemWorker } = require('./worker/zkRedeemWorker')
+const { RocketPoolStakeWorker } = require('./worker/rocketPoolDepositWorker')
+const { RocketPoolUnStakeWorker } = require('./worker/rocketPoolWithdrawWorker')
 
 const { queue } = require('./queue')
 const {
@@ -41,6 +43,10 @@ const workerMapping = {
   [jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE]: new CurveMultiExchangeWorker(),
   [jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]: new CurveAddLiquidityWorker(),
   [jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]: new CurveRemoveLiquidityWorker(),
+  [jobType.PG_DARKPOOL_ZK_STAKE]: new zkStakeWorker(),
+  [jobType.PG_DARKPOOL_ZK_REDEEM]: new zkRedeemWorker(),
+  [jobType.PG_DARKPOOL_ROCKET_POOL_STAKE]: new RocketPoolStakeWorker(),
+  [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: new RocketPoolUnStakeWorker(),
 }
 
 async function start() {
@@ -74,7 +80,14 @@ async function getTxObject({ data }) {
 
   const worker = workerMapping[data.type]
   if (worker) {
-    const gasAmount = await worker.estimateGas(web3, data)
+    let gasAmount
+    try {
+      gasAmount = await worker.estimateGas(web3, data)
+    } catch (e) {
+      
+      console.error('Failed to estimate gas', e.message, e.stack)
+      throw new RelayerError('Failed to estimate gas')
+    }
     const gasFee = await calcGasFee(web3, gasAmount)
     return await worker.getTxObj(web3, data, gasFee)
   } else {

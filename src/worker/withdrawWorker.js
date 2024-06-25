@@ -27,13 +27,8 @@ class WithdrawWorker extends BaseWorker {
 
   async estimateGas(web3, data) {
     const contract = this.getContract(web3, data)
-    const contractCall = this.getContractCall(contract, data, gasLimits['WITHDRAW_WITH_EXTRA'])
-    try {
-      return await contractCall.estimateGas()
-    } catch (error) {
-      console.error('Estimate gas failed: ', error)
-      return gasUnitFallback[jobType.PG_DARKPOOL_WITHDRAW]
-    }
+    const contractCall = this.getContractCall(contract, data, 0)
+    return await contractCall.estimateGas()
   }
 
   getContract(web3) {

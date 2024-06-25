@@ -2,13 +2,12 @@ const pgDarkPoolCurveAddLiquidityABI = require('../../abis/pgDarkPoolCurveAddliq
 const pgDarkPoolCurveFSNAddLiquidityABI = require('../../abis/pgDarkPoolCurveFSNAddLiquidityAssetManager.abi.json')
 const pgDarkPoolCurveMPAddLiquidityABI = require('../../abis/pgDarkPoolCurveMPAddLiquidityAssetManager.abi.json')
 
-const { POOL_TYPE, jobType } = require('../config/constants')
+const { POOL_TYPE } = require('../config/constants')
 const {
     pgDarkPoolCurveAddLiquidityAssetManager,
     pgDarkPoolCurveFSNAddLiquidityAssetManager,
     pgDarkPoolCurveMPAddLiquidityAssetManager,
     gasLimits,
-    gasUnitFallback
 } = require('../config/config')
 const { calculateFeeForTokens } = require('../modules/fees')
 
@@ -72,14 +71,8 @@ class CurveAddLiquidityWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data, data.gasRefund)
-        try {
-            const gasLimit = await contractCall.estimateGas()
-            return gasLimit
-        } catch (error) {
-            console.error('Estimate gas failed: ', error)
-            return gasUnitFallback[jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]
-        }
+        const contractCall = this.getContractCall(contract, data, [0,0,0,0])
+        return await contractCall.estimateGas()
     }
 
     getContract(web3, data) {

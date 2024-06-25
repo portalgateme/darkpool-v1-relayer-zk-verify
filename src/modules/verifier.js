@@ -4,29 +4,28 @@ const {pgDarkPoolVerifierHub} = require('../config/config')
 const {jobType} = require('../config/constants')
 const {RelayerError } = require('../utils')
 
+const verifierMap = {
+   [jobType.PG_DARKPOOL_WITHDRAW]: 'withdraw',
+   [jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP]: 'uniswapSwap',
+   [jobType.PG_DARKPOOL_UNISWAP_LP]: 'uniswapLiquidityProvision',
+   [jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY]: 'uniswapRemoveLiquidity',
+   [jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING]: 'uniswapCollectFees',
+   [jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE]: 'curveMultiExchange',
+   [jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]: 'curveAddLiquidity',
+   [jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]: 'curveRemoveLiquidity',
+   [jobType.PG_DARKPOOL_ZK_STAKE]: 'zkLockNote',
+   [jobType.PG_DARKPOOL_ZK_REDEEM]: 'zkUnlockNote',
+   [jobType.PG_DARKPOOL_ROCKET_POOL_STAKE]: 'rocketPoolStake',
+   [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: 'rocketPoolStake',
+ }
 
 async function zkProofVerifier(web3, proof, input, job) {
-   const hubContract = new web3.eth.Contract(pgVerifierHubABI, pgDarkPoolVerifierHub)
-   let verifierContractAddress
-   if (job === jobType.PG_DARKPOOL_WITHDRAW){
-      verifierContractAddress = await hubContract.methods.getVerifier("withdraw").call()
-   } else if (job === jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP){
-      verifierContractAddress = await hubContract.methods.getVerifier("uniswapSwap").call()
-   } else if (job === jobType.PG_DARKPOOL_UNISWAP_LP){
-      verifierContractAddress = await hubContract.methods.getVerifier("uniswapLiquidityProvision").call()
-   } else if (job === jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING){
-      verifierContractAddress = await hubContract.methods.getVerifier("uniswapCollectFees").call()
-   } else if (job === jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY){
-      verifierContractAddress = await hubContract.methods.getVerifier("uniswapRemoveLiquidity").call()
-   } else if (job === jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE){
-      verifierContractAddress = await hubContract.methods.getVerifier("curveMultiExchange").call()
-   } else if (job === jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY){
-      verifierContractAddress = await hubContract.methods.getVerifier("curveAddLiquidity").call()
-   } else if (job === jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY){
-      verifierContractAddress = await hubContract.methods.getVerifier("curveRemoveLiquidity").call()
-   } else{
+   let verifierName = verifierMap[job]
+   if(!verifierName) {
       throw new RelayerError('Unknown job type.' , 0)
    }
+   const hubContract = new web3.eth.Contract(pgVerifierHubABI, pgDarkPoolVerifierHub)
+   const verifierContractAddress = await hubContract.methods.getVerifier(verifierName).call()
 
    const verifierContract = new web3.eth.Contract(pgVerifierABI, verifierContractAddress)
    try {

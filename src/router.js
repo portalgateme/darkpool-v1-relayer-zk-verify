@@ -29,5 +29,10 @@ router.post('/v1/pgDarkPoolUniswapRemoveLiquidity', controller.pgDarkPoolUniswap
 router.post('/v1/pgDarkPoolCurveMultiExchange', controller.pgDarkPoolCurveMultiExchange)
 router.post('/v1/pgDarkPoolCurveAddLiquidity', controller.pgDarkPoolCurveAddLiquidity)
 router.post('/v1/pgDarkPoolCurveRemoveLiquidity', controller.pgDarkPoolCurveRemoveLiquidity)
+router.post('/v1/pgDarkPoolZkStake', controller.pgDarkPoolZkStake)
+router.post('/v1/pgDarkPoolZkRedeem', controller.pgDarkPoolZkRedeem)
+router.post('/v1/pgDarkPoolRocketPoolStake', controller.pgDarkPoolRocketPoolStake)
+router.post('/v1/pgDarkPoolRocketPoolUnStake', controller.pgDarkPoolRocketPoolUnStake)
+
 
 module.exports = router
