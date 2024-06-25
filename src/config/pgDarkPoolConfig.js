@@ -15,7 +15,11 @@ module.exports = {
     darkpoolAssetManager: '0x159F3668c72BBeCdF1fb31beeD606Ec9649654eB',
     uniswapLiquidityAssetManager: '0x53e5A08c95CF866E34F2A6A685ee9f90366e154E',
     uniswapSwapAssetManager: '0xc98b275a309f187b691e025b956e03603e12b420',
-    stakingAssetManager: '0x0',
+    rocketPoolStakeAssetManager: '0xEF8F70bB29DEAd5CEcaE26C6Cb19B987475B3e48',
+    sablierDynamicAssetManager: '0x0',
+    sablierLinearAssetManager: '0x0',
+    stakingOperator: '0x539bcbc08F2cA42E50887dA4Db0DC34EbF0B090b',
+    stakingAssetManager: '0x1Fa7Cb4925086128f3bb9e26761C9C75dbAC3CD1',
     //deployedBlock: 18323404,
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
@@ -23,6 +27,7 @@ module.exports = {
   netId42161: {
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x630aD89523a18fA30F752297F3F53B7BC363488b',
+    // curve doesn't support arbitrum
     curveAddLiquidityAssetManager: '0x0',
     curveFSNAddLiquidityAssetManager: '0x0',
     curveFSNRemoveLiquidityAssetManager: '0x0',
@@ -34,6 +39,12 @@ module.exports = {
     darkpoolAssetManager: '0xf7C40b5057a1D1a3d58B02BCdb125E63ef380564',
     uniswapLiquidityAssetManager: '0x9D4746F8f2364da04fF47d729072F71b742726aA',
     uniswapSwapAssetManager: '0xdB9ea6e600077492Ef568826AC9155159D7Da8C9',
+    rocketPoolStakeAssetManager: '0x0',// rocket pool doesn't support arbitrum
+    sablierDynamicAssetManager: '0x0',
+    sablierLinearAssetManager: '0x0',
+    stakingOperator: '0xF4f1D4F28Be82D81135c13D255452B8325B585B0',
+    stakingAssetManager: '0xB1CC5D9227323330E8a58e891c123B38D03f0BAA',
+
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
