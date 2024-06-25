@@ -3,6 +3,7 @@ const { pgServiceFee } = require('../config/config')
 const { getPriceToNativeFromLLama } = require('./priceOracle')
 const { GasPriceOracle } = require('gas-price-oracle')
 const { oracleRpcUrl } = require('../config/config')
+const priceWeb3 = require('./web3')('oracle')
 
 const NATIVE_DECIMAL = 18
 const PRECISION = 1000000
@@ -13,7 +14,7 @@ const GAS_PRIORITY_BUFF = 2
 const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
 
 async function getGasPrice(web3) {
-    const block = await web3.eth.getBlock('latest')
+    const block = await priceWeb3.eth.getBlock('latest')
     if (block && block.baseFeePerGas) {
         console.log("=====baseFeePerGas:", block.baseFeePerGas);
         return toBN(block.baseFeePerGas)

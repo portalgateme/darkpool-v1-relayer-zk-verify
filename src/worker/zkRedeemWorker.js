@@ -37,14 +37,8 @@ class zkRedeemWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3)
-        const contractCall = this.getContractCall(contract, data, data.refund)
-        try {
-            const gasLimit = await contractCall.estimateGas()
-            return gasLimit
-        } catch (error) {
-            console.error('Estimate gas failed: ', error)
-            throw new RelayerError('Estimate gas failed', error)
-        }
+        const contractCall = this.getContractCall(contract, data, 0)
+        return await contractCall.estimateGas()
     }
 
     getContract(web3) {
