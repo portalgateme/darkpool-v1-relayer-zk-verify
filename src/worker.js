@@ -85,6 +85,7 @@ async function getTxObject({ data }) {
     try {
       gasAmount = await worker.estimateGas(web3, data)
     } catch (e) {
+      console.error(e, 'Estimation fallback', data.type)
       gasAmount = gasUnitFallback[data.type]
     }
     const gasFee = await calcGasFee(web3, gasAmount)
