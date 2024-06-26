@@ -26,8 +26,8 @@ class WithdrawWorker extends BaseWorker {
   }
 
   async estimateGas(web3, data) {
-    const contract = this.getContract(web3, data)
-    const contractCall = this.getContractCall(contract, data, 0)
+    const contract = this.getContract(web3)
+    const contractCall = this.getContractCall(contract, data, 0x0)
     return await contractCall.estimateGas()
   }
 

@@ -21,7 +21,7 @@ async function getDecimalByAddress(web3, address) {
 }
 
 function isETH(address) {
-  return address == "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+  return address.toLowerCase() == '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 }
 
 //const poseidonHash = items => toBN(poseidon(items).toString())

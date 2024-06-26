@@ -36,7 +36,7 @@ class UniswapRemoveLiquidityWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3, data)
-        const contractCall = this.getContractCall(contract, data, [0, 0])
+        const contractCall = this.getContractCall(contract, data, [data.relayerGasFeeFromToken1, data.relayerGasFeeFromToken2])
         return await contractCall.estimateGas()
     }
 

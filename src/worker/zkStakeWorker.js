@@ -28,7 +28,7 @@ class zkStakeWorker extends BaseWorker {
 
     async estimateGas(web3, data) {
         const contract = this.getContract(web3)
-        const contractCall = this.getContractCall(contract, data, 0)
+        const contractCall = this.getContractCall(contract, data, data.refund)
         return await contractCall.estimateGas()
     }
 
