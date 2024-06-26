@@ -47,7 +47,7 @@ class WithdrawWorker extends BaseWorker {
 
   async getTxObj(web3, data, gasFee) {
     const contract = this.getContract(web3)
-    const refinedToken = this.getOriginalTokenFromStakingTokenMapping(data.asset)
+    let refinedToken = this.getOriginalTokenFromStakingTokenMapping(data.asset)
     if (!refinedToken) {
       refinedToken = data.asset
     }
