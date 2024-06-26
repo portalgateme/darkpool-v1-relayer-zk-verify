@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const pgConfig = require('./pgDarkPoolConfig')
 const { gasLimitConfig, gasUnitFallbackConfig } = require('./gasConfig')
+const { stakingTokenConfig } = require('./stakingConfig')
 
 const netId = Number(process.env.NET_ID) || 1
 
@@ -39,4 +40,5 @@ module.exports = {
   gasUnitFallback: gasUnitFallbackConfig[netId],
   minimumBalance: '500000000000000000',
   baseFeeReserve: Number(process.env.BASE_FEE_RESERVE_PERCENTAGE),
+  stakingTokenMapping: stakingTokenConfig[netId],
 }
