@@ -37,7 +37,7 @@ class WithdrawWorker extends BaseWorker {
   }
 
   getOriginalTokenFromStakingTokenMapping(token) {
-    const stakingTokenMappingEntry = stakingTokenMapping.find(entry => entry.stakingToken === token);
+    const stakingTokenMappingEntry = stakingTokenMapping.find(entry => entry.stakingToken.toLowerCase() == token.toLowerCase());
     if (stakingTokenMappingEntry) {
       return stakingTokenMappingEntry.originalToken
     } else {
