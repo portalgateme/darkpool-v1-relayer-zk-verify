@@ -26,10 +26,12 @@ module.exports = {
   pgDarkPoolStakingAssetManager: pgConfig[`netId${netId}`].stakingAssetManager,
   pgDarkPoolStakingOperator: pgConfig[`netId${netId}`].stakingOperator,
   pgDarkPoolRocketPoolStakeAssetManager: pgConfig[`netId${netId}`].rocketPoolStakeAssetManager,
+  pgDarkPoolSablierDynamicAssetManager: pgConfig[`netId${netId}`].sablierDynamicAssetManager,
+  pgDarkPoolSablierLinearAssetManager: pgConfig[`netId${netId}`].sablierLinearAssetManager,
   uniswapNfpManager: pgConfig[`netId${netId}`].uniswapNfpManager,
   uniswapFactory: pgConfig[`netId${netId}`].uniswapFactory,
-
-  
+  sablierV2LockupLinear: pgConfig[`netId${netId}`].sablierV2LockupLinear,
+  sablierV2LockupDynamic: pgConfig[`netId${netId}`].sablierV2LockupDynamic,
 
   pgDarkPoolVerifierHub: pgConfig[`netId${netId}`].verifierHub,
   privateKey: process.env.PRIVATE_KEY,

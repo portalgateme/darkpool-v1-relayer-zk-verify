@@ -1,4 +1,4 @@
-const rocketPoolStakeAssetManagerAbi = require('../../abis/rocketPool/RocketPoolStakeAssetManager.json')
+const rocketPoolStakeAssetManagerAbi = require('../../abis/pgDarkPoolRocketPoolStakeAssetManager.json')
 const config = require('../config/config')
 
 const {
