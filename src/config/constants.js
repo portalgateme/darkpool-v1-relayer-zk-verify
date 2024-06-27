@@ -41,12 +41,27 @@ const BASEPOOL_TYPE = Object.freeze({
   FRAXUSDC: 2,
 })
 
-
+const ChainId = Object.freeze({
+  HARDHAT: 31337,
+  HARDHAT_ARBITRUM: 31338,
+  HARDHAT_POLYGON: 31339,
+  MAINNET: 1,
+  GOERLI: 5,
+  SEPOLIA: 11155111,
+  ARBITRUM_ONE: 42161,
+  OPTIMISM: 10,
+  POLYGON: 137,
+  CELO: 42220,
+  BNB: 56,
+  AVALANCHE: 43114,
+  BASE: 100,
+})
 
 module.exports = {
   jobType,
   status,
   curvePoolType,
   POOL_TYPE,
-  BASEPOOL_TYPE
+  BASEPOOL_TYPE,
+  ChainId
 }  

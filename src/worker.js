@@ -22,6 +22,7 @@ const {
   httpRpcUrl,
   oracleRpcUrl,
   baseFeeReserve,
+  gasUnitFallback,
 } = require('./config/config')
 const { TxManager } = require('tx-manager')
 const { redis, redisSubscribe } = require('./modules/redis')
@@ -84,9 +85,8 @@ async function getTxObject({ data }) {
     try {
       gasAmount = await worker.estimateGas(web3, data)
     } catch (e) {
-      
-      console.error('Failed to estimate gas', e.message, e.stack)
-      throw new RelayerError('Failed to estimate gas')
+      console.error(e, 'Estimation fallback', data.type)
+      gasAmount = gasUnitFallback[data.type]
     }
     const gasFee = await calcGasFee(web3, gasAmount)
     return await worker.getTxObj(web3, data, gasFee)

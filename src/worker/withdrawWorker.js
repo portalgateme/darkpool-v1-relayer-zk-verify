@@ -7,6 +7,7 @@ const {
   pgDarkPoolAssetManager,
   gasLimits,
   gasUnitFallback,
+  stakingTokenMapping,
 } = require('../config/config')
 
 const { BaseWorker } = require('./baseWorker')
@@ -26,8 +27,8 @@ class WithdrawWorker extends BaseWorker {
   }
 
   async estimateGas(web3, data) {
-    const contract = this.getContract(web3, data)
-    const contractCall = this.getContractCall(contract, data, 0)
+    const contract = this.getContract(web3)
+    const contractCall = this.getContractCall(contract, data, data.refund)
     return await contractCall.estimateGas()
   }
 
@@ -35,10 +36,23 @@ class WithdrawWorker extends BaseWorker {
     return new web3.eth.Contract(pgDarkPoolABI.abi, pgDarkPoolAssetManager)
   }
 
+  getOriginalTokenFromStakingTokenMapping(token) {
+    const stakingTokenMappingEntry = stakingTokenMapping.find(entry => entry.stakingToken.toLowerCase() == token.toLowerCase());
+    if (stakingTokenMappingEntry) {
+      return stakingTokenMappingEntry.originalToken
+    } else {
+      return null
+    }
+  }
+
   async getTxObj(web3, data, gasFee) {
     const contract = this.getContract(web3)
-    const { gasFeeInToken, serviceFeeInToken } = await calculateFeesForOneToken(gasFee, data.asset, data.amount)
-    console.log(gasFee,gasFeeInToken,serviceFeeInToken, BigInt(data.amount))
+    let refinedToken = this.getOriginalTokenFromStakingTokenMapping(data.asset)
+    if (!refinedToken) {
+      refinedToken = data.asset
+    }
+    const { gasFeeInToken, serviceFeeInToken } = await calculateFeesForOneToken(gasFee, refinedToken, data.amount)
+    console.log(gasFee, gasFeeInToken, serviceFeeInToken, BigInt(data.amount), refinedToken, data.asset)
     if (gasFeeInToken + serviceFeeInToken > BigInt(data.amount)) {
       throw new RelayerError('Insufficient funds to pay fees')
     }
