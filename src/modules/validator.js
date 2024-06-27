@@ -430,6 +430,35 @@ const pgDarkPoolRocketPoolStakeSchema = {
   ],
 }
 
+const pgDarkPoolSablierClaimSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    streamCategory: intType,
+    merkleRoot: bytes32Type,
+    nullifier: bytes32Type,
+    stream: addressType,
+    streamId: Uint256Type,
+    assetOut: addressType,
+    amountOut: Uint256Type,
+    noteFooterOut: bytes32Type,
+    relayer: relayerType,
+    refund: bytes32Type,
+
+    verifierArgs: {
+      type: 'array',
+      maxItems: 6,
+      minItems: 6,
+      items: new Array(6).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'nullifier', 'noteFooterOut',
+    'amount', 'relayer', 'refund', 'verifierArgs'
+  ],
+}
+
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
 const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
 const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
@@ -442,6 +471,7 @@ const validatePgDarkPoolZkStake = ajv.compile(pgDarkPoolZkStakeSchema)
 const validatePgDarkPoolZkRedeem = ajv.compile(pgDarkPoolZkRedeemSchema)
 const validatePgDarkPoolRocketPoolStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
 const validatePgDarkPoolRocketPoolUnStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
+const validatePgDarkPoolSablierClaim = ajv.compile(pgDarkPoolSablierClaimSchema)
 
 
 
@@ -503,6 +533,10 @@ function getPgDarkPoolRocketPoolUnStakeInputError(data) {
   return getInputError(validatePgDarkPoolRocketPoolUnStake, data)
 }
 
+function getPgDarkPoolSablierClaimInputError(data) {
+  return getInputError(validatePgDarkPoolSablierClaim, data)
+}
+
 module.exports = {
   getPgDarkPoolWithdrawInputError,
   getPgDarkPoolUniswapSSInputError,
@@ -515,5 +549,6 @@ module.exports = {
   getPgDarkPoolZkStakeInputError,
   getPgDarkPoolZkRedeemInputError,
   getPgDarkPoolRocketPoolStakeInputError,
-  getPgDarkPoolRocketPoolUnStakeInputError
+  getPgDarkPoolRocketPoolUnStakeInputError,
+  getPgDarkPoolSablierClaimInputError
 }

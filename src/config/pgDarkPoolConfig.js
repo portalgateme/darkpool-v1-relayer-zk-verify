@@ -23,6 +23,8 @@ module.exports = {
     //deployedBlock: 18323404,
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    sablierV2LockupLinear: '0xAFb979d9afAd1aD27C5eFf4E27226E3AB9e5dCC9',
+    sablierV2LockupDynamic: '0x7CC7e125d83A581ff438608490Cc0f7bDff79127',
   },
   netId42161: {
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
@@ -47,6 +49,8 @@ module.exports = {
 
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    sablierV2LockupLinear: '0xFDD9d122B451F549f48c4942c6fa6646D849e8C1',
+    sablierV2LockupDynamic: '0xf390cE6f54e4dc7C5A5f7f8689062b7591F7111d',
   },
   netId137: {
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
@@ -64,6 +68,8 @@ module.exports = {
     uniswapSwapAssetManager: '0x0',
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    sablierV2LockupLinear: '0x5f0e1dea4A635976ef51eC2a2ED41490d1eBa003',
+    sablierV2LockupDynamic: '0xB194c7278C627D52E440316b74C5F24FC70c1565',
   },
   netId11155111: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
@@ -84,6 +90,8 @@ module.exports = {
     //deployedBlock: 9739503,
     uniswapNfpManager: '0x1238536071E1c677A632429e3655c799b22cDA52',
     uniswapFactory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
+    sablierV2LockupLinear: '0x7a43F8a888fa15e68C103E18b0439Eb1e98E4301',
+    sablierV2LockupDynamic: '0xc9940AD8F43aAD8e8f33A4D5dbBf0a8F7FF4429A',
   },
   netId31337: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
@@ -109,6 +117,8 @@ module.exports = {
 
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    sablierV2LockupLinear: '0xAFb979d9afAd1aD27C5eFf4E27226E3AB9e5dCC9',
+    sablierV2LockupDynamic: '0x7CC7e125d83A581ff438608490Cc0f7bDff79127',
   },
   netId31338: {
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
@@ -128,5 +138,7 @@ module.exports = {
 
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    sablierV2LockupLinear: '0xFDD9d122B451F549f48c4942c6fa6646D849e8C1',
+    sablierV2LockupDynamic: '0xf390cE6f54e4dc7C5A5f7f8689062b7591F7111d',
   }
 }
