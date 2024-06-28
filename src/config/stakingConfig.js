@@ -47,6 +47,13 @@ const stakingTokenConfig = {
   ],
   [ChainId.POLYGON]: [],
   [ChainId.SEPOLIA]: [],
+  [ChainId.BounceBitTestnet]: [
+    {
+      originalToken: '0x0000000000000000000000000000000000000000',
+      stakingToken: '0x161790584454a2f90569CB8B84779c9cF3efed93',
+      name: 'sgBB',
+    },
+  ],
   [ChainId.HARDHAT]: [
     {
       originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
