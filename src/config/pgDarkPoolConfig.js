@@ -88,7 +88,7 @@ module.exports = {
   netId6000: {
     nativeToken: '0x0000000000000000000000000000000000000000',
     rETHAddress: '0x',
-    offchainOracleAddress: '0x0',
+    offchainOracleAddress: '0x0000000000000000000000000000000000000000',
     verifierHub: '0x915c67f84E6d507bF973b7713970268eF6E9611e',
     curveAddLiquidityAssetManager: '0x0',
     curveFSNAddLiquidityAssetManager: '0x0',
