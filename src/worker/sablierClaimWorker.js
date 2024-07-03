@@ -41,7 +41,7 @@ class SablierClaimWorker extends BaseWorker {
   }
 
   getContract(web3, data) {
-    if (data.streamCategory == 0) {
+    if (data.streamCategory == 'linear') {
       return new web3.eth.Contract(pgDarkPoolSablierLinearAssetManagerABI.abi, pgDarkPoolSablierLinearAssetManager)
     } else {
       return new web3.eth.Contract(pgDarkPoolSablierDynamicAssetManagerABI.abi, pgDarkPoolSablierDynamicAssetManager)
@@ -49,12 +49,12 @@ class SablierClaimWorker extends BaseWorker {
   }
 
   async check(web3, data) {
-    const asset = await getAsset(web3, data.streamId, data.streamCategory == 0)
+    const asset = await getAsset(web3, data.streamId, data.streamCategory == 'linear')
     if (!isAddressEquals(asset, data.assetOut)) {
       throw new RelayerError('Claim asset mismatch')
     }
 
-    const withdrawableAmount = await getWithdrawableAmount(web3, data.streamId, data.streamCategory == 0)
+    const withdrawableAmount = await getWithdrawableAmount(web3, data.streamId, data.streamCategory == 'linear')
     if (BigInt(withdrawableAmount) < BigInt(data.amountOut)) {
       throw new RelayerError('Insufficient funds to claim')
     }

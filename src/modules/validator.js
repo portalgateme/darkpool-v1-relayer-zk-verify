@@ -49,6 +49,7 @@ const assetType = { ...addressType }
 const relayerType = { ...addressType, isFeeRecipient: true }
 const curvePoolType = { type: 'string', enum: ['META', 'FSN', 'NORMAL'] }
 const curveBasePoolType = { type: 'integer', enum: [0, 1, 2] }
+const sablierStreamCategoryType = { type: 'string', enum: ['linear', 'dynamic'] }
 
 const pgDarkPoolWithdrawSchema = {
   type: 'object',
@@ -434,7 +435,7 @@ const pgDarkPoolSablierClaimSchema = {
   type: 'object',
   properties: {
     proof: proofType,
-    streamCategory: intType,
+    streamCategory: sablierStreamCategoryType,
     merkleRoot: bytes32Type,
     nullifier: bytes32Type,
     stream: addressType,
@@ -447,9 +448,9 @@ const pgDarkPoolSablierClaimSchema = {
 
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
-      items: new Array(6).fill(bytes32Type),
+      maxItems: 8,
+      minItems: 8,
+      items: new Array(8).fill(bytes32Type),
     },
   },
   additionalProperties: false,
