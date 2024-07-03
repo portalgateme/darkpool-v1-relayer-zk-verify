@@ -1,7 +1,7 @@
 const pgDarkPoolSablierDynamicAssetManagerABI = require('../../abis/pgDarkPoolSablierDynamicAssetManager.json')
 const pgDarkPoolSablierLinearAssetManagerABI = require('../../abis/pgDarkPoolSablierLinearAssetManager.json')
 
-const { RelayerError } = require('../utils')
+const { RelayerError, isAddressEquals } = require('../utils')
 const { calculateFeesForOneToken } = require('../modules/fees')
 
 const {
@@ -11,7 +11,7 @@ const {
 } = require('../config/config')
 
 const { BaseWorker } = require('./baseWorker')
-const { getAsset } = require('../defi/sablierService')
+const { getAsset, getWithdrawableAmount } = require('../defi/sablierService')
 
 class SablierClaimWorker extends BaseWorker {
 
@@ -64,8 +64,8 @@ class SablierClaimWorker extends BaseWorker {
     const contract = this.getContract(web3, data)
     await this.check(web3, data)
     const { gasFeeInToken, serviceFeeInToken } = await calculateFeesForOneToken(gasFee, data.assetOut, data.amountOut)
-    console.log(gasFee, gasFeeInToken, serviceFeeInToken, BigInt(data.amount))
-    if (gasFeeInToken + serviceFeeInToken > BigInt(data.amount)) {
+    console.log(gasFee, gasFeeInToken, serviceFeeInToken, BigInt(data.amountOut))
+    if (gasFeeInToken + serviceFeeInToken > BigInt(data.amountOut)) {
       throw new RelayerError('Insufficient funds to pay fees')
     }
 
