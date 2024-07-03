@@ -17,6 +17,7 @@ const verifierMap = {
    [jobType.PG_DARKPOOL_ZK_REDEEM]: 'zkUnlockNote',
    [jobType.PG_DARKPOOL_ROCKET_POOL_STAKE]: 'rocketPoolStake',
    [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: 'rocketPoolStake',
+   [jobType.PG_DARKPOOL_SABLIER_CLAIM] : 'sablierClaimStream',
  }
 
 async function zkProofVerifier(web3, proof, input, job) {
