@@ -376,7 +376,7 @@ const pgDarkPoolZkStakeSchema = {
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'inNullifier', 'inAsset', 'inAmount',
-    'outNoteFooter','relayer', 'refund', 'verifierArgs'
+    'outNoteFooter', 'relayer', 'refund', 'verifierArgs'
   ],
 }
 
@@ -402,7 +402,7 @@ const pgDarkPoolZkRedeemSchema = {
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'inNullifier', 'inAsset', 'inAmount',
-    'outNoteFooter','relayer', 'refund', 'verifierArgs'
+    'outNoteFooter', 'relayer', 'refund', 'verifierArgs'
   ],
 }
 
@@ -455,8 +455,8 @@ const pgDarkPoolSablierClaimSchema = {
   },
   additionalProperties: false,
   required: [
-    'proof', 'merkleRoot', 'nullifier', 'noteFooterOut',
-    'amount', 'relayer', 'refund', 'verifierArgs'
+    'proof', 'streamCategory', 'merkleRoot', 'nullifier', 'noteFooterOut',
+    'stream', 'streamId', 'assetOut', 'amountOut', 'relayer', 'refund', 'verifierArgs'
   ],
 }
 
