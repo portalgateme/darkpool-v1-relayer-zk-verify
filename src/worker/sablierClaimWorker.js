@@ -12,6 +12,7 @@ const {
 
 const { BaseWorker } = require('./baseWorker')
 const { getAsset, getWithdrawableAmount } = require('../defi/sablierService')
+const config = require('../config/config')
 
 class SablierClaimWorker extends BaseWorker {
 
@@ -41,15 +42,25 @@ class SablierClaimWorker extends BaseWorker {
   }
 
   getContract(web3, data) {
-    if (data.streamCategory == 'linear') {
+    if (this.isLinear(data)) {
       return new web3.eth.Contract(pgDarkPoolSablierLinearAssetManagerABI.abi, pgDarkPoolSablierLinearAssetManager)
     } else {
       return new web3.eth.Contract(pgDarkPoolSablierDynamicAssetManagerABI.abi, pgDarkPoolSablierDynamicAssetManager)
     }
   }
 
+  isLinear(data) {
+    if (isAddressEquals(data.stream, config.sablierV2LockupLinear)) {
+      return true
+    } else if (isAddressEquals(data.stream, config.sablierV2LockupDynamic)) {
+      return false
+    } else {
+      throw new RelayerError('Unknown stream address')
+    }
+  }
+
   async check(web3, data) {
-    const asset = await getAsset(web3, data.streamId, data.streamCategory == 'linear')
+    const asset = await getAsset(web3, data.streamId, this.isLinear(data))
     if (!isAddressEquals(asset, data.assetOut)) {
       throw new RelayerError('Claim asset mismatch')
     }
