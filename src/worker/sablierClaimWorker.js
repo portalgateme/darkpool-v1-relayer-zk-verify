@@ -65,7 +65,7 @@ class SablierClaimWorker extends BaseWorker {
       throw new RelayerError('Claim asset mismatch')
     }
 
-    const withdrawableAmount = await getWithdrawableAmount(web3, data.streamId, data.streamCategory == 'linear')
+    const withdrawableAmount = await getWithdrawableAmount(web3, data.streamId, this.isLinear(data))
     if (BigInt(withdrawableAmount) < BigInt(data.amountOut)) {
       throw new RelayerError('Insufficient funds to claim')
     }
