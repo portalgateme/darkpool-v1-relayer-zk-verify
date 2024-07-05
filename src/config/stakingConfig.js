@@ -50,7 +50,7 @@ const stakingTokenConfig = {
   [ChainId.BounceBitTestnet]: [
     {
       originalToken: '0x0000000000000000000000000000000000000000',
-      stakingToken: '0x041816F862012e505DC241470DB26a273ac8f9D3',
+      stakingToken: '0x1276801901cBC847077a8e7e27C973894c86157A',
       name: 'sgBB',
     },
   ],
