@@ -55,6 +55,8 @@ const ChainId = Object.freeze({
   BNB: 56,
   AVALANCHE: 43114,
   BASE: 100,
+  BounceBit: 6001,
+  BounceBitTestnet: 6000,
 })
 
 module.exports = {

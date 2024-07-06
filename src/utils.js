@@ -1,6 +1,6 @@
 //const { poseidon } = require('circomlib')
 const { toBN, toChecksumAddress, BN, fromWei, isAddress, toWei, toBigInt } = require('web3-utils')
-const { offchainOracleAddress } = require('./config/config')
+const { offchainOracleAddress, nativeToken } = require('./config/config')
 const web3 = require('./modules/web3')('oracle')
 const offchainOracleABI = require('../abis/OffchainOracle.abi.json')
 const offchainOracle = new web3.eth.Contract(offchainOracleABI, offchainOracleAddress)
@@ -21,7 +21,7 @@ async function getDecimalByAddress(web3, address) {
 }
 
 function isETH(address) {
-  return address.toLowerCase() == '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  return address.toLowerCase() == nativeToken.toLowerCase()
 }
 
 //const poseidonHash = items => toBN(poseidon(items).toString())
