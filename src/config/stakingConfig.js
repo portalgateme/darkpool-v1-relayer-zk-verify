@@ -65,6 +65,7 @@ const stakingTokenConfig = {
       originalToken: '0x22aAC17E571D6651880d057e310703fF4C7c3483',
       stakingToken: '0xfBf0dDceF9360757fCA368911b6719a35DD8C660',
       name: 'sgSTBB',
+    }
   ],
   [ChainId.POLYGON]: [],
   [ChainId.SEPOLIA]: [],
