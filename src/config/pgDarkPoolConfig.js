@@ -75,6 +75,7 @@ module.exports = {
 
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    skipDefaultPriceOrace: true,
   },
   netId137: {
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',

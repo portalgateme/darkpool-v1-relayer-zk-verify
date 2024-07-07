@@ -59,7 +59,7 @@ const stakingTokenConfig = {
     {
       originalToken: '0x77776b40C3d75cb07ce54dEA4b2Fd1D07F865222',
       stakingToken: '0x45AAD8B921BB0e3f88A108047D743Ca6388aFe49',
-      name: 'sgBBUSDC',
+      name: 'sgBBUSD',
     },
     {
       originalToken: '0x22aAC17E571D6651880d057e310703fF4C7c3483',

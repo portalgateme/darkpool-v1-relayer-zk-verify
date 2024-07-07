@@ -3,6 +3,7 @@ const { pgServiceFee } = require('../config/config')
 const { getPriceToNativeFromLLama } = require('./priceOracle')
 const { GasPriceOracle } = require('gas-price-oracle')
 const { oracleRpcUrl } = require('../config/config')
+const config = require('../config/config')
 const priceWeb3 = require('./web3')('oracle')
 
 const NATIVE_DECIMAL = 18
@@ -57,7 +58,11 @@ function calcServiceFee(amount) {
 }
 
 async function calculateFeesForOneToken(gasFeeInEth, asset, amount) {
-    let rate = await rateToEth(asset)
+    let rate = 0n
+    if (!config.skipDefaultPriceOrace) {
+        rate = await rateToEth(asset)
+    }
+    
     if (rate == 0n) {
         const prices = await getPriceToNativeFromLLama([asset]);
         rate = prices[asset];

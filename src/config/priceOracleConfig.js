@@ -11,6 +11,12 @@ module.exports = {
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     },
+    [6001]: {
+        defillamaUrl: 'https://coins.llama.fi',
+        defillamaChainPrefix: 'bouncebit',
+        defillamaNativeToken: '0x0000000000000000000000000000000000000000',
+        defillamaNativeDecimals: 18
+    },
     [137]: {
         defillamaUrl: 'https://coins.llama.fi',
         defillamaChainPrefix: 'polygon',
