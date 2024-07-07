@@ -24,7 +24,7 @@ async function getPriceToNativeFromLLama(assets) {
         const priceData = response.data['coins'][priceOracleConfig.defillamaChainPrefix + ":" + asset]
         const decimals = priceData.decimals;
         const price = ethers.utils.parseUnits(priceData.price.toString(), decimals)
-        const priceToNative = ethers.BigNumber.from(price).mul(ethers.BigNumber.from(10).pow(nativeDecimal)).div(ethers.BigNumber.from(nativePrice)).toBigInt()
+        const priceToNative = ethers.BigNumber.from(price).mul(ethers.BigNumber.from(10).pow(nativeDecimal * 3 - decimals * 2)).div(ethers.BigNumber.from(nativePrice)).toBigInt()
         prices[asset] = priceToNative
     })
 

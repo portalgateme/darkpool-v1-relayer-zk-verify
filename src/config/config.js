@@ -41,4 +41,5 @@ module.exports = {
   minimumBalance: '500000000000000000',
   baseFeeReserve: Number(process.env.BASE_FEE_RESERVE_PERCENTAGE),
   stakingTokenMapping: stakingTokenConfig[netId],
+  skipDefaultPriceOrace: pgConfig[`netId${netId}`].skipDefaultPriceOrace?true:false,
 }
