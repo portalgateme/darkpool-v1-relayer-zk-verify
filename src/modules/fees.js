@@ -11,15 +11,16 @@ const PRECISION = 1000000
 const GAS_PRECISION = 10
 const GAS_UNIT_BUFF = 1
 const GAS_PRIORITY_BUFF = 2
-const MAX_PRIORITY_FEE = 2 * 10 ** 9
+const MAX_PRIORITY_FEE_PRECISION = 10 ** 9
 
 const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
 
 async function getGasPrice(web3) {
     const block = await priceWeb3.eth.getBlock('latest')
     if (block && block.baseFeePerGas) {
-        console.log("=====baseFeePerGas:", block.baseFeePerGas);
-        return toBN(block.baseFeePerGas).add(toBN(MAX_PRIORITY_FEE))
+        const maxPriorityFee = config.maxPriorityFee * MAX_PRIORITY_FEE_PRECISION
+        console.log("=====baseFeePerGas,maxPriorityFee:", block.baseFeePerGas, maxPriorityFee);
+        return toBN(block.baseFeePerGas).add(toBN(maxPriorityFee))
     }
 
     const { fast } = await gasPriceOracle.gasPrices()

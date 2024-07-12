@@ -1,5 +1,11 @@
 const { jobType } = require('./constants')
 
+const DEFAULT_MAX_PRIORITY_FEE = 3
+
+const maxPriorityFeeConfig = {
+    [42161]: 0,
+    [31338]: 0,
+}
 
 const gasLimitConfig = {
     [1]: {
@@ -189,5 +195,7 @@ const gasUnitFallbackConfig = {
 
 module.exports = {
     gasLimitConfig,
-    gasUnitFallbackConfig
+    gasUnitFallbackConfig,
+    maxPriorityFeeConfig,
+    DEFAULT_MAX_PRIORITY_FEE
 }

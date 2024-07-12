@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const pgConfig = require('./pgDarkPoolConfig')
-const { gasLimitConfig, gasUnitFallbackConfig } = require('./gasConfig')
+const { gasLimitConfig, gasUnitFallbackConfig, maxPriorityFeeConfig, DEFAULT_MAX_PRIORITY_FEE } = require('./gasConfig')
 const { stakingTokenConfig } = require('./stakingConfig')
 
 const netId = Number(process.env.NET_ID) || 1
@@ -29,7 +29,7 @@ module.exports = {
   uniswapNfpManager: pgConfig[`netId${netId}`].uniswapNfpManager,
   uniswapFactory: pgConfig[`netId${netId}`].uniswapFactory,
 
-  
+
 
   pgDarkPoolVerifierHub: pgConfig[`netId${netId}`].verifierHub,
   privateKey: process.env.PRIVATE_KEY,
@@ -41,5 +41,6 @@ module.exports = {
   minimumBalance: '500000000000000000',
   baseFeeReserve: Number(process.env.BASE_FEE_RESERVE_PERCENTAGE),
   stakingTokenMapping: stakingTokenConfig[netId],
-  skipDefaultPriceOrace: pgConfig[`netId${netId}`].skipDefaultPriceOrace?true:false,
+  skipDefaultPriceOrace: pgConfig[`netId${netId}`].skipDefaultPriceOrace ? true : false,
+  maxPriorityFee: maxPriorityFeeConfig[netId] ?? DEFAULT_MAX_PRIORITY_FEE,
 }
