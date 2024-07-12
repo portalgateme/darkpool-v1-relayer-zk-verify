@@ -11,6 +11,7 @@ const { zkRedeemWorker } = require('./worker/zkRedeemWorker')
 const { RocketPoolStakeWorker } = require('./worker/rocketPoolDepositWorker')
 const { RocketPoolUnStakeWorker } = require('./worker/rocketPoolWithdrawWorker')
 const { SablierClaimWorker } = require('./worker/sablierClaimWorker')
+const { InfraWorker } = require('./worker/infraWorker')
 
 
 const { queue } = require('./queue')
@@ -51,6 +52,7 @@ const workerMapping = {
   [jobType.PG_DARKPOOL_ROCKET_POOL_STAKE]: new RocketPoolStakeWorker(),
   [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: new RocketPoolUnStakeWorker(),
   [jobType.PG_DARKPOOL_SABLIER_CLAIM]: new SablierClaimWorker(),
+  [jobType.PG_DARKPOOL_INFRA]: new InfraWorker(),
 }
 
 async function start() {

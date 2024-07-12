@@ -49,6 +49,7 @@ const assetType = { ...addressType }
 const relayerType = { ...addressType, isFeeRecipient: true }
 const curvePoolType = { type: 'string', enum: ['META', 'FSN', 'NORMAL'] }
 const curveBasePoolType = { type: 'integer', enum: [0, 1, 2] }
+const bytesType = { type: 'string', pattern: '^0x[a-fA-F0-9]*$' }
 
 const pgDarkPoolWithdrawSchema = {
   type: 'object',
@@ -458,6 +459,68 @@ const pgDarkPoolSablierClaimSchema = {
   ],
 }
 
+const pgDarkPoolDefiInfraSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    inNoteType: int24Type,
+    inNullifiers: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: Array(4).fill(Uint256Type)
+    },
+    inAssets: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: Array(4).fill(assetType)
+    },
+    inAmountsOrNftIds: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: Array(4).fill(Uint256Type)
+    },
+    contractAddress: addressType,
+    defiParameters: bytesType,
+    defiParameterHash: bytes32Type,
+    outNoteType: int24Type,
+    outAssets: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: Array(4).fill(assetType)
+    },
+    outNoteFooters: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: Array(4).fill(Uint256Type)
+    },
+    relayer: relayerType,
+    gasRefund: {
+      type: 'array',
+      maxItems: 4,
+      minItems: 4,
+      items: Array(4).fill(Uint256Type)
+    },
+
+    verifierArgs: {
+      type: 'array',
+      maxItems: 22,
+      minItems: 22,
+      items: new Array(22).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'inNoteType', 'inNullifiers', 'inAssets', 'inAmountsOrNftIds', 'contractAddress',
+    'defiParameters', 'defiParameterHash', 'outNoteType', 'outAssets', 'outNoteFooters', 'relayer', 'gasRefund', 'verifierArgs'
+  ],
+}
+
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
 const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
 const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
@@ -471,6 +534,7 @@ const validatePgDarkPoolZkRedeem = ajv.compile(pgDarkPoolZkRedeemSchema)
 const validatePgDarkPoolRocketPoolStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
 const validatePgDarkPoolRocketPoolUnStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
 const validatePgDarkPoolSablierClaim = ajv.compile(pgDarkPoolSablierClaimSchema)
+const validatePgDarkPoolDefiInfra = ajv.compile(pgDarkPoolDefiInfraSchema)
 
 
 
@@ -536,6 +600,10 @@ function getPgDarkPoolSablierClaimInputError(data) {
   return getInputError(validatePgDarkPoolSablierClaim, data)
 }
 
+function getPgDarkPoolDefiInfraInputError(data) {
+  return getInputError(validatePgDarkPoolDefiInfra, data)
+}
+
 module.exports = {
   getPgDarkPoolWithdrawInputError,
   getPgDarkPoolUniswapSSInputError,
@@ -549,5 +617,6 @@ module.exports = {
   getPgDarkPoolZkRedeemInputError,
   getPgDarkPoolRocketPoolStakeInputError,
   getPgDarkPoolRocketPoolUnStakeInputError,
-  getPgDarkPoolSablierClaimInputError
+  getPgDarkPoolSablierClaimInputError,
+  getPgDarkPoolDefiInfraInputError
 }

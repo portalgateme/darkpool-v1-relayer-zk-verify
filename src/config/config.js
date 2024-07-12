@@ -28,6 +28,7 @@ module.exports = {
   pgDarkPoolRocketPoolStakeAssetManager: pgConfig[`netId${netId}`].rocketPoolStakeAssetManager,
   pgDarkPoolSablierDynamicAssetManager: pgConfig[`netId${netId}`].sablierDynamicAssetManager,
   pgDarkPoolSablierLinearAssetManager: pgConfig[`netId${netId}`].sablierLinearAssetManager,
+  pgDarkPoolGeneralDefiIntegrationAssetManager: pgConfig[`netId${netId}`].generalDefiIntegrationAssetManager,
   uniswapNfpManager: pgConfig[`netId${netId}`].uniswapNfpManager,
   uniswapFactory: pgConfig[`netId${netId}`].uniswapFactory,
   sablierV2LockupLinear: pgConfig[`netId${netId}`].sablierV2LockupLinear,
