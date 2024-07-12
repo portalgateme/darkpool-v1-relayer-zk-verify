@@ -48,22 +48,22 @@ const stakingTokenConfig = {
   [ChainId.BounceBit]: [
     {
       originalToken: '0x0000000000000000000000000000000000000000',
-      stakingToken: '0x2E7Ed17CCDF306B7eB301A05b3CB895f5b4F1643',
+      stakingToken: '0x5D873095152b921222241c0Cbd82d83b47bB31D3',
       name: 'sgBB',
     },
     {
       originalToken: '0xF5e11df1ebCf78b6b6D26E04FF19cD786a1e81dC',
-      stakingToken: '0xF99969B1Cb7255e8F14741eAFEEdC767e743899a',
+      stakingToken: '0x578A43b97a9c46b13B153Df6AA05393b78E241Ee',
       name: 'sgBBTC',
     },
     {
       originalToken: '0x77776b40C3d75cb07ce54dEA4b2Fd1D07F865222',
-      stakingToken: '0x45AAD8B921BB0e3f88A108047D743Ca6388aFe49',
+      stakingToken: '0x9af2DDB1E3A30442f590f659e13a243Da15C86A0',
       name: 'sgBBUSD',
     },
     {
       originalToken: '0x22aAC17E571D6651880d057e310703fF4C7c3483',
-      stakingToken: '0xfBf0dDceF9360757fCA368911b6719a35DD8C660',
+      stakingToken: '0x3dD11E06DAA99AD255C83545d05Ad27602e0907F',
       name: 'sgSTBB',
     }
   ],

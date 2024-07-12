@@ -50,7 +50,7 @@ module.exports = {
   },
   netId6001: {
     offchainOracleAddress: '0x0000000000000000000000000000000000000000',
-    verifierHub: '0x630aD89523a18fA30F752297F3F53B7BC363488b',
+    verifierHub: '0x4F526939E5e5EC49dADb8707f44DDD97543B6cBa',
     // curve doesn't support bb
     curveAddLiquidityAssetManager: '0x0',
     curveFSNAddLiquidityAssetManager: '0x0',
@@ -60,18 +60,18 @@ module.exports = {
     curveMultiExchangeAssetManager: '0x0',
     curveRemoveLiquidityAssetManager: '0x0',
     curveSingleExchangeAssetManager: '0x0',
-    stakingOperator: '0x1115b84c9359FCD5D1DF8146F1Fd17828aaC07c2',
-    darkpoolAssetManager: '0x3bd7150667975E10010d8043Bfb98Ccc28808CFb',
-    nftAssetManager: '0xeD1eA76471860EBCE127b69BD6Fab7E852Bf32f5',
-    oTCSwapAssetManager: '0xecAa4d6a2692d4e3CE6D950b6B482A1f4F0806CF',
-    generalDefiIntegrationAssetManager: '0xb152eA156a1842d9b871672c5519779e026740DE',
+    stakingOperator: '0x4d459dDe25707CA353De15CC3B85b7C2e4bb380c',
+    darkpoolAssetManager: '0x722133fBb559E2849e3402De3279Bd3059b7fe4E',
+    nftAssetManager: '0x0f3778d690090E6dfd0fc5948b23A55A587C558E',
+    oTCSwapAssetManager: '0xAa5e02284d1Fd0f6C12AFBDABc28Ed5aC5a6474b',
+    generalDefiIntegrationAssetManager: '0x881e3e5416D1b6acecD9d5BA20895D06Ecc40a28',
+    stakingAssetManager: '0xe6B0a94e1eA206B122a11a30dA7FB9ADaA12ef42',
     uniswapLiquidityAssetManager: '0x0',
     uniswapSwapAssetManager: '0x0',
     // rocket pool doesn't support bb
     rocketPoolStakeAssetManager: '0x0',
     sablierDynamicAssetManager: '0x0',
     sablierLinearAssetManager: '0x0',
-    stakingAssetManager: '0x4b1ef223BCFFA3fF313B201c41f7c71CD1675C23',
 
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
