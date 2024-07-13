@@ -3,6 +3,7 @@ const { pgServiceFee } = require('../config/config')
 const { getPriceToNativeFromLLama } = require('./priceOracle')
 const { GasPriceOracle } = require('gas-price-oracle')
 const { oracleRpcUrl } = require('../config/config')
+const config = require('../config/config')
 const priceWeb3 = require('./web3')('oracle')
 
 const NATIVE_DECIMAL = 18
@@ -10,15 +11,16 @@ const PRECISION = 1000000
 const GAS_PRECISION = 10
 const GAS_UNIT_BUFF = 1
 const GAS_PRIORITY_BUFF = 2
-const MAX_PRIORITY_FEE = 2 * 10 ** 9
+const MAX_PRIORITY_FEE_PRECISION = 10 ** 9
 
 const gasPriceOracle = new GasPriceOracle({ defaultRpc: oracleRpcUrl })
 
 async function getGasPrice(web3) {
     const block = await priceWeb3.eth.getBlock('latest')
     if (block && block.baseFeePerGas) {
-        console.log("=====baseFeePerGas:", block.baseFeePerGas);
-        return toBN(block.baseFeePerGas).add(toBN(MAX_PRIORITY_FEE))
+        const maxPriorityFee = config.maxPriorityFee * MAX_PRIORITY_FEE_PRECISION
+        console.log("=====baseFeePerGas,maxPriorityFee:", block.baseFeePerGas, maxPriorityFee);
+        return toBN(block.baseFeePerGas).add(toBN(maxPriorityFee))
     }
 
     const { fast } = await gasPriceOracle.gasPrices()
@@ -57,8 +59,13 @@ function calcServiceFee(amount) {
 }
 
 async function calculateFeesForOneToken(gasFeeInEth, asset, amount) {
-    let rate = await rateToEth(asset)
+    let rate = 0n
+    if (!config.skipDefaultPriceOrace) {
+        rate = await rateToEth(asset)
+    }
+    
     if (rate == 0n) {
+        console.log("fallback to defillma for price", asset, config.skipDefaultPriceOrace)
         const prices = await getPriceToNativeFromLLama([asset]);
         rate = prices[asset];
     }
