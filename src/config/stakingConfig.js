@@ -79,12 +79,12 @@ const stakingTokenConfig = {
   [ChainId.HARDHAT]: [
     {
       originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-      stakingToken: '0x30A6d2B697635a0ECf1975d2386A0FE6b608B0Fb',
+      stakingToken: '0x63ecE4C05B8fB272D16844E96702Ea2f26370982',
       name: 'sgETH',
     },
     {
       originalToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      stakingToken: '0xCd9BC6cE45194398d12e27e1333D5e1d783104dD',
+      stakingToken: '0x3576293Ba6Adacba1A81397db889558Dd91A8519',
       name: 'sgUSDC',
     },
   ],
