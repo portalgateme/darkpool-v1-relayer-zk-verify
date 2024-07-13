@@ -25,6 +25,7 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
   netId42161: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x630aD89523a18fA30F752297F3F53B7BC363488b',
     // curve doesn't support arbitrum
@@ -49,6 +50,7 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
   netId6001: {
+    nativeToken: '0x0000000000000000000000000000000000000000',
     offchainOracleAddress: '0x0000000000000000000000000000000000000000',
     verifierHub: '0x4F526939E5e5EC49dADb8707f44DDD97543B6cBa',
     // curve doesn't support bb
@@ -78,6 +80,7 @@ module.exports = {
     skipDefaultPriceOrace: true,
   },
   netId137: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x0',
     curveAddLiquidityAssetManager: '0x0',
@@ -168,6 +171,7 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   },
   netId31338: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x868542bE225690DCfE753e2e8977E3500677e749',
     curveAddLiquidityAssetManager: '0x0',
