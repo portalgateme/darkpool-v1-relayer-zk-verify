@@ -1,5 +1,7 @@
+const { ChainId } = require('./constants')
+
 module.exports = {
-  netId1: {
+  [ChainId.MAINNET]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
@@ -26,7 +28,7 @@ module.exports = {
     sablierV2LockupLinear: '0xAFb979d9afAd1aD27C5eFf4E27226E3AB9e5dCC9',
     sablierV2LockupDynamic: '0x7CC7e125d83A581ff438608490Cc0f7bDff79127',
   },
-  netId42161: {
+  [ChainId.ARBITRUM_ONE]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x630aD89523a18fA30F752297F3F53B7BC363488b',
@@ -53,7 +55,7 @@ module.exports = {
     sablierV2LockupLinear: '0xFDD9d122B451F549f48c4942c6fa6646D849e8C1',
     sablierV2LockupDynamic: '0xf390cE6f54e4dc7C5A5f7f8689062b7591F7111d',
   },
-  netId6001: {
+  [ChainId.BounceBit]: {
     nativeToken: '0x0000000000000000000000000000000000000000',
     offchainOracleAddress: '0x0000000000000000000000000000000000000000',
     verifierHub: '0x4F526939E5e5EC49dADb8707f44DDD97543B6cBa',
@@ -83,7 +85,7 @@ module.exports = {
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
     skipDefaultPriceOrace: true,
   },
-  netId137: {
+  [ChainId.BASE]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x0',
@@ -103,7 +105,7 @@ module.exports = {
     sablierV2LockupLinear: '0x5f0e1dea4A635976ef51eC2a2ED41490d1eBa003',
     sablierV2LockupDynamic: '0xB194c7278C627D52E440316b74C5F24FC70c1565',
   },
-  netId11155111: {
+  [ChainId.SEPOLIA]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     rETHAddress: '0x',
     offchainOracleAddress: '0x4Fe44a9aC8Ef059Be2dB97f9e3bcA32Ab698C2f2',
@@ -125,7 +127,7 @@ module.exports = {
     sablierV2LockupLinear: '0x7a43F8a888fa15e68C103E18b0439Eb1e98E4301',
     sablierV2LockupDynamic: '0xc9940AD8F43aAD8e8f33A4D5dbBf0a8F7FF4429A',
   },
-  netId6000: {
+  [ChainId.BounceBitTestnet]: {
     nativeToken: '0x0000000000000000000000000000000000000000',
     rETHAddress: '0x',
     offchainOracleAddress: '0x0000000000000000000000000000000000000000',
@@ -153,7 +155,7 @@ module.exports = {
     uniswapNfpManager: '0x1238536071E1c677A632429e3655c799b22cDA52',
     uniswapFactory: '0x0227628f3F023bb0B980b67D528571c95c6DaC1c',
   },
-  netId31337: {
+  [ChainId.HARDHAT]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     rETHAddress: '0xae78736Cd615f374D3085123A210448E74Fc6393',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
@@ -182,7 +184,7 @@ module.exports = {
     sablierV2LockupLinear: '0xAFb979d9afAd1aD27C5eFf4E27226E3AB9e5dCC9',
     sablierV2LockupDynamic: '0x7CC7e125d83A581ff438608490Cc0f7bDff79127',
   },
-  netId31338: {
+  [ChainId.HARDHAT_ARBITRUM]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
     verifierHub: '0x868542bE225690DCfE753e2e8977E3500677e749',
@@ -198,6 +200,36 @@ module.exports = {
     uniswapLiquidityAssetManager: '0xF4844d9CD10c9f68e626310579996F7539A7c4F3',
     uniswapSwapAssetManager: '0xc538D528a9eE0A8137C99a15d1DE873e902C1115',
     stakingAssetManager: '0x0',
+
+    uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
+    uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    sablierV2LockupLinear: '0xFDD9d122B451F549f48c4942c6fa6646D849e8C1',
+    sablierV2LockupDynamic: '0xf390cE6f54e4dc7C5A5f7f8689062b7591F7111d',
+  },
+  [ChainId.HARDHAT_BASE]: {
+    nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
+    verifierHub: '0xddE78e6202518FF4936b5302cC2891ec180E8bFf',
+    curveAddLiquidityAssetManager: '0x0',
+    curveFSNAddLiquidityAssetManager: '0x0',
+    curveFSNRemoveLiquidityAssetManager: '0x0',
+    curveMPAddLiquidityAssetManager: '0x0',
+    curveMPRemoveLiquidityAssetManager: '0x0',
+    curveMultiExchangeAssetManager: '0x0',
+    curveRemoveLiquidityAssetManager: '0x0',
+    curveSingleExchangeAssetManager: '0x0',
+    stakingOperator: '0x5D42EBdBBa61412295D7b0302d6F50aC449Ddb4F',
+    darkpoolAssetManager: '0x045857BDEAE7C1c7252d611eB24eB55564198b4C',
+    nftAssetManager: '0x1780bCf4103D3F501463AD3414c7f4b654bb7aFd',
+    aerodromeAddLiquidityAssetManager: '0xeF31027350Be2c7439C1b0BE022d49421488b72C',
+    aerodromeRemoveLiquidityAssetManager: '0xdFdE6B33f13de2CA1A75A6F7169f50541B14f75b',
+    aerodromeSwapAssetManager: '0xd9140951d8aE6E5F625a02F5908535e16e3af964',
+    generalDefiIntegrationAssetManager: '0xe70f935c32dA4dB13e7876795f1e175465e6458e',
+    sablierDynamicAssetManager: '0x56fC17a65ccFEC6B7ad0aDe9BD9416CB365B9BE8',
+    sablierLinearAssetManager: '0xAdE429ba898c34722e722415D722A70a297cE3a2',
+    stakingAssetManager: '0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89',
+    uniswapLiquidityAssetManager: '0xDde063eBe8E85D666AD99f731B4Dbf8C98F29708',
+    uniswapSwapAssetManager: '0x162700d1613DfEC978032A909DE02643bC55df1A',
 
     uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
