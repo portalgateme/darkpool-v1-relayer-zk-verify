@@ -100,10 +100,10 @@ module.exports = {
     darkpoolAssetManager: '0x0',
     uniswapLiquidityAssetManager: '0x0',
     uniswapSwapAssetManager: '0x0',
-    uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
-    uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
-    sablierV2LockupLinear: '0x5f0e1dea4A635976ef51eC2a2ED41490d1eBa003',
-    sablierV2LockupDynamic: '0xB194c7278C627D52E440316b74C5F24FC70c1565',
+    uniswapNfpManager: '0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1',
+    uniswapFactory: '0x33128a8fC17869897dcE68Ed026d694621f6FDfD',
+    sablierV2LockupLinear: '0x4CB16D4153123A74Bc724d161050959754f378D8',
+    sablierV2LockupDynamic: '0xF9E9eD67DD2Fab3b3ca024A2d66Fcf0764d36742',
   },
   [ChainId.SEPOLIA]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
@@ -231,9 +231,9 @@ module.exports = {
     uniswapLiquidityAssetManager: '0xDde063eBe8E85D666AD99f731B4Dbf8C98F29708',
     uniswapSwapAssetManager: '0x162700d1613DfEC978032A909DE02643bC55df1A',
 
-    uniswapNfpManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
-    uniswapFactory: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
-    sablierV2LockupLinear: '0xFDD9d122B451F549f48c4942c6fa6646D849e8C1',
-    sablierV2LockupDynamic: '0xf390cE6f54e4dc7C5A5f7f8689062b7591F7111d',
+    uniswapNfpManager: '0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1',
+    uniswapFactory: '0x33128a8fC17869897dcE68Ed026d694621f6FDfD',
+    sablierV2LockupLinear: '0x4CB16D4153123A74Bc724d161050959754f378D8',
+    sablierV2LockupDynamic: '0xF9E9eD67DD2Fab3b3ca024A2d66Fcf0764d36742',
   }
 }

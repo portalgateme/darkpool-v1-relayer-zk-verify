@@ -40,7 +40,7 @@ module.exports = {
     },
     [ChainId.HARDHAT_BASE]: {
         defillamaUrl: 'https://coins.llama.fi',
-        defillamaChainPrefix: 'ethereum',
+        defillamaChainPrefix: 'base',
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     }
