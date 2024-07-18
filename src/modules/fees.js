@@ -65,6 +65,7 @@ async function calculateFeesForOneToken(gasFeeInEth, asset, amount) {
     }
     
     if (rate == 0n) {
+        console.log("fallback to defillma for price", asset, config.skipDefaultPriceOrace)
         const prices = await getPriceToNativeFromLLama([asset]);
         rate = prices[asset];
     }
