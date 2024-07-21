@@ -68,7 +68,13 @@ const stakingTokenConfig = {
     }
   ],
   [ChainId.BASE]: [],
-  [ChainId.SEPOLIA]: [],
+  [ChainId.SEPOLIA]: [
+    {
+      originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      stakingToken: '0x56fBD5d5C3e9D5f9Ae916F113232d52e6E377E71',
+      name: 'sgETH',
+    },
+  ],
   [ChainId.BounceBitTestnet]: [
     {
       originalToken: '0x0000000000000000000000000000000000000000',
