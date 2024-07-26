@@ -538,8 +538,8 @@ const pgDarkPoolAerodromeAddLiquiditySchema = {
     amount2Min: Uint256Type,
     deadline: Uint256Type,
     outNoteFooter: bytes32Type,
-    changeNoteFooter1: bytes32Type,
-    changeNoteFooter2: bytes32Type,
+    outChangeFooter1: bytes32Type,
+    outChangeFooter2: bytes32Type,
     relayer: relayerType,
     refundToken1: Uint256Type,
     refundToken2: Uint256Type,
@@ -554,7 +554,7 @@ const pgDarkPoolAerodromeAddLiquiditySchema = {
   additionalProperties: false,
   required: [
     'proof', 'merkleRoot', 'inNullifier1', 'inNullifier2', 'inAsset1', 'inAsset2', 'inAmount1', 'inAmount2',
-    'pool', 'stable', 'amount1Min', 'amount2Min', 'deadline', 'outNoteFooter', 'changeNoteFooter1', 'changeNoteFooter2',
+    'pool', 'stable', 'amount1Min', 'amount2Min', 'deadline', 'outNoteFooter', 'outChangeFooter1', 'outChangeFooter2',
     'relayer', 'refundToken1', 'refundToken2', 'verifierArgs'
   ],
 }

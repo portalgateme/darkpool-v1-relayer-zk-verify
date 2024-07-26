@@ -234,8 +234,7 @@ module.exports = {
   },
   [ChainId.HARDHAT_BASE]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-    offchainOracleAddress: '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8',
-    verifierHub: '0xddE78e6202518FF4936b5302cC2891ec180E8bFf',
+    offchainOracleAddress: '0xf224a25453D76A41c4427DD1C05369BC9f498444',
     curveAddLiquidityAssetManager: '0x0',
     curveFSNAddLiquidityAssetManager: '0x0',
     curveFSNRemoveLiquidityAssetManager: '0x0',
@@ -245,6 +244,7 @@ module.exports = {
     curveRemoveLiquidityAssetManager: '0x0',
     curveSingleExchangeAssetManager: '0x0',
     stakingOperator: '0x5D42EBdBBa61412295D7b0302d6F50aC449Ddb4F',
+    verifierHub: '0xddE78e6202518FF4936b5302cC2891ec180E8bFf',
     darkpoolAssetManager: '0x045857BDEAE7C1c7252d611eB24eB55564198b4C',
     nftAssetManager: '0x1780bCf4103D3F501463AD3414c7f4b654bb7aFd',
     aerodromeAddLiquidityAssetManager: '0xeF31027350Be2c7439C1b0BE022d49421488b72C',
@@ -256,9 +256,6 @@ module.exports = {
     stakingAssetManager: '0x51C65cd0Cdb1A8A8b79dfc2eE965B1bA0bb8fc89',
     uniswapLiquidityAssetManager: '0xDde063eBe8E85D666AD99f731B4Dbf8C98F29708',
     uniswapSwapAssetManager: '0x162700d1613DfEC978032A909DE02643bC55df1A',
-    aerodromeAddLiquidityAssetManager: '0xeF31027350Be2c7439C1b0BE022d49421488b72C',
-    aerodromeRemoveLiquidityAssetManager: '0xdFdE6B33f13de2CA1A75A6F7169f50541B14f75b',
-    aerodromeSwapAssetManager: '0xd9140951d8aE6E5F625a02F5908535e16e3af964',
 
     uniswapNfpManager: '0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1',
     uniswapFactory: '0x33128a8fC17869897dcE68Ed026d694621f6FDfD',

@@ -18,12 +18,12 @@ class AerodromAddLiquidityWorker extends BaseWorker {
             merkleRoot: data.merkleRoot,
             nullifiers: [data.inNullifier1, data.inNullifier2],
             assets: [data.inAsset1, data.inAsset2],
-            amounts: [inAmount1, inAmount2],
+            amounts: [data.inAmount1, data.inAmount2],
             pool: data.pool,
             stable: data.stable,
             amountsMin: [data.amount1Min, data.amount2Min],
             deadline: data.deadline,
-            noteFooters: [data.outNoteFooter, data.changeNoteFooter1, data.changeNoteFooter2],
+            noteFooters: [data.outChangeFooter1, data.outChangeFooter2, data.outNoteFooter],
             relayer: data.relayer,
             gasRefund: [refundToken1, refundToken2]
         }
