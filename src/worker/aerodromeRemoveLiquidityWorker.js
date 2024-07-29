@@ -7,6 +7,7 @@ const {
 
 const { BaseWorker } = require('./baseWorker')
 const { calculateFeeForTokens } = require('../modules/fees')
+const { estimateWithdraw } = require('../defi/aerodromeService')
 
 
 class AerodromRemoveLiquidityWorker extends BaseWorker {
@@ -16,7 +17,7 @@ class AerodromRemoveLiquidityWorker extends BaseWorker {
 
         const param = {
             merkleRoot: data.merkleRoot,
-            nullifier: data.inNullifier,
+            nullifier: data.nullifier,
             pool: data.pool,
             amount: data.amount,
             amountBurn: data.amountBurn,
@@ -24,7 +25,7 @@ class AerodromRemoveLiquidityWorker extends BaseWorker {
             assetsOut: [data.outAsset1, data.outAsset2],
             amountsOutMin: [data.outAmount1Min, data.outAmount2Min],
             deadline: data.deadline,
-            noteFooters: [data.outNoteFooter1, data.outNoteFooter2],
+            noteFooters: [data.outNoteFooter1, data.outNoteFooter2, data.outChangeNoteFooter],
             relayer: data.relayer,
             gasRefund: [refundToken1, refundToken2]
         }
@@ -45,9 +46,16 @@ class AerodromRemoveLiquidityWorker extends BaseWorker {
 
     async getTxObj(web3, data, gasFee) {
         const contract = this.getContract(web3)
-        const fees = await calculateFeeForTokens(gasFee, [data.outAsset1, data.outAsset2], [data.outAmount1, data.outAmount2])
-        if (fees[0].gasFeeInToken + fees[0].serviceFeeInToken > BigInt(data.outAmount1)
-            || fees[1].gasFeeInToken + fees[1].serviceFeeInToken > BigInt(data.outAmount2)) {
+        const { outAmount1, outAmount2 } = await estimateWithdraw(
+            web3,
+            data.pool,
+            data.outAsset1,
+            data.outAsset2,
+            data.stable,
+            data.amountBurn)
+        const fees = await calculateFeeForTokens(gasFee, [data.outAsset1, data.outAsset2], [outAmount1, outAmount2])
+        if (fees[0].gasFeeInToken + fees[0].serviceFeeInToken > BigInt(outAmount1)
+            || fees[1].gasFeeInToken + fees[1].serviceFeeInToken > BigInt(outAmount2)) {
             throw new Error('Insufficient amount to pay fees')
         }
         const contractCall = this.getContractCall(contract, data, fees[0].gasFeeInToken, fees[1].gasFeeInToken)

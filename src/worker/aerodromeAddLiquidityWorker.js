@@ -8,7 +8,6 @@ const {
 const { BaseWorker } = require('./baseWorker')
 const { calculateFeeForTokens } = require('../modules/fees')
 
-
 class AerodromAddLiquidityWorker extends BaseWorker {
 
     getContractCall(contract, data, refundToken1, refundToken2) {

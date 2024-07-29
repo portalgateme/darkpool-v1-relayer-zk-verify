@@ -564,7 +564,7 @@ const pgDarkPoolAerodromeRemoveLiquiditySchema = {
   properties: {
     proof: proofType,
     merkleRoot: bytes32Type,
-    inNullifier: bytes32Type,
+    nullifier: bytes32Type,
     pool: addressType,
     amount: Uint256Type,
     amountBurn: Uint256Type,
@@ -576,6 +576,7 @@ const pgDarkPoolAerodromeRemoveLiquiditySchema = {
     deadline: Uint256Type,
     outNoteFooter1: bytes32Type,
     outNoteFooter2: bytes32Type,
+    outChangeNoteFooter: bytes32Type,
     relayer: relayerType,
     refundToken1: bytes32Type,
     refundToken2: bytes32Type,
@@ -589,8 +590,8 @@ const pgDarkPoolAerodromeRemoveLiquiditySchema = {
   },
   additionalProperties: false,
   required: [
-    'proof', 'merkleRoot', 'inNullifier', 'pool', 'amount', 'amountBurn', 'stable',
-    'outAsset1', 'outAsset2', 'outAmount1Min', 'outAmount2Min', 'deadline', 'outNoteFooter1', 'outNoteFooter2',
+    'proof', 'merkleRoot', 'nullifier', 'pool', 'amount', 'amountBurn', 'stable',
+    'outAsset1', 'outAsset2', 'outAmount1Min', 'outAmount2Min', 'deadline', 'outNoteFooter1', 'outNoteFooter2', 'outChangeNoteFooter',
     'relayer', 'refundToken1', 'refundToken2', 'verifierArgs'
   ],
 }
