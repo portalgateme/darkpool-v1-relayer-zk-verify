@@ -18,8 +18,8 @@ module.exports = {
     uniswapLiquidityAssetManager: '0x53e5A08c95CF866E34F2A6A685ee9f90366e154E',
     uniswapSwapAssetManager: '0xc98b275a309f187b691e025b956e03603e12b420',
     rocketPoolStakeAssetManager: '0xEF8F70bB29DEAd5CEcaE26C6Cb19B987475B3e48',
-    sablierDynamicAssetManager: '0x0',
-    sablierLinearAssetManager: '0x0',
+    sablierDynamicAssetManager: '0x0Cd1600114b3e83a212e6570f8ee50988673B84e',
+    sablierLinearAssetManager: '0xe0fE2642FFc6C58A324Ad65DC37B6B3f9C0f9933',
     stakingOperator: '0x539bcbc08F2cA42E50887dA4Db0DC34EbF0B090b',
     stakingAssetManager: '0x1Fa7Cb4925086128f3bb9e26761C9C75dbAC3CD1',
     //deployedBlock: 18323404,
@@ -45,8 +45,8 @@ module.exports = {
     uniswapLiquidityAssetManager: '0x9D4746F8f2364da04fF47d729072F71b742726aA',
     uniswapSwapAssetManager: '0xdB9ea6e600077492Ef568826AC9155159D7Da8C9',
     rocketPoolStakeAssetManager: '0x0',// rocket pool doesn't support arbitrum
-    sablierDynamicAssetManager: '0x0',
-    sablierLinearAssetManager: '0x0',
+    sablierDynamicAssetManager: '0x3dC5C6788E3ff47c4ba7e912cA1ceA3c8f9CAac4',
+    sablierLinearAssetManager: '0xC0A5AD1f7B43794dC5d40CEdD8C809DEC4d298BB',
     stakingOperator: '0xF4f1D4F28Be82D81135c13D255452B8325B585B0',
     stakingAssetManager: '0xB1CC5D9227323330E8a58e891c123B38D03f0BAA',
 
