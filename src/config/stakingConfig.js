@@ -67,8 +67,14 @@ const stakingTokenConfig = {
       name: 'sgSTBB',
     }
   ],
-  [ChainId.POLYGON]: [],
-  [ChainId.SEPOLIA]: [],
+  [ChainId.BASE]: [],
+  [ChainId.SEPOLIA]: [
+    {
+      originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      stakingToken: '0x56fBD5d5C3e9D5f9Ae916F113232d52e6E377E71',
+      name: 'sgETH',
+    },
+  ],
   [ChainId.BounceBitTestnet]: [
     {
       originalToken: '0x0000000000000000000000000000000000000000',
@@ -79,17 +85,28 @@ const stakingTokenConfig = {
   [ChainId.HARDHAT]: [
     {
       originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-      stakingToken: '0x30A6d2B697635a0ECf1975d2386A0FE6b608B0Fb',
+      stakingToken: '0x5fe2f174fe51474Cd198939C96e7dB65983EA307',
       name: 'sgETH',
     },
     {
       originalToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      stakingToken: '0xCd9BC6cE45194398d12e27e1333D5e1d783104dD',
+      stakingToken: '0x8AFB0C54bAE39A5e56b984DF1C4b5702b2abf205',
       name: 'sgUSDC',
     },
   ],
   [ChainId.HARDHAT_ARBITRUM]: [],
-  [ChainId.HARDHAT_POLYGON]: [],
+  [ChainId.HARDHAT_BASE]: [
+    {
+      originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      stakingToken: '0x63ecE4C05B8fB272D16844E96702Ea2f26370982',
+      name: 'sgETH',
+    },
+    {
+      originalToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      stakingToken: '0x3576293Ba6Adacba1A81397db889558Dd91A8519',
+      name: 'sgUSDC',
+    },
+  ],
 }
 
 

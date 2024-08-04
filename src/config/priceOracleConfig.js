@@ -1,43 +1,46 @@
+const { ChainId } = require('./constants')
+
+
 module.exports = {
-    [1]: {
+    [ChainId.MAINNET]: {
         defillamaUrl: 'https://coins.llama.fi',
         defillamaChainPrefix: 'ethereum',
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     },
-    [42161]: {
+    [ChainId.ARBITRUM_ONE]: {
         defillamaUrl: 'https://coins.llama.fi',
         defillamaChainPrefix: 'arbitrum',
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     },
-    [6001]: {
+    [ChainId.BounceBit]: {
         defillamaUrl: 'https://coins.llama.fi',
         defillamaChainPrefix: 'bouncebit',
         defillamaNativeToken: '0x0000000000000000000000000000000000000000',
         defillamaNativeDecimals: 18
     },
-    [137]: {
+    [ChainId.BASE]: {
         defillamaUrl: 'https://coins.llama.fi',
-        defillamaChainPrefix: 'polygon',
+        defillamaChainPrefix: 'base',
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     },
-    [31337]: {
+    [ChainId.HARDHAT]: {
         defillamaUrl: 'https://coins.llama.fi',
         defillamaChainPrefix: 'ethereum',
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     },
-    [31338]: {
+    [ChainId.HARDHAT_ARBITRUM]: {
         defillamaUrl: 'https://coins.llama.fi',
         defillamaChainPrefix: 'ethereum',
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     },
-    [31339]: {
+    [ChainId.HARDHAT_BASE]: {
         defillamaUrl: 'https://coins.llama.fi',
-        defillamaChainPrefix: 'ethereum',
+        defillamaChainPrefix: 'base',
         nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         defillamaNativeDecimals : 18
     }

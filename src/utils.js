@@ -24,6 +24,10 @@ function isETH(address) {
   return address.toLowerCase() == nativeToken.toLowerCase()
 }
 
+function isAddressEquals(a, b) {
+  return a.toLowerCase() == b.toLowerCase()
+}
+
 //const poseidonHash = items => toBN(poseidon(items).toString())
 //const poseidonHash2 = (a, b) => poseidonHash([a, b])
 
@@ -181,5 +185,6 @@ module.exports = {
   logRelayerError,
   readRelayerErrors,
   getRateToEth,
-  getDecimalByAddress
+  getDecimalByAddress,
+  isAddressEquals
 }

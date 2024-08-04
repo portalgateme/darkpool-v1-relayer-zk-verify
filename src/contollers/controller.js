@@ -11,6 +11,8 @@ const {
   getPgDarkPoolZkRedeemInputError,
   getPgDarkPoolRocketPoolStakeInputError,
   getPgDarkPoolRocketPoolUnStakeInputError,
+  getPgDarkPoolSablierClaimInputError,
+  getPgDarkPoolDefiInfraInputError
 } = require('../modules/validator')
 const { postJob } = require('../queue')
 const { jobType } = require('../config/constants')
@@ -184,6 +186,36 @@ async function pgDarkPoolRocketPoolUnStake(req, res) {
   return res.json({ id })
 }
 
+async function pgDarkPoolSablierClaim(req, res) {
+  const inputError = getPgDarkPoolSablierClaimInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_SABLIER_CLAIM,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolDefiInfra(req, res) {
+  const inputError = getPgDarkPoolDefiInfraInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_INFRA,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+
+
 module.exports = {
   pgDarkPoolWithdraw,
   pgDarkPoolUniswapSingleSwap,
@@ -196,5 +228,7 @@ module.exports = {
   pgDarkPoolZkStake,
   pgDarkPoolZkRedeem,
   pgDarkPoolRocketPoolStake,
-  pgDarkPoolRocketPoolUnStake
+  pgDarkPoolRocketPoolUnStake,
+  pgDarkPoolSablierClaim,
+  pgDarkPoolDefiInfra
 }
