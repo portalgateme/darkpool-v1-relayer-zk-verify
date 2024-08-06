@@ -59,6 +59,7 @@ const ChainId = Object.freeze({
   BASE: 8453,
   BounceBit: 6001,
   BounceBitTestnet: 6000,
+  EMCTestnet : 99876,
 })
 
 module.exports = {
