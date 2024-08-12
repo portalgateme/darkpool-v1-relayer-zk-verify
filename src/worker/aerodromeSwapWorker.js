@@ -27,7 +27,7 @@ class AerodromSwapWorker extends BaseWorker {
             relayer: data.relayer,
             gasRefund: gasRefund,
         }
-        calldata = contract.methods.asrodromeSwap(data.proof, param)
+        calldata = contract.methods.aerodromeSwap(data.proof, param)
 
         return calldata
     }
@@ -48,7 +48,7 @@ class AerodromSwapWorker extends BaseWorker {
         if (gasFeeInToken + serviceFeeInToken > BigInt(data.inAmount)) {
             throw new Error('Insufficient amount to pay fees')
         }
-        const contractCall = this.getContractCall(contract, data, fees[0].gasFeeInToken, fees[1].gasFeeInToken)
+        const contractCall = this.getContractCall(contract, data, gasFeeInToken)
 
         return {
             to: contract._address,

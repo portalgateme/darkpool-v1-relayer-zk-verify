@@ -404,7 +404,7 @@
           "type": "tuple"
         }
       ],
-      "name": "asrodromeSwap",
+      "name": "aerodromeSwap",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
