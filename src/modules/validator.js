@@ -521,6 +521,125 @@ const pgDarkPoolDefiInfraSchema = {
   ],
 }
 
+const pgDarkPoolAerodromeAddLiquiditySchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    inNullifier1: bytes32Type,
+    inNullifier2: bytes32Type,
+    inAsset1: assetType,
+    inAsset2: assetType,
+    inAmount1: Uint256Type,
+    inAmount2: Uint256Type,
+    pool: addressType,
+    stable: { "type": "boolean" },
+    amount1Min: Uint256Type,
+    amount2Min: Uint256Type,
+    deadline: Uint256Type,
+    outNoteFooter: bytes32Type,
+    outChangeFooter1: bytes32Type,
+    outChangeFooter2: bytes32Type,
+    relayer: relayerType,
+    refundToken1: Uint256Type,
+    refundToken2: Uint256Type,
+
+    verifierArgs: {
+      type: 'array',
+      maxItems: 16,
+      minItems: 16,
+      items: new Array(16).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'inNullifier1', 'inNullifier2', 'inAsset1', 'inAsset2', 'inAmount1', 'inAmount2',
+    'pool', 'stable', 'amount1Min', 'amount2Min', 'deadline', 'outNoteFooter', 'outChangeFooter1', 'outChangeFooter2',
+    'relayer', 'refundToken1', 'refundToken2', 'verifierArgs'
+  ],
+}
+
+const pgDarkPoolAerodromeRemoveLiquiditySchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    nullifier: bytes32Type,
+    pool: addressType,
+    amount: Uint256Type,
+    amountBurn: Uint256Type,
+    stable: { "type": "boolean" },
+    outAsset1: assetType,
+    outAsset2: assetType,
+    outAmount1Min: Uint256Type,
+    outAmount2Min: Uint256Type,
+    deadline: Uint256Type,
+    outNoteFooter1: bytes32Type,
+    outNoteFooter2: bytes32Type,
+    outChangeNoteFooter: bytes32Type,
+    relayer: relayerType,
+    refundToken1: bytes32Type,
+    refundToken2: bytes32Type,
+
+    verifierArgs: {
+      type: 'array',
+      maxItems: 15,
+      minItems: 15,
+      items: new Array(15).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'nullifier', 'pool', 'amount', 'amountBurn', 'stable',
+    'outAsset1', 'outAsset2', 'outAmount1Min', 'outAmount2Min', 'deadline', 'outNoteFooter1', 'outNoteFooter2', 'outChangeNoteFooter',
+    'relayer', 'refundToken1', 'refundToken2', 'verifierArgs'
+  ],
+}
+
+const pgDarkPoolAerodromeSwapSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    merkleRoot: bytes32Type,
+    inNullifier: bytes32Type,
+    inAsset: assetType,
+    inAmount: Uint256Type,
+    routes: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 20,
+      items: {
+        type: 'object',
+        properties: {
+          from: addressType,
+          to: addressType,
+          stable: { type: 'boolean' },
+          factory: addressType
+        },
+        required: ['from', 'to', 'stable', 'factory']
+      }
+    },
+    routeHash: bytes32Type,
+    minExpectedAmountOut: Uint256Type,
+    deadline: Uint256Type,
+    outNoteFooter: bytes32Type,
+    relayer: relayerType,
+    gasRefund: Uint256Type,
+    verifierArgs: {
+      type: 'array',
+      maxItems: 9,
+      minItems: 9,
+      items: new Array(9).fill(bytes32Type),
+    },
+  },
+  additionalProperties: false,
+  required: [
+    'proof', 'merkleRoot', 'inNullifier', 'inAsset', 'inAmount', 'routes', 'routeHash',
+    'minExpectedAmountOut', 'deadline', 'outNoteFooter', 'relayer', 'gasRefund', 'verifierArgs'
+  ],
+}
+
+
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
 const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
 const validatePgDarkPoolUniswapLP = ajv.compile(pgDarkPoolUniswapLPSchema)
@@ -535,7 +654,9 @@ const validatePgDarkPoolRocketPoolStake = ajv.compile(pgDarkPoolRocketPoolStakeS
 const validatePgDarkPoolRocketPoolUnStake = ajv.compile(pgDarkPoolRocketPoolStakeSchema)
 const validatePgDarkPoolSablierClaim = ajv.compile(pgDarkPoolSablierClaimSchema)
 const validatePgDarkPoolDefiInfra = ajv.compile(pgDarkPoolDefiInfraSchema)
-
+const validatePgDarkPoolAerodromeAddLiquidity = ajv.compile(pgDarkPoolAerodromeAddLiquiditySchema)
+const validatePgDarkPoolAerodromeRemoveLiquidity = ajv.compile(pgDarkPoolAerodromeRemoveLiquiditySchema)
+const validatePgDarkPoolAerodromeSwap = ajv.compile(pgDarkPoolAerodromeSwapSchema)
 
 
 function getInputError(validator, data) {
@@ -604,6 +725,19 @@ function getPgDarkPoolDefiInfraInputError(data) {
   return getInputError(validatePgDarkPoolDefiInfra, data)
 }
 
+function getPgDarkPoolAerodromeAddLiquidityInputError(data) {
+  return getInputError(validatePgDarkPoolAerodromeAddLiquidity, data)
+}
+
+function getPgDarkPoolAerodromeRemoveLiquidityInputError(data) {
+  return getInputError(validatePgDarkPoolAerodromeRemoveLiquidity, data)
+}
+
+function getPgDarkPoolAerodromeSwapInputError(data) {
+  return getInputError(validatePgDarkPoolAerodromeSwap, data)
+}
+
+
 module.exports = {
   getPgDarkPoolWithdrawInputError,
   getPgDarkPoolUniswapSSInputError,
@@ -618,5 +752,8 @@ module.exports = {
   getPgDarkPoolRocketPoolStakeInputError,
   getPgDarkPoolRocketPoolUnStakeInputError,
   getPgDarkPoolSablierClaimInputError,
-  getPgDarkPoolDefiInfraInputError
+  getPgDarkPoolDefiInfraInputError,
+  getPgDarkPoolAerodromeAddLiquidityInputError,
+  getPgDarkPoolAerodromeRemoveLiquidityInputError,
+  getPgDarkPoolAerodromeSwapInputError,
 }

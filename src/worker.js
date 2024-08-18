@@ -12,6 +12,9 @@ const { RocketPoolStakeWorker } = require('./worker/rocketPoolDepositWorker')
 const { RocketPoolUnStakeWorker } = require('./worker/rocketPoolWithdrawWorker')
 const { SablierClaimWorker } = require('./worker/sablierClaimWorker')
 const { InfraWorker } = require('./worker/infraWorker')
+const { AerodromAddLiquidityWorker } = require('./worker/aerodromeAddLiquidityWorker')
+const { AerodromRemoveLiquidityWorker } = require('./worker/aerodromeRemoveLiquidityWorker')
+const { AerodromSwapWorker } = require('./worker/aerodromeSwapWorker')
 
 
 const { queue } = require('./queue')
@@ -53,6 +56,9 @@ const workerMapping = {
   [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: new RocketPoolUnStakeWorker(),
   [jobType.PG_DARKPOOL_SABLIER_CLAIM]: new SablierClaimWorker(),
   [jobType.PG_DARKPOOL_INFRA]: new InfraWorker(),
+  [jobType.PG_DARKPOOL_AERODROME_ADD_LIQUIDITY]: new AerodromAddLiquidityWorker(),
+  [jobType.PG_DARKPOOL_AERODROME_REMOVE_LIQUIDITY]: new AerodromRemoveLiquidityWorker(),
+  [jobType.PG_DARKPOOL_AERODROME_SWAP]: new AerodromSwapWorker(),
 }
 
 async function start() {

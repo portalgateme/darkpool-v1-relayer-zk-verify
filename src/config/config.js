@@ -29,6 +29,10 @@ module.exports = {
   pgDarkPoolSablierDynamicAssetManager: pgConfig[netId].sablierDynamicAssetManager,
   pgDarkPoolSablierLinearAssetManager: pgConfig[netId].sablierLinearAssetManager,
   pgDarkPoolGeneralDefiIntegrationAssetManager: pgConfig[netId].generalDefiIntegrationAssetManager,
+  pgDarkPoolAerodromeAddLiquidityAssetManager: pgConfig[netId].aerodromeAddLiquidityAssetManager,
+  pgDarkPoolAerodromeRemoveLiquidityAssetManager: pgConfig[netId].aerodromeRemoveLiquidityAssetManager,
+  pgDarkPoolAerodromeSwapAssetManager: pgConfig[netId].aerodromeSwapAssetManager,
+
   uniswapNfpManager: pgConfig[netId].uniswapNfpManager,
   uniswapFactory: pgConfig[netId].uniswapFactory,
   sablierV2LockupLinear: pgConfig[netId].sablierV2LockupLinear,

@@ -35,5 +35,8 @@ router.post('/v1/pgDarkPoolRocketPoolStake', controller.pgDarkPoolRocketPoolStak
 router.post('/v1/pgDarkPoolRocketPoolUnStake', controller.pgDarkPoolRocketPoolUnStake)
 router.post('/v1/pgDarkPoolSablierClaim', controller.pgDarkPoolSablierClaim)
 router.post('/v1/pgDarkPoolDefiInfra', controller.pgDarkPoolDefiInfra)
+router.post('/v1/pgDarkPoolAerodromeAddLiquidity', controller.pgDarkPoolAerodromeAddLiquidity)
+router.post('/v1/pgDarkPoolAerodromeRemoveLiquidity', controller.pgDarkPoolAerodromeRemoveLiquidity)
+router.post('/v1/pgDarkPoolAerodromeSwap', controller.pgDarkPoolAerodromeSwap)
 
 module.exports = router

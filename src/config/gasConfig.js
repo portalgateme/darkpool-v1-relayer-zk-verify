@@ -100,6 +100,9 @@ const gasUnitFallbackConfig = {
         [jobType.PG_DARKPOOL_ZK_REDEEM]: 2000000,
         [jobType.PG_DARKPOOL_SABLIER_CLAIM]: 2000000,
         [jobType.PG_DARKPOOL_INFRA]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_ADD_LIQUIDITY]: 4800000,
+        [jobType.PG_DARKPOOL_AERODROME_REMOVE_LIQUIDITY]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_SWAP]: 2000000,
     },
     [ChainId.BounceBit]: {
         [jobType.PG_DARKPOOL_WITHDRAW]: 800000,
@@ -208,6 +211,9 @@ const gasUnitFallbackConfig = {
         [jobType.PG_DARKPOOL_ZK_REDEEM]: 2000000,
         [jobType.PG_DARKPOOL_SABLIER_CLAIM]: 2000000,
         [jobType.PG_DARKPOOL_INFRA]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_ADD_LIQUIDITY]: 4800000,
+        [jobType.PG_DARKPOOL_AERODROME_REMOVE_LIQUIDITY]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_SWAP]: 2000000,
     }
 }
 
