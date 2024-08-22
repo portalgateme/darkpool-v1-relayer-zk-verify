@@ -98,7 +98,7 @@ module.exports = {
   },
   [ChainId.BASE]: {
     nativeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-    offchainOracleAddress: '0x0FfC4A1d000F0078d14FD32D73E98227fDca35F8',
+    offchainOracleAddress: '0xf224a25453D76A41c4427DD1C05369BC9f498444',
     verifierHub: '0x0',
     curveAddLiquidityAssetManager: '0x0',
     curveFSNAddLiquidityAssetManager: '0x0',

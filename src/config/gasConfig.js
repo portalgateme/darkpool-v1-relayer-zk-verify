@@ -6,7 +6,9 @@ const DEFAULT_MAX_PRIORITY_FEE = 3
 
 const maxPriorityFeeConfig = {
     [ChainId.ARBITRUM_ONE]: 0,
+    [ChainId.BASE]: 0,
     [ChainId.HARDHAT_ARBITRUM]: 0,
+    [ChainId.HARDHAT_BASE]: 0,
 }
 
 const gasLimitConfig = {
