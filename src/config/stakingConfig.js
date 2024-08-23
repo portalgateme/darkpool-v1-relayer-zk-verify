@@ -67,7 +67,18 @@ const stakingTokenConfig = {
       name: 'sgSTBB',
     }
   ],
-  [ChainId.BASE]: [],
+  [ChainId.BASE]: [
+    {
+      originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      stakingToken: '0xC2Bf6bdc1868273d0dfbb163e9F82574D89a54f4',
+      name: 'sgETH',
+    },
+    {
+      originalToken: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+      stakingToken: '0x881e3e5416D1b6acecD9d5BA20895D06Ecc40a28',
+      name: 'sgUSDC',
+    },
+  ],
   [ChainId.SEPOLIA]: [
     {
       originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
