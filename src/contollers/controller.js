@@ -12,7 +12,10 @@ const {
   getPgDarkPoolRocketPoolStakeInputError,
   getPgDarkPoolRocketPoolUnStakeInputError,
   getPgDarkPoolSablierClaimInputError,
-  getPgDarkPoolDefiInfraInputError
+  getPgDarkPoolDefiInfraInputError,
+  getPgDarkPoolAerodromeAddLiquidityInputError,
+  getPgDarkPoolAerodromeRemoveLiquidityInputError,
+  getPgDarkPoolAerodromeSwapInputError,
 } = require('../modules/validator')
 const { postJob } = require('../queue')
 const { jobType } = require('../config/constants')
@@ -214,6 +217,48 @@ async function pgDarkPoolDefiInfra(req, res) {
   return res.json({ id })
 }
 
+async function pgDarkPoolAerodromeAddLiquidity(req, res) {
+  const inputError = getPgDarkPoolAerodromeAddLiquidityInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_AERODROME_ADD_LIQUIDITY,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolAerodromeRemoveLiquidity(req, res) {
+  const inputError = getPgDarkPoolAerodromeRemoveLiquidityInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_AERODROME_REMOVE_LIQUIDITY,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
+async function pgDarkPoolAerodromeSwap(req, res) {
+  const inputError = getPgDarkPoolAerodromeSwapInputError(req.body)
+  if (inputError) {
+    console.log('Invalid input:', inputError)
+    return res.status(400).json({ error: inputError })
+  }
+
+  const id = await postJob({
+    type: jobType.PG_DARKPOOL_AERODROME_SWAP,
+    request: req.body,
+  })
+  return res.json({ id })
+}
+
 
 
 module.exports = {
@@ -230,5 +275,8 @@ module.exports = {
   pgDarkPoolRocketPoolStake,
   pgDarkPoolRocketPoolUnStake,
   pgDarkPoolSablierClaim,
-  pgDarkPoolDefiInfra
+  pgDarkPoolDefiInfra,
+  pgDarkPoolAerodromeAddLiquidity,
+  pgDarkPoolAerodromeRemoveLiquidity,
+  pgDarkPoolAerodromeSwap,
 }

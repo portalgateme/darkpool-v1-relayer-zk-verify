@@ -6,7 +6,9 @@ const DEFAULT_MAX_PRIORITY_FEE = 3
 
 const maxPriorityFeeConfig = {
     [ChainId.ARBITRUM_ONE]: 0,
+    [ChainId.BASE]: 0,
     [ChainId.HARDHAT_ARBITRUM]: 0,
+    [ChainId.HARDHAT_BASE]: 0,
 }
 
 const gasLimitConfig = {
@@ -31,6 +33,10 @@ const gasLimitConfig = {
         DEFI_WITH_EXTRA: 20000000,
     },
     [ChainId.BounceBitTestnet]: {
+        WITHDRAW_WITH_EXTRA: 3000000,
+        DEFI_WITH_EXTRA: 20000000,
+    },
+    [ChainId.EMCTestnet]: {
         WITHDRAW_WITH_EXTRA: 3000000,
         DEFI_WITH_EXTRA: 20000000,
     },
@@ -96,6 +102,9 @@ const gasUnitFallbackConfig = {
         [jobType.PG_DARKPOOL_ZK_REDEEM]: 2000000,
         [jobType.PG_DARKPOOL_SABLIER_CLAIM]: 2000000,
         [jobType.PG_DARKPOOL_INFRA]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_ADD_LIQUIDITY]: 4800000,
+        [jobType.PG_DARKPOOL_AERODROME_REMOVE_LIQUIDITY]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_SWAP]: 2000000,
     },
     [ChainId.BounceBit]: {
         [jobType.PG_DARKPOOL_WITHDRAW]: 800000,
@@ -140,6 +149,22 @@ const gasUnitFallbackConfig = {
         [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: 2000000,
         [jobType.PG_DARKPOOL_ZK_STAKE]: 2000000,
         [jobType.PG_DARKPOOL_ZK_REDEEM]: 2000000,
+    },
+    [ChainId.EMCTestnet]: {
+        [jobType.PG_DARKPOOL_WITHDRAW]: 800000,
+        [jobType.PG_DARKPOOL_UNISWAP_SINGLESWAP]: 2000000,
+        [jobType.PG_DARKPOOL_UNISWAP_LP]: 4800000,
+        [jobType.PG_DARKPOOL_UNISWAP_FEE_COLLECTING]: 2800000,
+        [jobType.PG_DARKPOOL_UNISWAP_REMOVE_LIQUIDITY]: 3000000,
+        [jobType.PG_DARKPOOL_CURVE_MULTI_EXCHANGE]: 2200000,
+        [jobType.PG_DARKPOOL_CURVE_ADD_LIQUIDITY]: 5000000,
+        [jobType.PG_DARKPOOL_CURVE_REMOVE_LIQUIDITY]: 4300000,
+        [jobType.PG_DARKPOOL_ROCKET_POOL_STAKE]: 2000000,
+        [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: 2000000,
+        [jobType.PG_DARKPOOL_ZK_STAKE]: 2000000,
+        [jobType.PG_DARKPOOL_ZK_REDEEM]: 2000000,
+        [jobType.PG_DARKPOOL_SABLIER_CLAIM]: 2000000,
+        [jobType.PG_DARKPOOL_INFRA]: 3000000,
     },
     [ChainId.HARDHAT]: {
         [jobType.PG_DARKPOOL_WITHDRAW]: 800000,
@@ -188,6 +213,9 @@ const gasUnitFallbackConfig = {
         [jobType.PG_DARKPOOL_ZK_REDEEM]: 2000000,
         [jobType.PG_DARKPOOL_SABLIER_CLAIM]: 2000000,
         [jobType.PG_DARKPOOL_INFRA]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_ADD_LIQUIDITY]: 4800000,
+        [jobType.PG_DARKPOOL_AERODROME_REMOVE_LIQUIDITY]: 3000000,
+        [jobType.PG_DARKPOOL_AERODROME_SWAP]: 2000000,
     }
 }
 

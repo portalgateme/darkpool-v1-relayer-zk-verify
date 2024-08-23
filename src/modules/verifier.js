@@ -19,6 +19,9 @@ const verifierMap = {
    [jobType.PG_DARKPOOL_ROCKET_POOL_UNSTAKE]: 'rocketPoolStake',
    [jobType.PG_DARKPOOL_SABLIER_CLAIM] : 'sablierClaimStream',
    [jobType.PG_DARKPOOL_INFRA]: 'generalDefiIntegration',
+   [jobType.PG_DARKPOOL_AERODROME_ADD_LIQUIDITY]: 'aerodromeAddLiquidity',
+   [jobType.PG_DARKPOOL_AERODROME_REMOVE_LIQUIDITY]: 'aerodromeRemoveLiquidity',
+   [jobType.PG_DARKPOOL_AERODROME_SWAP]: 'aerodromeSwap',
  }
 
 async function zkProofVerifier(web3, proof, input, job) {
