@@ -105,7 +105,18 @@ const stakingTokenConfig = {
       name: 'sgUSDC',
     },
   ],
-  [ChainId.HARDHAT_ARBITRUM]: [],
+  [ChainId.HARDHAT_ARBITRUM]: [
+    {
+      originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      stakingToken: '0x2e407758a16fa3f7D464BA6146C3cC7F1854a089',
+      name: 'sgETH',
+    },
+    {
+      originalToken: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
+      stakingToken: '0x9674f70c5cEb61f990977D325AbF2C0201a4c520',
+      name: 'sgUSDC',
+    },
+  ],
   [ChainId.HARDHAT_BASE]: [
     {
       originalToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
