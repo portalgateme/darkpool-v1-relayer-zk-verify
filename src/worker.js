@@ -65,7 +65,7 @@ async function start() {
   try {
     await clearErrors()
     web3 = getWeb3()
-    const { CONFIRMATIONS, MAX_GAS_PRICE } = process.env
+    const { CONFIRMATIONS, MAX_GAS_PRICE, MAX_RETRIES } = process.env
     txManager = new TxManager({
       privateKey,
       rpcUrl: httpRpcUrl,
@@ -74,6 +74,7 @@ async function start() {
         MAX_GAS_PRICE,
         THROW_ON_REVERT: false,
         BASE_FEE_RESERVE_PERCENTAGE: baseFeeReserve,
+        MAX_RETRIES,
       },
     })
     queue.process(processJob)
