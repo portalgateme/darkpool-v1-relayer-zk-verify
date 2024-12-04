@@ -6,6 +6,9 @@ router.use((req, res, next) => {
   res.header('X-Frame-Options', 'DENY')
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
   next()
 })
 
@@ -38,5 +41,6 @@ router.post('/v1/pgDarkPoolDefiInfra', controller.pgDarkPoolDefiInfra)
 router.post('/v1/pgDarkPoolAerodromeAddLiquidity', controller.pgDarkPoolAerodromeAddLiquidity)
 router.post('/v1/pgDarkPoolAerodromeRemoveLiquidity', controller.pgDarkPoolAerodromeRemoveLiquidity)
 router.post('/v1/pgDarkPoolAerodromeSwap', controller.pgDarkPoolAerodromeSwap)
+router.post('/v1/pgZkVerifySubmitProof', controller.pgZkVerifySubmitProof)
 
 module.exports = router

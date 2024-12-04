@@ -50,4 +50,5 @@ module.exports = {
   stakingTokenMapping: stakingTokenConfig[netId],
   skipDefaultPriceOrace: pgConfig[netId].skipDefaultPriceOrace ? true : false,
   maxPriorityFee: maxPriorityFeeConfig[netId] ?? DEFAULT_MAX_PRIORITY_FEE,
+  zkVerifySeed: process.env.ZK_VERIFY_SEED,
 }

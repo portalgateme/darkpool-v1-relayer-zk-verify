@@ -35,6 +35,7 @@ const { redis, redisSubscribe } = require('./modules/redis')
 const getWeb3 = require('./modules/web3')
 const { zkProofVerifier } = require('./modules/verifier')
 const { calcGasFee } = require('./modules/fees')
+const { submitProof } = require('./worker/zkVerifyWorker')
 
 let web3
 let currentTx
@@ -125,6 +126,11 @@ async function processJob(job) {
 
 async function submitTx(job, retry = 0) {
   // await checkPgFee(job.data.asset, job.data.amount, job.data.fee, job.data.refund)
+  if (job.data.type === jobType.PG_ZK_VERIFY_SUBMIT_PROOF) {
+    await submitProof(job)
+    await updateStatus(status.CONFIRMED)
+    return
+  }
 
   currentTx = await txManager.createTx(await getTxObject(job))
 

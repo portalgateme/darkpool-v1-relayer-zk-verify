@@ -639,6 +639,19 @@ const pgDarkPoolAerodromeSwapSchema = {
   ],
 }
 
+const pgZkVerifySubmitProofSchema = {
+  type: 'object',
+  properties: {
+    proof: proofType,
+    publicSignals: {
+      type: 'array',
+      items: bytes32Type,
+      minItems: 1
+    },
+    vkHash: bytes32Type
+  },
+  required: ['proof', 'publicSignals', 'vkHash'],
+}
 
 const validatePgDarkPoolWithdraw = ajv.compile(pgDarkPoolWithdrawSchema)
 const validatePgDarkPoolUniswapSS = ajv.compile(pgDarkPoolUniswapSSSchema)
@@ -657,6 +670,7 @@ const validatePgDarkPoolDefiInfra = ajv.compile(pgDarkPoolDefiInfraSchema)
 const validatePgDarkPoolAerodromeAddLiquidity = ajv.compile(pgDarkPoolAerodromeAddLiquiditySchema)
 const validatePgDarkPoolAerodromeRemoveLiquidity = ajv.compile(pgDarkPoolAerodromeRemoveLiquiditySchema)
 const validatePgDarkPoolAerodromeSwap = ajv.compile(pgDarkPoolAerodromeSwapSchema)
+const validatePgZkVerifySubmitProof = ajv.compile(pgZkVerifySubmitProofSchema)
 
 
 function getInputError(validator, data) {
@@ -737,6 +751,10 @@ function getPgDarkPoolAerodromeSwapInputError(data) {
   return getInputError(validatePgDarkPoolAerodromeSwap, data)
 }
 
+function getPgZkVerifySubmitProofInputError(data) {
+  return getInputError(validatePgZkVerifySubmitProof, data)
+}
+
 
 module.exports = {
   getPgDarkPoolWithdrawInputError,
@@ -756,4 +774,5 @@ module.exports = {
   getPgDarkPoolAerodromeAddLiquidityInputError,
   getPgDarkPoolAerodromeRemoveLiquidityInputError,
   getPgDarkPoolAerodromeSwapInputError,
+  getPgZkVerifySubmitProofInputError,
 }
