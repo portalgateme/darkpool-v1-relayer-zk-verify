@@ -1,11 +1,11 @@
 
 class BaseWorker {
 
-    async getTxObj(web3, data, gasFee) {
+    async getTxObj(web3, data, gasFee, attDetails) {
 
     }
 
-    async estimateGas(web3, data) {
+    async estimateGas(web3, data, attDetails) {
 
     }
 

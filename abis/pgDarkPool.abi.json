@@ -22,11 +22,6 @@
         },
         {
           "internalType": "address",
-          "name": "verifierHub",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
           "name": "relayerHub",
           "type": "address"
         },
@@ -42,12 +37,17 @@
         },
         {
           "internalType": "address",
-          "name": "merkleTreeOperator",
+          "name": "mimc254",
           "type": "address"
         },
         {
           "internalType": "address",
-          "name": "mimc254",
+          "name": "zkHub",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "noteManager",
           "type": "address"
         },
         {
@@ -60,30 +60,8 @@
       "type": "constructor"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "target",
-          "type": "address"
-        }
-      ],
-      "name": "AddressEmptyCode",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "AddressInsufficientBalance",
-      "type": "error"
-    },
-    {
       "inputs": [],
-      "name": "FailedInnerCall",
+      "name": "InvalidNoteParameters",
       "type": "error"
     },
     {
@@ -98,7 +76,22 @@
     },
     {
       "inputs": [],
+      "name": "NoteFooterDuplicated",
+      "type": "error"
+    },
+    {
+      "inputs": [],
       "name": "NoteFooterUsed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NoteNotCreated",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NullifierLocked",
       "type": "error"
     },
     {
@@ -130,6 +123,11 @@
     },
     {
       "inputs": [],
+      "name": "RelayerMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [],
       "name": "RelayerNotRegistered",
       "type": "error"
     },
@@ -142,6 +140,11 @@
         }
       ],
       "name": "SafeERC20FailedOperation",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ZeroAddress",
       "type": "error"
     },
     {
@@ -358,6 +361,19 @@
     },
     {
       "inputs": [],
+      "name": "DEPOSIT_VERIFIER_ID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "ETH_ADDRESS",
       "outputs": [
         {
@@ -371,12 +387,77 @@
     },
     {
       "inputs": [],
+      "name": "JOIN_SPLIT_VERIFIER_ID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "JOIN_VERIFIER_ID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "P",
       "outputs": [
         {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "SPLIT_VERIFIER_ID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "TRANSFER_VERIFIER_ID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "WITHDRAW_VERIFIER_ID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
         }
       ],
       "stateMutability": "view",
@@ -405,9 +486,31 @@
           "type": "bytes32"
         },
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "depositERC20",
@@ -428,9 +531,31 @@
           "type": "bytes32"
         },
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "depositETH",
@@ -505,46 +630,7 @@
     },
     {
       "inputs": [],
-      "name": "getMerkleTreeOperator",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getMimc254",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "getRelayerHub",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getVerifierHub",
       "outputs": [
         {
           "internalType": "address",
@@ -583,9 +669,31 @@
           "type": "bytes32"
         },
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "join",
@@ -595,11 +703,6 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_merkleRoot",
-          "type": "bytes32"
-        },
         {
           "internalType": "bytes32",
           "name": "_nullifierIn1",
@@ -631,14 +734,74 @@
           "type": "bytes32"
         },
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "joinSplit",
       "outputs": [],
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "noteCommitments",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "noteFooters",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -760,24 +923,6 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "verifierHub",
-          "type": "address"
-        }
-      ],
-      "name": "setVerifierHub",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_merkleRoot",
-          "type": "bytes32"
-        },
-        {
           "internalType": "bytes32",
           "name": "_nullifierIn1",
           "type": "bytes32"
@@ -803,9 +948,31 @@
           "type": "bytes32"
         },
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "split",
@@ -815,11 +982,6 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_merkleRoot",
-          "type": "bytes32"
-        },
         {
           "internalType": "bytes32",
           "name": "_nullifierIn",
@@ -846,9 +1008,31 @@
           "type": "bytes32"
         },
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "transfer",
@@ -877,16 +1061,6 @@
           "type": "address"
         },
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_merkleRoot",
-          "type": "bytes32"
-        },
-        {
           "internalType": "bytes32",
           "name": "_nullifier",
           "type": "bytes32"
@@ -910,6 +1084,33 @@
           "internalType": "uint256",
           "name": "_relayerGasFee",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "withdrawERC20",
@@ -920,16 +1121,6 @@
     {
       "inputs": [
         {
-          "internalType": "bytes",
-          "name": "_proof",
-          "type": "bytes"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_merkleRoot",
-          "type": "bytes32"
-        },
-        {
           "internalType": "bytes32",
           "name": "_nullifier",
           "type": "bytes32"
@@ -953,6 +1144,33 @@
           "internalType": "uint256",
           "name": "_amount",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "attestationId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "merklePath",
+              "type": "bytes32[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "leafCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IZKHub.AttestationDetails",
+          "name": "_attDetails",
+          "type": "tuple"
         }
       ],
       "name": "withdrawETH",

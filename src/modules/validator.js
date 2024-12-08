@@ -56,7 +56,6 @@ const pgDarkPoolWithdrawSchema = {
   properties: {
     asset: assetType,
     proof: proofType,
-    merkleRoot: bytes32Type,
     nullifier: bytes32Type,
     recipient: addressType,
     relayer: relayerType,
@@ -64,14 +63,14 @@ const pgDarkPoolWithdrawSchema = {
     refund: bytes32Type,
     verifierArgs: {
       type: 'array',
-      maxItems: 6,
-      minItems: 6,
-      items: new Array(6).fill(bytes32Type),
+      maxItems: 5,
+      minItems: 5,
+      items: new Array(5).fill(bytes32Type),
     }
   },
   additionalProperties: false,
   required: [
-    'asset', 'proof', 'merkleRoot', 'nullifier',
+    'asset', 'proof', 'nullifier',
     'recipient', 'relayer', 'amount', 'verifierArgs'
   ],
 }

@@ -87,8 +87,8 @@ async function start() {
 }
 
 async function getTxObject({ data }) {
-  const validProof = await zkProofVerifier(web3, data.proof, data.verifierArgs, data.type)
-  if (!validProof) {
+  const attDetail = await zkProofVerifier(web3, data.proof, data.verifierArgs, data.type)
+  if (!attDetail) {
     throw new RelayerError('Invalid proof')
   }
 
@@ -96,13 +96,13 @@ async function getTxObject({ data }) {
   if (worker) {
     let gasAmount
     try {
-      gasAmount = await worker.estimateGas(web3, data)
+      gasAmount = await worker.estimateGas(web3, data, attDetail)
     } catch (e) {
       console.error(e, 'Estimation fallback', data.type)
       gasAmount = gasUnitFallback[data.type]
     }
     const gasFee = await calcGasFee(web3, gasAmount)
-    return await worker.getTxObj(web3, data, gasFee)
+    return await worker.getTxObj(web3, data, gasFee, attDetail)
   } else {
     throw new RelayerError(`Unknown job type: ${data.type}`)
   }
@@ -127,8 +127,9 @@ async function processJob(job) {
 async function submitTx(job, retry = 0) {
   // await checkPgFee(job.data.asset, job.data.amount, job.data.fee, job.data.refund)
   if (job.data.type === jobType.PG_ZK_VERIFY_SUBMIT_PROOF) {
-    await submitProof(job)
-    await updateStatus(status.CONFIRMED)
+    const { proof, publicSignals, vkHash } = job.data
+    const result = await submitProof(proof, publicSignals, vkHash)
+    await updateResult(result, status.CONFIRMED)
     return
   }
 
@@ -159,6 +160,13 @@ async function submitTx(job, retry = 0) {
 async function updateTxHash(txHash) {
   console.log(`A new successfully sent tx ${txHash}`)
   currentJob.data.txHash = txHash
+  await currentJob.update(currentJob.data)
+}
+
+async function updateResult(result, status) {
+  console.log(`updateResult:  ${result}`)
+  currentJob.data.result = result
+  currentJob.data.status = status
   await currentJob.update(currentJob.data)
 }
 

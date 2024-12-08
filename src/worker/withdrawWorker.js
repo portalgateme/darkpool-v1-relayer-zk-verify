@@ -1,34 +1,34 @@
 const pgDarkPoolABI = require('../../abis/pgDarkPool.abi.json')
 
-const { isETH, toBN, RelayerError } = require('../utils')
+const { isETH, RelayerError } = require('../utils')
 const { calculateFeesForOneToken } = require('../modules/fees')
 
 const {
   pgDarkPoolAssetManager,
   gasLimits,
-  gasUnitFallback,
   stakingTokenMapping,
 } = require('../config/config')
 
 const { BaseWorker } = require('./baseWorker')
-const { jobType } = require('../config/constants')
 
 class WithdrawWorker extends BaseWorker {
 
-  getContractCall(contract, data, refund) {
+  getContractCall(contract, data, refund, attDetails) {
     let calldata
     if (isETH(data.asset)) {
-      calldata = contract.methods.withdrawETH(data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, refund, data.amount)
+      calldata = contract.methods.withdrawETH(data.nullifier, data.recipient, data.relayer, refund, data.amount, attDetails)
     } else {
-      calldata = contract.methods.withdrawERC20(data.asset, data.proof, data.merkleRoot, data.nullifier, data.recipient, data.relayer, data.amount, refund)
+      calldata = contract.methods.withdrawERC20(data.asset, data.nullifier, data.recipient, data.relayer, data.amount, refund, attDetails)
     }
+
+    console.log(data.nullifier, data.recipient, data.relayer, refund, data.amount, attDetails)
 
     return calldata
   }
 
-  async estimateGas(web3, data) {
+  async estimateGas(web3, data, attDetails) {
     const contract = this.getContract(web3)
-    const contractCall = this.getContractCall(contract, data, data.refund)
+    const contractCall = this.getContractCall(contract, data, data.refund, attDetails)
     return await contractCall.estimateGas()
   }
 
@@ -45,7 +45,7 @@ class WithdrawWorker extends BaseWorker {
     }
   }
 
-  async getTxObj(web3, data, gasFee) {
+  async getTxObj(web3, data, gasFee, attDetails) {
     const contract = this.getContract(web3)
     let refinedToken = this.getOriginalTokenFromStakingTokenMapping(data.asset)
     if (!refinedToken) {
@@ -57,7 +57,7 @@ class WithdrawWorker extends BaseWorker {
       throw new RelayerError('Insufficient funds to pay fees')
     }
 
-    const contractCall = this.getContractCall(contract, data, gasFeeInToken)
+    const contractCall = this.getContractCall(contract, data, gasFeeInToken, attDetails)
 
     return {
       to: contract._address,

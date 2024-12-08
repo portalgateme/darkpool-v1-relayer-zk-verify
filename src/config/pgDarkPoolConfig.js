@@ -135,7 +135,7 @@ module.exports = {
     aerodromeAddLiquidityAssetManager: '0x0',
     aerodromeRemoveLiquidityAssetManager: '0x0',
     aerodromeSwapAssetManager: '0x0',
-    darkpoolAssetManager: '0xa10d309818527C8D8F5164f9D640515d6616bFeE',
+    darkpoolAssetManager: '0xB6E72619e33a22e263f0C6B566e6C0D91c56d45a',
     uniswapLiquidityAssetManager: '0x0',
     uniswapSwapAssetManager: '0x0',
     sablierDynamicAssetManager: '0x6c5Af867CB8950C92EC8F1e1382857Aa62e754F5',

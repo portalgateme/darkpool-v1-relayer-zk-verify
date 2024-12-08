@@ -6,11 +6,15 @@ async function initSession() {
     return session;
 }
 
-async function submitProof(job) {
-    const { proof, publicSignals, vkHash } = job.data
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
+async function submitProof(proof, publicSignals, vkHash) {
+
+    let session;
     try {
-        const session = await initSession();
+        session = await initSession();
 
         const { transactionResult } = await session
             .verify()
@@ -21,19 +25,32 @@ async function submitProof(job) {
                 proofData: {
                     proof,
                     publicSignals,
-                    vk:vkHash,
+                    vk: vkHash,
                 },
             });
 
         const res = await transactionResult;
+        console.log(res);
+        await sleep(60000);
 
         if (res && res.attestationId) {
-            return res;
+            const poe = await session.poe(res.attestationEvent.id, res.leafDigest);
+            console.log(poe);
+            return {
+                attestationId: res.attestationEvent.id,
+                merklePath: poe.proof,
+                leafCount: poe.numberOfLeaves,
+                index: poe.leafIndex,
+            };
         } else {
             throw new Error("Your proof isn't correct.");
         }
     } catch (error) {
         throw new Error(`Transaction failed: ${error.message}`);
+    } finally {
+        if (session) {
+            session.close();
+        }
     }
 }
 
